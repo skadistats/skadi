@@ -2,32 +2,37 @@
 
 import io, optparse, os, sys
 
-from skadi.io import protobuf
-from skadi import mutators, world
-
 pwd  = os.path.dirname(__file__)
 root = os.path.join(pwd, '..')
 sys.path.append(root)
 
+from skadi import mutators, world
+from skadi.io import protobuf
+from skadi.util.flattener import Flattener
+
 option_parser   = optparse.OptionParser()
 (options, args) = option_parser.parse_args()
 
+test_needs_decoder = lambda st: st.needs_decoder
+
 for arg in args:
-    stream  = io.open(os.path.join(root, arg), 'r+b')
-    demo_io = protobuf.DemoIO.wrapping(stream.read())
-    world   = world.World()
+    world = world.World()
 
-    mutators = {
-        'CDemoFileHeader':   mutators.parse_file_header,
-        'CDemoPacket':       mutators.parse_packet,
-        'CDemoSendTables':   mutators.parse_send_tables,
-        'CDemoClassInfo':    mutators.parse_class_info,
-        'CDemoStringTables': mutators.parse_string_tables
-    }
+    print '> pre-sync'
 
-    m = demo_io.read_message()
-    while m.__class__.__name__ != 'CDemoSyncTick':
-        mutators[m.__class__.__name__](world)
-        m = demo_io.read_message()
+    stream = io.open(os.path.join(root, arg), 'r+b')
+    demo_io = protobuf.DemoIO(stream)
 
-    world.flatten_send_tables()
+    for m in iter(demo_io):
+        cls = m.__class__.__name__
+        if cls == 'CDemoSyncTick':
+            print '> sync tick'
+            break
+        getattr(mutators, mutators.BY_CLASS[cls])(world, m)
+
+    print '> receive tables'
+    flattener = Flattener(world)
+    for st in filter(test_needs_decoder, world.send_tables.values()):
+        world.recv_tables[st.dt] = flattener.flatten(st)
+
+    print world

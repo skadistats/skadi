@@ -16,10 +16,6 @@ class InvalidDemo(Exception):
     pass
 
 class IOWrapper(object):
-    @classmethod
-    def wrapping(cls, data):
-        return cls(io.BufferedReader(io.BytesIO(data)))
-
     def __init__(self, io):
         self._io = io
 
@@ -111,7 +107,7 @@ class DemoIO(IOWrapper):
 
     def _verify(self):
         header = self._io.read(len(DemoIO.HEADER))
-        next_4 = self._io.read(4) # Not sure what this is.
+        next_4 = self._io.read(4) # offset of game info at end of file
         if header != DemoIO.HEADER:
             raise InvalidDemo()
 
@@ -137,6 +133,10 @@ class PacketIO(IOWrapper):
         pb_n.svc_VoiceData:         pb_n.CSVCMsg_VoiceData
     }
 
+    @classmethod
+    def wrapping(cls, bytes):
+        return cls(io.BufferedReader(io.BytesIO(bytes)))
+
     def __init__(self, io):
         super(PacketIO, self).__init__(io)
 
@@ -157,5 +157,5 @@ class PacketIO(IOWrapper):
 
         return message
 
-    def _rewind(self):
+    def rewind(self):
         self._io.seek(0)
