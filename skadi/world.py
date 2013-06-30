@@ -6,8 +6,11 @@ from skadi.util.flattener import Flattener
 class World(object):
     def __init__(self):
         self.meta = {}
+        self.server_info = {}
+        self.voice_init = {}
+        self.game_events = c.OrderedDict()
+        self.set_view = c.OrderedDict()
         self.classes = c.OrderedDict()
-        self.properties = c.OrderedDict()
         self.string_tables = c.OrderedDict()
         self.send_tables = c.OrderedDict()
         self.recv_tables = c.OrderedDict()

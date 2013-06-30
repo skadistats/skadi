@@ -67,13 +67,6 @@ class Table(object):
         lenprops = len(self.props)
         return '<{0} {1} ({2} props)>'.format(cls, self.dt, lenprops)
 
-    def swap(self, first, second):
-        l = list(self.props)
-        i = l.index(first)
-        j = l.index(second)
-        l[i], l[j] = l[j], l[i]
-        return Table(self.dt, l)
-
 test_exclude = lambda prop: prop.flags & Flag.EXCLUDE
 test_not_exclude = lambda prop: prop.flags ^ Flag.EXCLUDE
 test_inside_array = lambda prop: prop.flags & Flag.INSIDE_ARRAY
@@ -158,3 +151,10 @@ class RecvTable(Table):
                 cursor += 1
 
         return rt
+
+    def swap(self, first, second):
+        l = list(self.props)
+        i = l.index(first)
+        j = l.index(second)
+        l[i], l[j] = l[j], l[i]
+        return RecvTable(self.dt, l)
