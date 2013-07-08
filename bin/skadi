@@ -9,6 +9,7 @@ sys.path.append(root)
 from skadi import mutators, world
 from skadi.io import protobuf
 from skadi.util.flattener import Flattener
+from skadi.handler import user_message
 
 option_parser   = optparse.OptionParser()
 (options, args) = option_parser.parse_args()
@@ -16,23 +17,32 @@ option_parser   = optparse.OptionParser()
 test_needs_decoder = lambda st: st.needs_decoder
 
 for arg in args:
-    world = world.World()
+  world = world.World()
 
-    print '> pre-sync'
+  print '> pre-sync'
+  stream = io.open(os.path.join(root, arg), 'r+b')
+  demo_io = protobuf.DemoIO(stream)
+  iter_m = iter(demo_io)
 
-    stream = io.open(os.path.join(root, arg), 'r+b')
-    demo_io = protobuf.DemoIO(stream)
+  for m in iter_m:
+    cls = m.__class__.__name__
+    if cls == 'CDemoSyncTick':
+        print '> sync tick'
+        break
+    getattr(mutators, mutators.BY_CLASS[cls])(world, m)
 
-    for m in iter(demo_io):
-        cls = m.__class__.__name__
-        if cls == 'CDemoSyncTick':
-            print '> sync tick'
-            break
-        getattr(mutators, mutators.BY_CLASS[cls])(world, m)
+  print '> receive tables'
+  flattener = Flattener(world)
+  for st in filter(test_needs_decoder, world.send_tables.values()):
+    world.recv_tables[st.dt] = flattener.flatten(st)
 
-    print '> receive tables'
-    flattener = Flattener(world)
-    for st in filter(test_needs_decoder, world.send_tables.values()):
-        world.recv_tables[st.dt] = flattener.flatten(st)
-
-    print world
+  print '> message dump (everything in the replay)'
+  for m in iter_m:
+    cls = m.__class__.__name__
+    if cls in ('CDemoPacket', 'CDemoFullPacket'):
+        data = m.data if cls == 'CDemoPacket' else m.packet.data
+        packet_io = protobuf.PacketIO.wrapping(data)
+        for _m in packet_io:
+          print '  {0}'.format(_m.__class__.__name__)
+    else:
+      print '  {0}'.format(m.__class__.__name__)

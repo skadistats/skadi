@@ -14,6 +14,7 @@ Currently, skadi:
 
 * gives access to 100% of protobuf-message-level data (including embedded messages in some of the top-level messages)
 * correctly flattens "send tables" into "receive tables"
+* has scaffolding for interpreting all known 'user messages' (ex. particle management, combat log, chat, and more)
 
 Next, I aim to:
 
