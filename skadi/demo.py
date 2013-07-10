@@ -52,7 +52,7 @@ class Demo(object):
       'tick_interval', 'game_dir', 'map_name', 'sky_name',
       'host_name'
     )
-    self._server_info = {(v,getattr(pbmsg,v)) for v in to_extract}
+    self._server_info = {v:getattr(pbmsg,v) for v in to_extract}
 
   @property
   def voice_init(self):
@@ -61,7 +61,7 @@ class Demo(object):
   @voice_init.setter
   def voice_init(self, pbmsg):
     to_extract = ('quality', 'codec')
-    self._voice_init = {(v,getattr(pbmsg,v)) for v in to_extract}
+    self._voice_init = {v:getattr(pbmsg,v) for v in to_extract}
 
   @property
   def game_event_list(self):
