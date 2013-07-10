@@ -1,48 +1,79 @@
 #!/usr/bin/env python
 
-import io, optparse, os, sys
+import io, optparse, os, re, sys
 
-pwd  = os.path.dirname(__file__)
+pwd = os.path.dirname(__file__)
 root = os.path.join(pwd, '..')
 sys.path.append(root)
 
-from skadi import mutators, world
 from skadi.io import protobuf
-from skadi.util.flattener import Flattener
-from skadi.handler import user_message
+from skadi.demo import Demo
 
-option_parser   = optparse.OptionParser()
+from skadi.generated import demo_pb2 as pb_d
+from skadi.generated import netmessages_pb2 as pb_n
+
+option_parser = optparse.OptionParser()
 (options, args) = option_parser.parse_args()
 
-test_needs_decoder = lambda st: st.needs_decoder
+def underscore(_str):
+  s1 = re.sub('(.)([A-Z][a-z]+)', r'\1_\2', _str)
+  return re.sub('([a-z0-9])([A-Z])', r'\1_\2', s1).lower()
+
+DEMO_PRESYNC = (
+  pb_d.CDemoFileHeader, pb_d.CDemoSendTables, pb_d.CDemoClassInfo,
+  pb_d.CDemoStringTables
+)
+
+DEMO_PACKETLIKE = (pb_d.CDemoPacket, pb_d.CDemoFullPacket)
+
+SVC_RELEVANT = (
+  pb_n.CSVCMsg_ServerInfo, pb_n.CSVCMsg_VoiceInit, pb_n.CSVCMsg_GameEventList,
+  pb_n.CSVCMsg_SetView
+)
+
+SVC_EXTRANEOUS = (
+  pb_n.CSVCMsg_CreateStringTable, pb_n.CNETMsg_Tick, pb_n.CNETMsg_SetConVar,
+  pb_n.CNETMsg_SignonState, pb_n.CSVCMsg_ClassInfo
+)
 
 for arg in args:
-  world = world.World()
+  demo = Demo()
 
   print '> pre-sync'
+
   stream = io.open(os.path.join(root, arg), 'r+b')
   demo_io = protobuf.DemoIO(stream)
-  iter_m = iter(demo_io)
+  iter_d = iter(demo_io)
 
-  for m in iter_m:
-    cls = m.__class__.__name__
-    if cls == 'CDemoSyncTick':
-        print '> sync tick'
-        break
-    getattr(mutators, mutators.BY_CLASS[cls])(world, m)
+  for pbmsg in iter_d:
+    cls = pbmsg.__class__.__name__
+    if isinstance(pbmsg, pb_d.CDemoSyncTick):
+      break
+    elif isinstance(pbmsg, pb_d.CDemoPacket):
+      packet_io = protobuf.PacketIO.wrapping(pbmsg.data)
+      for _pbmsg in packet_io:
+        matches = re.match(r'C(SVC|NET)Msg_(.*)$', _pbmsg.__class__.__name__)
+        attr = underscore(matches.group(2))
+        if isinstance(_pbmsg, SVC_RELEVANT):
+          setattr(demo, attr, _pbmsg)
+    elif isinstance(pbmsg, DEMO_PRESYNC):
+      matches = re.match(r'CDemo(.*)$', pbmsg.__class__.__name__)
+      attr = underscore(matches.group(1))
+      setattr(demo, attr, pbmsg)
+    else:
+      err = '! protobuf {0}: open an issue at github.com/onethirtyfive/skadi'
+      print err.format(pbmsg.__class__.__name__)
 
   print '> receive tables'
-  flattener = Flattener(world)
-  for st in filter(test_needs_decoder, world.send_tables.values()):
-    world.recv_tables[st.dt] = flattener.flatten(st)
+  demo.flatten_send_tables()
 
   print '> message dump (everything in the replay)'
-  for m in iter_m:
-    cls = m.__class__.__name__
-    if cls in ('CDemoPacket', 'CDemoFullPacket'):
-        data = m.data if cls == 'CDemoPacket' else m.packet.data
-        packet_io = protobuf.PacketIO.wrapping(data)
-        for _m in packet_io:
-          print '  {0}'.format(_m.__class__.__name__)
+  for pbmsg in iter_d:
+    if isinstance(pbmsg, DEMO_PACKETLIKE):
+      is_full_packet = isinstance(pbmsg, pb_d.CDemoFullPacket)
+      data = pbmsg.packet.data if is_full_packet else pbmsg.data
+      packet_io = protobuf.PacketIO.wrapping(data)
+      for _pbmsg in packet_io:
+        print '  {0}'.format(_pbmsg.__class__.__name__)
     else:
-      print '  {0}'.format(m.__class__.__name__)
+      print '  {0}'.format(_pbmsg.__class__.__name__)

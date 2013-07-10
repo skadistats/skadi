@@ -47,7 +47,7 @@ BY_ID = {
   110: 'SendStatPopup',           111: 'TutorialFinish'
 }
 
-def handle(pbmsg):
+def parse(pbmsg):
   _id = pbmsg.msg_type
 
   if _id == 106: # wtf one-off?
@@ -68,7 +68,7 @@ def handle(pbmsg):
     result = getattr(sys.modules[__name__], 'parse_{0}'.format(cls))(_pbmsg)
   except AttributeError:
     result = None
-    err = '! unhandled UM {0}: open an issue at github.com/onethirtyfive/skadi'
+    err = '! unparsed UM {0}: open an issue at github.com/onethirtyfive/skadi'
     print err.format(cls)
 
   return result
