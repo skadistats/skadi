@@ -5,7 +5,7 @@ class Entity(object):
     self.reset()
 
   def reset(self):
-    self._state = {(prop.var_name, None) for prop in self.recv_table.props}
+    self._state = {prop.var_name:None for prop in self.recv_table.props}
 
   def summarize(self):
     return self._state.copy()
