@@ -1,66 +1,25 @@
 #!/usr/bin/env python
 
-import io, itertools, optparse, os, re, sys
+import io
+import optparse
+import os
+import sys
 
 pwd = os.path.dirname(__file__)
 root = os.path.join(pwd, '..')
 sys.path.append(root)
 
 from skadi.demo import Demo
-from skadi.generated import demo_pb2 as pb_d
-from skadi.generated import netmessages_pb2 as pb_n
-from skadi.io import protobuf
+from skadi.io import protobuf as pb_io
 
 option_parser = optparse.OptionParser()
 (options, args) = option_parser.parse_args()
 
-DEMO_PRESYNC = (
-  pb_d.CDemoFileHeader, pb_d.CDemoSendTables, pb_d.CDemoClassInfo,
-  pb_d.CDemoStringTables
-)
-
-DEMO_PACKETLIKE = (pb_d.CDemoPacket, pb_d.CDemoFullPacket)
-
-SVC_RELEVANT = (
-  pb_n.CSVCMsg_ServerInfo, pb_n.CSVCMsg_VoiceInit, pb_n.CSVCMsg_GameEventList,
-  pb_n.CSVCMsg_SetView
-)
-
-def underscore(_str):
-  s1 = re.sub('(.)([A-Z][a-z]+)', r'\1_\2', _str)
-  return re.sub('([a-z0-9])([A-Z])', r'\1_\2', s1).lower()
-
 for arg in args:
-  print '> gathering demo metadata'
-  dem = Demo()
+  print '> parsing {0}'.format(os.path.basename(arg))
+
   stream = io.open(os.path.join(root, arg), 'r+b')
-  demo_io = protobuf.DemoIO(stream)
-  iter_d = iter(demo_io)
+  demo_io = pb_io.DemoIO(stream)
+  dem = Demo.build(demo_io)
 
-  for pbmsg in iter_d:
-    cls = pbmsg.__class__.__name__
-    if isinstance(pbmsg, pb_d.CDemoSyncTick):
-      break
-    elif isinstance(pbmsg, pb_d.CDemoPacket):
-      packet_io = protobuf.PacketIO.wrapping(pbmsg.data)
-      for _pbmsg in packet_io:
-        matches = re.match(r'C(SVC|NET)Msg_(.*)$', _pbmsg.__class__.__name__)
-        attr = underscore(matches.group(2))
-        if isinstance(_pbmsg, SVC_RELEVANT):
-          setattr(dem, attr, _pbmsg)
-    elif isinstance(pbmsg, DEMO_PRESYNC):
-      matches = re.match(r'CDemo(.*)$', cls)
-      attr = underscore(matches.group(1))
-      setattr(dem, attr, pbmsg)
-    else:
-      err = '! protobuf {0}: open an issue at github.com/onethirtyfive/skadi'
-      print err.format(cls)
-
-  print '> flattening send tables'
-  dem.flatten_send_tables()
-
-  print '> generating replay content summary'
-  messages = map(lambda m: m.__class__.__name__, list(iter_d))
-  summary = [(k, sum(1 for i in g)) for k,g in itertools.groupby(messages)]
-  for cls, count in summary:
-    print '  {0} {1}'.format(str(count).rjust(3), cls)
+  # feel free to inspect built demo here with print statements

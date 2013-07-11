@@ -3,11 +3,57 @@ from __future__ import absolute_import
 import collections as c
 import io
 import itertools
+import re
 
+from skadi.generated import demo_pb2 as pb_d
+from skadi.generated import netmessages_pb2 as pb_n
 from skadi.io import protobuf as pb_io
 from skadi.state.demo import *
 
+DEMO_PRESYNC = (
+  pb_d.CDemoFileHeader, pb_d.CDemoSendTables, pb_d.CDemoClassInfo,
+  pb_d.CDemoStringTables
+)
+
+SVC_RELEVANT = (
+  pb_n.CSVCMsg_ServerInfo, pb_n.CSVCMsg_VoiceInit, pb_n.CSVCMsg_GameEventList,
+  pb_n.CSVCMsg_SetView
+)
+
+def underscore(_str):
+  s1 = re.sub('(.)([A-Z][a-z]+)', r'\1_\2', _str)
+  return re.sub('([a-z0-9])([A-Z])', r'\1_\2', s1).lower()
+
 class Demo(object):
+  @classmethod
+  def build(cls, demo_io):
+    dem = cls()
+    iter_d = iter(demo_io)
+
+    for pbmsg in iter_d:
+      _cls = pbmsg.__class__.__name__
+      if isinstance(pbmsg, pb_d.CDemoSyncTick):
+        break
+      elif isinstance(pbmsg, pb_d.CDemoPacket):
+        packet_io = pb_io.PacketIO.wrapping(pbmsg.data)
+        for _pbmsg in packet_io:
+          matches = re.match(r'C(SVC|NET)Msg_(.*)$', _pbmsg.__class__.__name__)
+          attr = underscore(matches.group(2))
+          if isinstance(_pbmsg, SVC_RELEVANT):
+            setattr(dem, attr, _pbmsg)
+      elif isinstance(pbmsg, DEMO_PRESYNC):
+        matches = re.match(r'CDemo(.*)$', _cls)
+        attr = underscore(matches.group(1))
+        setattr(dem, attr, pbmsg)
+      else:
+        err = '! pb_io {0}: open an issue at github.com/onethirtyfive/skadi'
+        print err.format(_cls)
+
+    dem.flatten_send_tables()
+    dem.chronology = demo_io.chronologize()
+
+    return dem
+
   def __init__(self):
     self._file_header = None
     self._server_info = None
