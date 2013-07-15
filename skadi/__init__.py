@@ -2,5 +2,5 @@ import collections as c
 
 def enum(**enums):
   _enum = type('Enum', (), enums)
-  _enum._enums = enums
+  _enum.tuples = enums
   return _enum

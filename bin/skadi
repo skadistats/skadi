@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 
 import io
+import math
 import optparse
 import os
 import sys
@@ -10,7 +11,10 @@ root = os.path.join(pwd, '..')
 sys.path.append(root)
 
 from skadi.demo import Demo
-from skadi.io import protobuf as pb_io
+from skadi.generated import netmessages_pb2 as pb_n
+from skadi.io import property as io_pr
+from skadi.io import protobuf as io_pb
+from skadi.io import bitstream as io_bs
 
 option_parser = optparse.OptionParser()
 (options, args) = option_parser.parse_args()
@@ -19,7 +23,44 @@ for arg in args:
   print '> parsing {0}'.format(os.path.basename(arg))
 
   stream = io.open(os.path.join(root, arg), 'r+b')
-  demo_io = pb_io.DemoIO(stream)
+  demo_io = io_pb.DemoIO(stream)
   dem = Demo.build(demo_io)
 
   # feel free to inspect built demo here with print statements
+  tick, offset = dem.chronology.epochs.items()[0]
+  demo_io.seek(offset)
+
+  _szclass = int(math.ceil(math.log(dem.server_info['max_classes'], 2)))
+
+  pbmsg = demo_io.read_message()
+  for _pbmsg in io_pb.PacketIO.wrapping(pbmsg.packet.data):
+    if isinstance(_pbmsg, pb_n.CSVCMsg_PacketEntities):
+      ib_st = dem.string_tables['instancebaseline']
+
+      ent_id, i = -1, 0
+      bs = io_bs.BitstreamIO(_pbmsg.entity_data)
+
+      while i < _pbmsg.updated_entries:
+        ent_id, ent_flags = bs.read_entity_header(ent_id)
+        ent_class = bs.read(_szclass)
+        ent_serial = bs.read(10)
+        ent_dp = bs.read_entity_delta_props()
+
+        _class = dem.class_info[ent_class].dt
+        recv_table = dem.recv_tables[_class]
+
+        print
+        print '*** DT: {0}'.format(recv_table.dt)
+        print
+
+        for dp in ent_dp:
+          prop = recv_table.props[dp]
+          ff = prop._flags()
+          ff = '({0})'.format(','.join(ff)) if ff else '(no flags)'
+          print "{0} '{1}' {2}".format(prop._type(), prop.var_name, ff)
+          print '  {0}'.format(io_pr.Reader.read(prop, bs))
+
+        i += 1
+
+      #baseline = next((x for x in ib_st.items if x.name == e_cls), None)
+      #_bs = io_bs.BitstreamIO(baseline)

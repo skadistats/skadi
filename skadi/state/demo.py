@@ -48,7 +48,7 @@ class StringTable(object):
     _repr = "<StringTable '{0}' f:{1} ({2} items, {3} items clientside)"
     return _repr.format(n, f, lenitems, lenitemsc)
 
-test_collapsible = lambda prop: prop.flags & Flag.COLLAPSIBLE
+test_collapsible = lambda prop: prop.flags & Flag.Collapsible
 
 class Flattener(object):
   def __init__(self, demo):
@@ -92,28 +92,29 @@ class Flattener(object):
     return st.exclusions + list(itertools.chain(*inherited))
 
 Flag = enum(
-  UNSIGNED                 = 1 <<  0, COORD                     = 1 <<  1,
-  NO_SCALE                 = 1 <<  2, ROUND_DOWN                = 1 <<  3,
-  ROUND_UP                 = 1 <<  4, NORMAL                    = 1 <<  5,
-  EXCLUDE                  = 1 <<  6, XYZE                      = 1 <<  7,
-  INSIDE_ARRAY             = 1 <<  8, PROXY_ALWAYS              = 1 <<  9,
-  VECTOR_ELEM              = 1 << 10, COLLAPSIBLE               = 1 << 11,
-  COORD_MP                 = 1 << 12, COORD_MP_LOW_PRECISION    = 1 << 13,
-  COORD_MP_INTEGRAL        = 1 << 14, CELL_COORD                = 1 << 15,
-  CELL_COORD_LOW_PRECISION = 1 << 16, CELL_COORD_INTEGRAL       = 1 << 17,
-  CHANGES_OFTEN            = 1 << 18, ENCODED_AGAINST_TICKCOUNT = 1 << 19
+  Unsigned              = 1 <<  0, Coord                   = 1 <<  1,
+  NoScale               = 1 <<  2, RoundDown               = 1 <<  3,
+  RoundUp               = 1 <<  4, Normal                  = 1 <<  5,
+  Exclude               = 1 <<  6, XYZE                    = 1 <<  7,
+  InsideArray           = 1 <<  8, ProxyAlways             = 1 <<  9,
+  VectorElem            = 1 << 10, Collapsible             = 1 << 11,
+  CoordMP               = 1 << 12, CoordMPLowPrecision     = 1 << 13,
+  CoordMPIntegral       = 1 << 14, CellCoord               = 1 << 15,
+  CellCoordLowPrecision = 1 << 16, CellCoordIntegral       = 1 << 17,
+  ChangesOften          = 1 << 18, EncodedAgainstTickcount = 1 << 19
 )
 
 Type = enum(
-  INT        = 0, FLOAT  = 1, VECTOR = 2,
-  VECTOR_XY  = 3, STRING = 4, ARRAY  = 5,
-  DATA_TABLE = 6, INT64  = 7
+  Int       = 0, Float  = 1, Vector = 2,
+  VectorXY  = 3, String = 4, Array  = 5,
+  DataTable = 6, Int64  = 7
 )
 
 class Prop(object):
   DELEGATED = (
-    'var_name', 'type',    'flags',   'num_elements',
-    'num_bits', 'dt_name', 'priority'
+    'var_name', 'type',    'flags',    'num_elements',
+    'num_bits', 'dt_name', 'priority', 'low_value',
+    'high_value'
   )
 
   def __init__(self, origin_dt, attributes):
@@ -137,13 +138,13 @@ class Prop(object):
     return _repr.format(odt, vn, t, f, p, b, e, dt)
 
   def _type(self):
-    for k, v in Type._enums.items():
+    for k, v in Type.tuples.items():
       if self.type == v:
         return k.lower()
 
   def _flags(self):
     named_flags = []
-    for k, v in Flag._enums.items():
+    for k, v in Flag.tuples.items():
       if self.flags & v:
         named_flags.append(k.lower())
     return named_flags
@@ -158,10 +159,10 @@ class Table(object):
     lenprops = len(self.props)
     return '<{0} {1} ({2} props)>'.format(cls, self.dt, lenprops)
 
-test_exclude = lambda prop: prop.flags & Flag.EXCLUDE
-test_not_exclude = lambda prop: prop.flags ^ Flag.EXCLUDE
-test_inside_array = lambda prop: prop.flags & Flag.INSIDE_ARRAY
-test_data_table = lambda prop: prop.type == Type.DATA_TABLE
+test_exclude = lambda prop: prop.flags & Flag.Exclude
+test_not_exclude = lambda prop: prop.flags ^ Flag.Exclude
+test_inside_array = lambda prop: prop.flags & Flag.InsideArray
+test_data_table = lambda prop: prop.type == Type.DataTable
 test_baseclass = lambda prop: prop.name == 'baseclass'
 
 class SendTable(Table):
@@ -177,7 +178,9 @@ class SendTable(Table):
         'num_elements': prop.num_elements,
         'num_bits': prop.num_bits,
         'dt_name': prop.dt_name,
-        'priority': prop.priority
+        'priority': prop.priority,
+        'low_value': prop.low_value,
+        'high_value': prop.high_value
       }
       props.append(Prop(dt, attributes))
 
@@ -233,7 +236,7 @@ class RecvTable(Table):
 
       while cursor < proplen:
         prop = rt.props[cursor]
-        is_co_prop = (pr == 64 and (prop.flags & Flag.CHANGES_OFTEN))
+        is_co_prop = (pr == 64 and (prop.flags & Flag.ChangesOften))
 
         if is_co_prop or prop.priority == pr:
           rt = rt.swap(rt.props[hole], prop)

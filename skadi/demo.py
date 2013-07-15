@@ -7,7 +7,7 @@ import re
 
 from skadi.generated import demo_pb2 as pb_d
 from skadi.generated import netmessages_pb2 as pb_n
-from skadi.io import protobuf as pb_io
+from skadi.io import protobuf as io_pb
 from skadi.state.demo import *
 
 DEMO_PRESYNC = (
@@ -35,7 +35,7 @@ class Demo(object):
       if isinstance(pbmsg, pb_d.CDemoSyncTick):
         break
       elif isinstance(pbmsg, pb_d.CDemoPacket):
-        packet_io = pb_io.PacketIO.wrapping(pbmsg.data)
+        packet_io = io_pb.PacketIO.wrapping(pbmsg.data)
         for _pbmsg in packet_io:
           matches = re.match(r'C(SVC|NET)Msg_(.*)$', _pbmsg.__class__.__name__)
           attr = underscore(matches.group(2))
@@ -46,8 +46,13 @@ class Demo(object):
         attr = underscore(matches.group(1))
         setattr(dem, attr, pbmsg)
       else:
-        err = '! pb_io {0}: open an issue at github.com/onethirtyfive/skadi'
+        err = '! io_pb {0}: open an issue at github.com/onethirtyfive/skadi'
         print err.format(_cls)
+
+    for send_table in dem.send_tables.values():
+      for i, prop in enumerate(send_table.props):
+        if prop.type == Type.Array:
+          prop.array_prop = send_table.props[i - 1]
 
     dem.flatten_send_tables()
     dem.chronology = demo_io.chronologize()
@@ -128,7 +133,7 @@ class Demo(object):
 
   @send_tables.setter
   def send_tables(self, pbmsg):
-    packet_io = pb_io.PacketIO.wrapping(pbmsg.data)
+    packet_io = io_pb.PacketIO.wrapping(pbmsg.data)
     send_tables = {}
     for svc_message in iter(packet_io):
       st = SendTable.construct(svc_message)
