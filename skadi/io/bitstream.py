@@ -2,16 +2,9 @@ import bitstring
 import io
 import pdb
 
-PVS_ENT = 0b001
-PVS_BYE = 0b010
-PVS_DEL = 0b100
-
 SIZEOF_BYTE = 4
 SIZEOF_BIT = SIZEOF_BYTE * 8
 FORMAT = 'uintle:{0}'.format(SIZEOF_BIT)
-
-class EntityHeaderUnavailable(EOFError):
-  pass
 
 class BitstreamIO(object):
   @classmethod
@@ -64,43 +57,7 @@ class BitstreamIO(object):
       value |= (bits & 0x7f) << run
       run += 7
 
-      if not (bits >> 7) or run == 28:
+      if not (bits >> 7) or run == 35:
         break
 
     return value
-
-  def read_entity_header(self, base_ent_index):
-    try:
-      value = self.read(6)
-
-      if value & 0x30:
-        a = (value >> 4) & 3
-        b = 16 if a == 3 else 0
-        value = self.read(4 * a + b) << 4 | (value & 0xf)
-
-      flags = 0
-      if not self.read(1):
-        if self.read(1):
-          flags |= PVS_ENT
-      else:
-        flags |= PVS_BYE
-        if self.read(1):
-          flags |= PVS_DEL
-    except IndexError:
-      raise EntityHeaderUnavailable()
-
-    return base_ent_index + value + 1, flags
-
-  def read_entity_delta_props(self):
-    edp, cursor = [], -1
-    while True:
-      consecutive = self.read(1)
-      if consecutive:
-        cursor += 1
-      else:
-        offset = self.read_varint_35()
-        if offset == 0x3fff:
-          return edp
-        else:
-          cursor += offset + 1
-      edp.append(cursor)

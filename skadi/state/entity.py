@@ -1,31 +1,36 @@
-from skadi.io import property as io_pr
+import pprint
+
+class Template(object):
+  def __init__(self, class_id, recv_table, baseline):
+    self.class_id = class_id
+    self.recv_table = recv_table
+    self.baseline = baseline
+
+  def __repr__(self):
+    return '{0} ({1} props)'.format(self.recv_table.dt, len(self.baseline))
 
 class Instance(object):
   native_attrs = ('template', '_state')
 
-  def __init__(_id, template, delta=None):
+  def __init__(self, _id, template, delta=None):
     self.id = _id
     self.template = template
-    self._state = template.baseline.deepcopy()
+    self._state = template.baseline.copy()
     if delta:
       self.apply(delta)
 
-  def __getattr__(self, name):
-    prop = next((p for p in self.entity.props if p.var_name == name), None)
-    if not prop or name in Snapshot.native_attrs:
-      return super(Snapshot, self).__getattr__(name)
+  def __iter__(self):
+    return iter(self._state.items())
+
+  def __repr__(self):
+    dt, state = self.template.recv_table.dt, self._state
+    return '<Instance dt: {0}, state:{1}>'.format(dt, state)
+
+  def get(self, name):
     return self._state[name]
 
-  def __setattr__(self, name, value):
-    prop = next((p for p in self.entity.props if p.var_name == name), None)
-    if not prop or name in Snapshot.native_attrs:
-      super(Snapshot, self).__setattr__(name, value)
+  def set(self, name, value):
     self._state[name] = value
 
-  def apply(delta):
-    [setattr(copy, n, v) for n,v in delta.items()]
-
-class Template(object):
-  def __init__(recv_table, baseline):
-    self.recv_table = recv_table
-    self.baseline = baseline
+  def apply(self, delta):
+    [self.set(n, v) for n,v in delta.items()]

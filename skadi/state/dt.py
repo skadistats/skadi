@@ -1,95 +1,12 @@
-import itertools
-
 from skadi import enum
+from skadi.state import *
 
-class Class(object):
-  def __init__(self, _id, name, dt):
-    self.id = _id
-    self.dt = dt
-    self.name = name
-
-  def __repr__(self):
-    _id = self.id
-    dtn = self.dt
-    name = self.name
-    return "<Class {0} '{1}' ({2})>".format(_id, name, dtn)
-
-class GameEvent(object):
-  def __init__(self, _id, name, keys):
-    self.id = _id
-    self.name = name
-    self.keys = keys
-
-  def __repr__(self):
-    _id, n= self.id, self.name
-    lenkeys = len(self.keys)
-    return "<GameEvent {0} '{1}' ({2} keys)>".format(_id, n, lenkeys)
-
-class String(object):
-  def __init__(self, name, data):
-    self.name = name
-    self.data = data
-
-  def __repr__(self):
-    n, d = self.name, self.data
-    return "<String '{0}' ({1} bytes)>".format(n, d)
-
-class StringTable(object):
-  def __init__(self, name, flags, items, items_clientside):
-    self.name = name
-    self.items = items
-    self.items_clientside = items_clientside
-    self.flags = flags
-
-  def __repr__(self):
-    n, f = self.name, hex(int(self.flags))
-    lenitems = len(self.items)
-    lenitemsc = len(self.items_clientside)
-    _repr = "<StringTable '{0}' f:{1} ({2} items, {3} items clientside)"
-    return _repr.format(n, f, lenitems, lenitemsc)
-
+test_baseclass = lambda prop: prop.name == 'baseclass'
 test_collapsible = lambda prop: prop.flags & Flag.Collapsible
-
-class Flattener(object):
-  def __init__(self, demo):
-    self.demo = demo
-
-  def flatten(self, st):
-    props = self._build(st, [], self._aggregate_exclusions(st))
-    return RecvTable.construct(st.dt, props)
-
-  def _build(self, st, onto, excl):
-    non_dt_props = self._compile(st, onto, excl)
-
-    for prop in non_dt_props:
-      onto.append(prop)
-
-    return onto
-
-  def _compile(self, st, onto, excl, collapsed=None):
-    collapsed = collapsed or []
-
-    def test_excluded(prop):
-      return (st.dt, prop.var_name) not in excl
-
-    for prop in st.dt_props:
-      if test_data_table(prop) and test_excluded(prop):
-        _st = self.demo.send_tables[prop.dt_name]
-        if test_collapsible(prop):
-          collapsed += self._compile(_st, onto, excl, collapsed)
-        else:
-          self._build(_st, onto, excl)
-
-    return collapsed + filter(test_excluded, st.non_dt_props)
-
-  def _aggregate_exclusions(self, st):
-    def recurse(_dt_prop):
-      st = self.demo.send_tables[_dt_prop.dt_name]
-      return self._aggregate_exclusions(st)
-
-    inherited = map(recurse, st.dt_props)
-
-    return st.exclusions + list(itertools.chain(*inherited))
+test_data_table = lambda prop: prop.type == Type.DataTable
+test_exclude = lambda prop: prop.flags & Flag.Exclude
+test_inside_array = lambda prop: prop.flags & Flag.InsideArray
+test_not_exclude = lambda prop: prop.flags ^ Flag.Exclude
 
 Flag = enum(
   Unsigned              = 1 <<  0, Coord                   = 1 <<  1,
@@ -158,12 +75,6 @@ class Table(object):
     cls = self.__class__.__name__
     lenprops = len(self.props)
     return '<{0} {1} ({2} props)>'.format(cls, self.dt, lenprops)
-
-test_exclude = lambda prop: prop.flags & Flag.Exclude
-test_not_exclude = lambda prop: prop.flags ^ Flag.Exclude
-test_inside_array = lambda prop: prop.flags & Flag.InsideArray
-test_data_table = lambda prop: prop.type == Type.DataTable
-test_baseclass = lambda prop: prop.name == 'baseclass'
 
 class SendTable(Table):
   @classmethod

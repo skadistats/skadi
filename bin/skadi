@@ -4,17 +4,20 @@ import io
 import math
 import optparse
 import os
+import pprint
 import sys
 
 pwd = os.path.dirname(__file__)
 root = os.path.join(pwd, '..')
 sys.path.append(root)
 
-from skadi.demo import Demo
+from skadi import demo
 from skadi.generated import netmessages_pb2 as pb_n
+from skadi.state import entity as ent
+from skadi.io import bitstream as io_bs
+from skadi.io import entity as io_en
 from skadi.io import property as io_pr
 from skadi.io import protobuf as io_pb
-from skadi.io import bitstream as io_bs
 
 option_parser = optparse.OptionParser()
 (options, args) = option_parser.parse_args()
@@ -22,45 +25,49 @@ option_parser = optparse.OptionParser()
 for arg in args:
   print '> parsing {0}'.format(os.path.basename(arg))
 
+  # Build a demo from the file.
   stream = io.open(os.path.join(root, arg), 'r+b')
   demo_io = io_pb.DemoIO(stream)
-  dem = Demo.build(demo_io)
+  dem = demo.Demo.build(demo_io)
 
-  # feel free to inspect built demo here with print statements
-  tick, offset = dem.chronology.epochs.items()[0]
+  # Let's go to the 4th FullPacket.
+  tick, offset = dem.chronology.epochs.items()[3]
   demo_io.seek(offset)
-
-  _szclass = int(math.ceil(math.log(dem.server_info['max_classes'], 2)))
-
   pbmsg = demo_io.read_message()
+
+  snapshot = demo.Snapshot()
+
+  dem.string_tables = pbmsg.string_table
+  dem.generate_entity_templates()
+
   for _pbmsg in io_pb.PacketIO.wrapping(pbmsg.packet.data):
     if isinstance(_pbmsg, pb_n.CSVCMsg_PacketEntities):
-      ib_st = dem.string_tables['instancebaseline']
-
-      ent_id, i = -1, 0
-      bs = io_bs.BitstreamIO(_pbmsg.entity_data)
+      i, index = 0, -1
+      bs_io = io_bs.BitstreamIO(_pbmsg.entity_data)
 
       while i < _pbmsg.updated_entries:
-        ent_id, ent_flags = bs.read_entity_header(ent_id)
-        ent_class = bs.read(_szclass)
-        ent_serial = bs.read(10)
-        ent_dp = bs.read_entity_delta_props()
+        index, flags = io_en.HeaderReader(bs_io).read(index)
 
-        _class = dem.class_info[ent_class].dt
-        recv_table = dem.recv_tables[_class]
+        if flags & io_en.PVS.Enter:
+          reader = io_en.EnterPVSPreludeReader(bs_io)
+          cls, serial, dp = reader.read(dem.class_bits)
+          recv_table = dem.recv_tables[dem.class_info[cls].dt]
 
-        print
-        print '*** DT: {0}'.format(recv_table.dt)
-        print
+          delta = {}
+          for prop_index in dp:
+            prop = recv_table.props[prop_index]
+            delta[prop.var_name] = io_pr.Reader.read(prop, bs_io)
 
-        for dp in ent_dp:
-          prop = recv_table.props[dp]
-          ff = prop._flags()
-          ff = '({0})'.format(','.join(ff)) if ff else '(no flags)'
-          print "{0} '{1}' {2}".format(prop._type(), prop.var_name, ff)
-          print '  {0}'.format(io_pr.Reader.read(prop, bs))
+          instance = ent.Instance(index, dem.templates[cls], delta=delta)
+          snapshot.instances[index] = instance
+        elif flags & io_en.PVS.Leave:
+          raise NotImplementedError('entity leave')
+        else:
+          raise NotImplementedError('entity update')
 
         i += 1
 
-      #baseline = next((x for x in ib_st.items if x.name == e_cls), None)
-      #_bs = io_bs.BitstreamIO(baseline)
+  for index, instance in snapshot.instances.items():
+    print 'entity #{0}, {1}'.format(index, instance.template.recv_table.dt)
+    for state, value in iter(instance):
+      print '  {0}: {1}'.format(state, value)

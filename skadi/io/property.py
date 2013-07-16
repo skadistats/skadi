@@ -2,7 +2,7 @@ import bitstring
 import math
 import sys
 
-from skadi.demo import Flag, Type
+from skadi.state.dt import Flag, Type
 
 TYPE_EXCLUSIONS = ('DataTable')
 BY_TYPE = {v:k for k,v in Type.tuples.items() if k not in TYPE_EXCLUSIONS}
@@ -25,7 +25,7 @@ class IntReader(Reader):
   def read(self):
     if self.prop.flags & Flag.EncodedAgainstTickcount:
       if self.prop.flags & Flag.Unsigned:
-        return stream.read_var_35()
+        return self.io.read_varint_35()
       else:
         value = self.io.read_varint_35()
         return (-(value & 1)) ^ (value >> 1)
@@ -73,7 +73,17 @@ class FloatReader(Reader):
       bit_array = bitstring.BitArray(uint=self.io.read(32), length=32)
       return bit_array.float
     elif self.prop.flags & Flag.Normal:
-      raise NotImplementedError('! Normal')
+      sign = self.io.read(1)
+      bit_array = bitstring.BitArray(uint=self.io.read(11), length=32)
+
+      value = bit_array.float
+      if (bit_array >> 31):
+        value += 4.2949673e9
+      value *= 4.885197850512946e-4
+      if sign:
+        value *= -1
+
+      return value
     elif self.prop.flags & Flag.CellCoord:
       value = self.io.read(self.prop.num_bits)
       return value + 0.03125 * self.io.read(5)
@@ -152,12 +162,14 @@ class Int64Reader(Reader):
     super(Int64Reader, self).__init__(prop, io)
 
   def read(self):
-    # n.b. edith panics if the int64 is encoded against tick count
+    if self.prop.flags & Flag.EncodedAgainstTickcount:
+      raise NotImplementedError('int64 cant be encoded against tickcount')
+
     negate = False
     second_bits = self.prop.num_bits - 32
 
-    if not self.prop.flags & Flag.Unsigned:
-      second_bits =- 1
+    if not (self.prop.flags & Flag.Unsigned):
+      second_bits -= 1
       if self.io.read(1):
         negate = True
 
