@@ -252,11 +252,11 @@ class Demo(object):
       dp = io_en.PropListReader(bs_io).read()
       recv_table = self.recv_tables[self.class_info[cls].dt]
 
-      delta = collections.OrderedDict()
+      baseline = collections.OrderedDict()
       for prop_index in dp:
         prop = recv_table.props[prop_index]
-        delta[prop.var_name] = io_pr.Reader.read(prop, bs_io)
+        baseline[prop.var_name] = io_pr.Reader.read(prop, bs_io)
 
-      templates[cls] = ent.Template(cls, recv_table, delta)
+      templates[cls] = ent.Template(cls, recv_table, baseline)
 
     self.templates = templates

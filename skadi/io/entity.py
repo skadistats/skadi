@@ -1,4 +1,5 @@
 from skadi import enum
+from skadi.io import property as io_pr
 
 PVS = enum(Enter = 0x01, Leave = 0x02, Delete = 0x04)
 
@@ -32,7 +33,7 @@ class PropListReader(object):
     self.io = io
 
   def read(self):
-    dp, cursor = [], -1
+    pl, cursor = [], -1
     while True:
       consecutive = self.io.read(1)
       if consecutive:
@@ -40,10 +41,10 @@ class PropListReader(object):
       else:
         offset = self.io.read_varint_35()
         if offset == 0x3fff:
-          return dp
+          return pl
         else:
           cursor += offset + 1
-      dp.append(cursor)
+      pl.append(cursor)
 
 class EnterPVSPreludeReader(object):
   def __init__(self, io):
@@ -52,3 +53,16 @@ class EnterPVSPreludeReader(object):
   def read(self, class_bits):
     plr = PropListReader(self.io)
     return self.io.read(class_bits), self.io.read(10), plr.read()
+
+class PropReader(object):
+  def __init__(self, io):
+    self.io = io
+
+  def read(self, prop_list, recv_table):
+    delta = {}
+
+    for prop_index in prop_list:
+      prop = recv_table.props[prop_index]
+      delta[prop.var_name] = io_pr.Reader.read(prop, self.io)
+
+    return delta

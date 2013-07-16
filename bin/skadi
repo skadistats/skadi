@@ -12,6 +12,7 @@ root = os.path.join(pwd, '..')
 sys.path.append(root)
 
 from skadi import demo
+from skadi.generated import demo_pb2 as pb_d
 from skadi.generated import netmessages_pb2 as pb_n
 from skadi.state import entity as ent
 from skadi.io import bitstream as io_bs
@@ -33,41 +34,58 @@ for arg in args:
   # Let's go to the 4th FullPacket.
   tick, offset = dem.chronology.epochs.items()[3]
   demo_io.seek(offset)
-  pbmsg = demo_io.read_message()
+  iter_d = iter(demo_io)
 
   snapshot = demo.Snapshot()
 
-  dem.string_tables = pbmsg.string_table
-  dem.generate_entity_templates()
+  for pbmsg in iter_d:
+    if isinstance(pbmsg, pb_d.CDemoFullPacket):
+      data = pbmsg.packet.data
+      try:
+        dem.string_tables = pbmsg.string_table
+        dem.generate_entity_templates()
+      except KeyError:
+        continue
+    elif isinstance(pbmsg, pb_d.CDemoPacket):
+      data = pbmsg.data
 
-  for _pbmsg in io_pb.PacketIO.wrapping(pbmsg.packet.data):
-    if isinstance(_pbmsg, pb_n.CSVCMsg_PacketEntities):
-      i, index = 0, -1
-      bs_io = io_bs.BitstreamIO(_pbmsg.entity_data)
+    for _pbmsg in io_pb.PacketIO.wrapping(data):
+      if isinstance(_pbmsg, pb_n.CNETMsg_Tick):
+        print 'tick: {0}'.format(_pbmsg.tick)
+      if isinstance(_pbmsg, pb_n.CSVCMsg_PacketEntities):
+        index, i = -1, 0
+        bs_io = io_bs.BitstreamIO(_pbmsg.entity_data)
 
-      while i < _pbmsg.updated_entries:
-        index, flags = io_en.HeaderReader(bs_io).read(index)
+        while i < _pbmsg.updated_entries:
+          index, flags = io_en.HeaderReader(bs_io).read(index)
 
-        if flags & io_en.PVS.Enter:
-          reader = io_en.EnterPVSPreludeReader(bs_io)
-          cls, serial, dp = reader.read(dem.class_bits)
-          recv_table = dem.recv_tables[dem.class_info[cls].dt]
+          if flags & io_en.PVS.Enter:
+            reader = io_en.EnterPVSPreludeReader(bs_io)
+            cls, serial, prop_list = reader.read(dem.class_bits)
+            dt = dem.class_info[cls].dt
+            print 'create: {0} ({1})'.format(index, dt)
+            recv_table = dem.recv_tables[dt]
+            delta = io_en.PropReader(bs_io).read(prop_list, recv_table)
+            instance = ent.Instance(index, dem.templates[cls], delta=delta)
 
-          delta = {}
-          for prop_index in dp:
-            prop = recv_table.props[prop_index]
-            delta[prop.var_name] = io_pr.Reader.read(prop, bs_io)
+            snapshot.instances[index] = instance
+          elif flags & io_en.PVS.Leave:
+            if flags & io_en.PVS.Delete:
+              dt = snapshot.instances[index].template.recv_table.dt
+              print 'delete: {0} ({1})'.format(index, dt)
+              del snapshot.instances[index]
+          else:
+            dt = snapshot.instances[index].template.recv_table.dt
+            print 'update: {0} ({1})'.format(index, dt)
+            instance = snapshot.instances[index]
+            prop_list = io_en.PropListReader(bs_io).read()
+            recv_table = instance.template.recv_table
+            delta = io_en.PropReader(bs_io).read(prop_list, recv_table)
+            instance.apply(delta)
 
-          instance = ent.Instance(index, dem.templates[cls], delta=delta)
-          snapshot.instances[index] = instance
-        elif flags & io_en.PVS.Leave:
-          raise NotImplementedError('entity leave')
-        else:
-          raise NotImplementedError('entity update')
+          i += 1
 
-        i += 1
-
-  for index, instance in snapshot.instances.items():
-    print 'entity #{0}, {1}'.format(index, instance.template.recv_table.dt)
-    for state, value in iter(instance):
-      print '  {0}: {1}'.format(state, value)
+        if _pbmsg.is_delta:
+          while bs_io.read(1):
+            index = stream.get_bits(11)
+            del snapshot.instances[index]
