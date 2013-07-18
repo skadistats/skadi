@@ -1,5 +1,4 @@
 from skadi import enum
-from skadi.state import *
 
 test_baseclass = lambda prop: prop.name == 'baseclass'
 test_collapsible = lambda prop: prop.flags & Flag.Collapsible

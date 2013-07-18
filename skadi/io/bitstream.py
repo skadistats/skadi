@@ -1,12 +1,11 @@
 import bitstring
 import io
-import pdb
 
 SIZEOF_BYTE = 4
 SIZEOF_BIT = SIZEOF_BYTE * 8
 FORMAT = 'uintle:{0}'.format(SIZEOF_BIT)
 
-class BitstreamIO(object):
+class Bitstream(object):
   @classmethod
   def wrapping(cls, bytes):
     return cls(bytes)

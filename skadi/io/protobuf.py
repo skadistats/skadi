@@ -1,4 +1,3 @@
-import collections as c
 import io
 import math
 import snappy
@@ -18,13 +17,13 @@ class InvalidProtobufMessage(Exception):
 class InvalidDemo(Exception):
   pass
 
-class IOWrapper(object):
+class Stream(object):
   def __init__(self, io):
     self._io = io
 
   def __iter__(self):
     def next_message():
-      return self.read_message()
+      return self.read()
     return iter(next_message, None)
 
   # Algorithm "borrowed" from Google protobuf library.
@@ -53,7 +52,7 @@ class IOWrapper(object):
     self._io.read(bytesize)
     return value
 
-class PacketIO(IOWrapper):
+class Packet(Stream):
   PARSER_BY_SIGNATURE = {
     pb_n.net_SetConVar:         pb_n.CNETMsg_SetConVar,
     pb_n.net_SignonState:       pb_n.CNETMsg_SignonState,
@@ -80,9 +79,9 @@ class PacketIO(IOWrapper):
     return cls(io.BufferedReader(io.BytesIO(bytes)))
 
   def __init__(self, io):
-    super(PacketIO, self).__init__(io)
+    super(Packet, self).__init__(io)
 
-  def read_message(self):
+  def read(self):
     try:
       sig = self.read_varint_32()
       size = self.read_varint_32()
@@ -90,11 +89,11 @@ class PacketIO(IOWrapper):
     except EOFError, e:
       return None
 
-    if sig not in PacketIO.PARSER_BY_SIGNATURE:
+    if sig not in Packet.PARSER_BY_SIGNATURE:
       msg = 'please update protobuf definitions: {0}'.format(sig)
       raise InvalidProtobufMessage(msg)
 
-    message = PacketIO.PARSER_BY_SIGNATURE[sig]()
+    message = Packet.PARSER_BY_SIGNATURE[sig]()
     message.ParseFromString(data)
 
     return message
@@ -102,14 +101,7 @@ class PacketIO(IOWrapper):
   def rewind(self):
     self._io.seek(0)
 
-class Chronology(object):
-  def __init__(self):
-    self.epochs = c.OrderedDict()
-
-  def note(self, tick, pos):
-    self.epochs[tick] = pos
-
-class DemoIO(IOWrapper):
+class Demo(Stream):
   HEADER = "PBUFDEM\0"
 
   PROTOBUF_CLASS_BY_SIGNATURE = {
@@ -130,10 +122,10 @@ class DemoIO(IOWrapper):
   }
 
   def __init__(self, io):
-    super(DemoIO, self).__init__(io)
+    super(Demo, self).__init__(io)
     self._verify()
 
-  def read_message(self):
+  def read(self):
     try:
       sig = self.read_varint_32()
       tick = self.read_varint_32()
@@ -146,11 +138,11 @@ class DemoIO(IOWrapper):
     except EOFError, e:
       return None
 
-    if sig not in DemoIO.PROTOBUF_CLASS_BY_SIGNATURE:
+    if sig not in Demo.PROTOBUF_CLASS_BY_SIGNATURE:
       msg = 'please update protobuf definitions: {0}'.format(sig)
       raise InvalidProtobufMessage(msg)
 
-    message = DemoIO.PROTOBUF_CLASS_BY_SIGNATURE[sig]()
+    message = Demo.PROTOBUF_CLASS_BY_SIGNATURE[sig]()
     message.ParseFromString(data)
 
     return message
@@ -161,28 +153,11 @@ class DemoIO(IOWrapper):
   def tell(self):
     return self._io.tell()
 
-  def chronologize(self):
-    chronology = Chronology()
-    iter_d = iter(self)
-    pbmsg = next(iter_d, None) # skip the stray CDemoPacket
-    pos = self.tell()
-    pbmsg = next(iter_d, None)
-    while not isinstance(pbmsg, pb_d.CDemoStop):
-      if isinstance(pbmsg, pb_d.CDemoFullPacket):
-        packet_io = PacketIO.wrapping(pbmsg.packet.data)
-        for _pbmsg in iter(packet_io):
-          if isinstance(_pbmsg, pb_n.CNETMsg_Tick):
-            chronology.note(_pbmsg.tick, pos)
-            break
-      pos = self.tell()
-      pbmsg = next(iter_d, None)
-    return chronology
-
   def rewind(self):
-    self._io.seek(len(DemoIO.HEADER) + 4)
+    self._io.seek(len(Demo.HEADER) + 4)
 
   def _verify(self):
-    header = self._io.read(len(DemoIO.HEADER))
+    header = self._io.read(len(Demo.HEADER))
     next_4 = self._io.read(4) # offset of game info at end of file
-    if header != DemoIO.HEADER:
+    if header != Demo.HEADER:
       raise InvalidDemo()

@@ -1,7 +1,5 @@
-import sys
-
-from skadi.generated import usermessages_pb2 as um
-from skadi.generated import dota_usermessages_pb2 as dota_um
+from skadi.generated import usermessages_pb2 as pb_um
+from skadi.generated import dota_usermessages_pb2 as pb_dota_um
 
 DOTA_UM_ID_BASE = 64
 
@@ -53,7 +51,7 @@ def parse(pbmsg):
   if _id == 106: # wtf one-off?
     cls = 'CDOTA_UM_GamerulesStateChanged'
   else:
-    ns = um if _id < DOTA_UM_ID_BASE else dota_um
+    ns = pb_um if _id < DOTA_UM_ID_BASE else pb_dota_um
     infix = 'DOTA' if ns is dota_um else ''
     cls = 'C{0}UserMsg_{1}'.format(infix, BY_ID[_id])
 

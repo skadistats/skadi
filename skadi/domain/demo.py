@@ -1,41 +1,16 @@
 from __future__ import absolute_import
 
 import collections
-import io
 import itertools
-import math
-import re
 
-from skadi.generated import demo_pb2 as pb_d
-from skadi.generated import netmessages_pb2 as pb_n
-from skadi.io import bitstream as io_bs
-from skadi.io import entity as io_en
-from skadi.io import property as io_pr
-from skadi.io import protobuf as io_pb
-
-from skadi.state import class_info as ci
-from skadi.state import dt
-from skadi.state import entity as ent
-from skadi.state import game_event as ge
-from skadi.state import string_table as st
-
-class Snapshot(object):
-  def __init__(self):
-    self.instances = {}
-
-DEMO_PRESYNC = (
-  pb_d.CDemoFileHeader, pb_d.CDemoSendTables, pb_d.CDemoClassInfo,
-  pb_d.CDemoStringTables
-)
-
-SVC_RELEVANT = (
-  pb_n.CSVCMsg_ServerInfo, pb_n.CSVCMsg_VoiceInit, pb_n.CSVCMsg_GameEventList,
-  pb_n.CSVCMsg_SetView
-)
-
-def underscore(_str):
-  s1 = re.sub('(.)([A-Z][a-z]+)', r'\1_\2', _str)
-  return re.sub('([a-z0-9])([A-Z])', r'\1_\2', s1).lower()
+from skadi.domain import class_info as d_ci
+from skadi.domain import dt as d_dt
+from skadi.domain import entity as d_ent
+from skadi.domain import game_event as d_ge
+from skadi.domain import string_table as d_st
+from skadi.io import bitstream as io_b
+from skadi.io import protobuf as io_p
+from skadi.reader import entity as r_ent
 
 class Flattener(object):
   def __init__(self, demo):
@@ -43,7 +18,7 @@ class Flattener(object):
 
   def flatten(self, st):
     props = self._build(st, [], self._aggregate_exclusions(st))
-    return dt.RecvTable.construct(st.dt, props)
+    return d_dt.RecvTable.construct(st.dt, props)
 
   def _build(self, st, onto, excl):
     non_dt_props = self._compile(st, onto, excl)
@@ -60,9 +35,9 @@ class Flattener(object):
       return (st.dt, prop.var_name) not in excl
 
     for prop in st.dt_props:
-      if dt.test_data_table(prop) and test_excluded(prop):
+      if d_dt.test_data_table(prop) and test_excluded(prop):
         _st = self.demo.send_tables[prop.dt_name]
-        if dt.test_collapsible(prop):
+        if d_dt.test_collapsible(prop):
           collapsed += self._compile(_st, onto, excl, collapsed)
         else:
           self._build(_st, onto, excl)
@@ -79,48 +54,6 @@ class Flattener(object):
     return st.exclusions + list(itertools.chain(*inherited))
 
 class Demo(object):
-  @classmethod
-  def build(cls, demo_io):
-    dem = cls()
-
-    # Process messages before CDemoSyncTick.
-    for pbmsg in iter(demo_io):
-      if isinstance(pbmsg, pb_d.CDemoSyncTick):
-        break
-      elif isinstance(pbmsg, pb_d.CDemoPacket):
-        packet_io = io_pb.PacketIO.wrapping(pbmsg.data)
-        for _pbmsg in packet_io:
-          match = re.match(r'C(SVC|NET)Msg_(.*)$', _pbmsg.__class__.__name__)
-          attr = underscore(match.group(2))
-          if isinstance(_pbmsg, SVC_RELEVANT):
-            setattr(dem, attr, _pbmsg)
-      elif isinstance(pbmsg, DEMO_PRESYNC):
-        matches = re.match(r'CDemo(.*)$', pbmsg.__class__.__name__)
-        attr = underscore(matches.group(1))
-        setattr(dem, attr, pbmsg)
-      else:
-        err = '! io_pb {0}: open an issue at github.com/onethirtyfive/skadi'
-        print err.format(pbmsg.__class__.__name__)
-
-    # For array props, we need to associate the element property.
-    for send_table in dem.send_tables.values():
-      for i, prop in enumerate(send_table.props):
-        if prop.type == dt.Type.Array:
-          prop.array_prop = send_table.props[i - 1]
-
-    # Flatten 'send tables' into 'receive tables' of communicable prop specs.
-    dem.flatten_send_tables()
-
-    # Parse remainder of demo for a chronology of CDemoFullPacket.
-    max_classes = dem.server_info['max_classes']
-    dem.class_bits = int(math.ceil(math.log(max_classes, 2)))
-    dem.chronology = demo_io.chronologize()
-
-    # Generate entity templates upon which instances will be based.
-    dem.generate_entity_templates()
-
-    return dem
-
   def __init__(self):
     self._file_header = None
     self._server_info = None
@@ -186,7 +119,7 @@ class Demo(object):
     for desc in pbmsg.descriptors:
       _id, name = desc.eventid, desc.name
       keys = [(k.type, k.name) for k in desc.keys]
-      game_event_list[_id] = ge.GameEvent(_id, name, keys)
+      game_event_list[_id] = d_ge.GameEvent(_id, name, keys)
     self._game_event_list = game_event_list
 
   @property
@@ -195,10 +128,10 @@ class Demo(object):
 
   @send_tables.setter
   def send_tables(self, pbmsg):
-    packet_io = io_pb.PacketIO.wrapping(pbmsg.data)
+    packet_io = io_p.Packet.wrapping(pbmsg.data)
     send_tables = {}
     for svc_message in iter(packet_io):
-      st = dt.SendTable.construct(svc_message)
+      st = d_dt.SendTable.construct(svc_message)
       send_tables[st.dt] = st
     self._send_tables = send_tables
 
@@ -215,7 +148,7 @@ class Demo(object):
     class_info = {}
     for c in pbmsg.classes:
       _id, dt, name = c.class_id, c.table_name, c.network_name
-      class_info[c.class_id] = ci.Class(_id, name, dt)
+      class_info[c.class_id] = d_ci.Class(_id, name, dt)
     self._class_info = class_info
 
   @property
@@ -228,11 +161,11 @@ class Demo(object):
     for t in pbmsg.tables:
       _ii, _iic = [], []
       for i in t.items:
-        _ii.append(st.String(i.str, i.data))
+        _ii.append(d_st.String(i.str, i.data))
       for i in t.items_clientside:
-        _iic.append(st.String(i.str, i.data))
+        _iic.append(d_st.String(i.str, i.data))
       name, flags = t.table_name, t.table_flags
-      string_tables[name] = st.StringTable(name, flags, _ii, _iic)
+      string_tables[name] = d_st.StringTable(name, flags, _ii, _iic)
     self._string_tables = string_tables
 
   def flatten_send_tables(self):
@@ -247,16 +180,17 @@ class Demo(object):
 
     templates = {}
     for string in ib_st.items:
+      io = io_b.Bitstream(string.data)
       cls = int(string.name)
-      bs_io = io_bs.BitstreamIO(string.data)
-      dp = io_en.PropListReader(bs_io).read()
       recv_table = self.recv_tables[self.class_info[cls].dt]
 
       baseline = collections.OrderedDict()
+      dp = r_ent.read_prop_list(io)
       for prop_index in dp:
         prop = recv_table.props[prop_index]
-        baseline[prop.var_name] = io_pr.Reader.read(prop, bs_io)
+        key = '{0}.{1}'.format(prop.origin_dt, prop.var_name)
+        baseline[key] = r_ent.read_prop(io, prop)
 
-      templates[cls] = ent.Template(cls, recv_table, baseline)
+      templates[cls] = d_ent.Template(cls, recv_table, baseline)
 
     self.templates = templates
