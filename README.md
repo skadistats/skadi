@@ -12,16 +12,20 @@ In Progress
 
 Currently, skadi:
 
-* gives access to 100% of protobuf-message-level data (including embedded messages in some of the top-level messages)
-* correctly flattens "send tables" into "receive tables"
-* has scaffolding for interpreting all known 'user messages' (ex. particle management, combat log, chat, and more)
+* flattens "send tables" into "receive tables"
+* creates and uses state containers for entities based off of entity 'baselines'
+* parses packet entities (in both CDemoPacket and CDemoFullPacket) into updates for these containers
+* applies these updates as the replay progresses
+* scaffolds all known 'user messages' (ex. particle management, combat log, chat, and more)
 
 Next, I aim to:
 
-* make state containers for entities based off of receive tables
-* parse packet entities (in both CDemoPacket and CDemoFullPacket) into updates for the containers
 * refine the code and add tests
-* and finally, enable arbirary access of world state in a repo at any game time
+* understand how world state evolves over time
+* author a better API for accessing time-based game state
+* implement user message handling for all interesting types
+* implement game event handling for all interesting types
+* present obtained data in a way much more easily consumed by skadi users (csv, json)
 
 Skadi will likely undergo heavy rewriting as I do this. New to Python.
 
