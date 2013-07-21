@@ -18,6 +18,7 @@ from skadi.io import bitstream as io_b
 from skadi.io import protobuf as io_p
 from skadi.reader import demo as r_demo
 from skadi.reader import entity as r_ent
+from skadi.reader import string_table as r_st
 
 option_parser = optparse.OptionParser()
 (options, args) = option_parser.parse_args()
@@ -30,17 +31,6 @@ for arg in args:
   demo_io = io_p.Demo(stream)
   dem = r_demo.read(demo_io)
 
-  # FIXME: hack--get the string tables from the last fullpacket
-  for tick, offset in reversed(dem.chronology.epochs.items()):
-    demo_io.seek(offset)
-    pbmsg = demo_io.read()
-    st = pbmsg.string_table
-    tn = map(lambda t: t.table_name, st.tables)
-    if 'instancebaseline' in tn:
-      dem.string_tables = pbmsg.string_table
-      dem.generate_entity_templates()
-      break
-
   demo_io.seek(dem.post_sync)
   iter_d = iter(demo_io)
 
@@ -48,20 +38,28 @@ for arg in args:
 
   for pbmsg in iter_d:
     if isinstance(pbmsg, pb_d.CDemoFullPacket):
-      #data = pbmsg.packet.data
-      #try:
-      #  dem.string_tables = pbmsg.string_table
-      #  dem.generate_entity_templates()
-      #except KeyError:
-      #  continue
-      pass
+      data = pbmsg.packet.data
     elif isinstance(pbmsg, pb_d.CDemoPacket):
       data = pbmsg.data
 
     for _pbmsg in io_p.Packet.wrapping(data):
       if isinstance(_pbmsg, pb_n.CNETMsg_Tick):
         print 'tick {0}'.format(_pbmsg.tick)
-      if isinstance(_pbmsg, pb_n.CSVCMsg_PacketEntities):
+      elif isinstance(_pbmsg, pb_n.CSVCMsg_UpdateStringTable):
+        table_id = _pbmsg.table_id
+        table_name = dem.string_tables.keys()[table_id]
+        table = dem.string_tables[table_name]
+        io_bs = io_b.Bitstream(_pbmsg.string_data)
+        items = r_st.read(io_bs, table, _pbmsg.num_changed_entries)
+        for i in items:
+          item = table[i.name]
+          if item:
+            item.data = i.data
+          else:
+            table.items.append(i)
+        if table_name == 'instancebaseline':
+          dem.generate_entity_templates()
+      elif isinstance(_pbmsg, pb_n.CSVCMsg_PacketEntities):
         io = io_b.Bitstream(_pbmsg.entity_data)
 
         c, u, d = r_ent.read(

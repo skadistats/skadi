@@ -11,7 +11,7 @@ class Instance(object):
   def __init__(self, _id, template, delta=None):
     self.id = _id
     self.template = template
-    self.state = template.baseline.copy()
+    self.state = template.baseline.copy() if template else {}
     if delta:
       self.apply(delta)
 

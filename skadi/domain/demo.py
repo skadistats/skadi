@@ -61,9 +61,9 @@ class Demo(object):
     self._game_event_list = None
     self._set_view = None
     self._class_info = None
-    self._string_tables = None
     self._send_tables = None
     self._recv_tables = None
+    self.string_tables = collections.OrderedDict()
 
   def __repr__(self):
     lenst = len(self._send_tables)
@@ -134,6 +134,7 @@ class Demo(object):
       st = d_dt.SendTable.construct(svc_message)
       send_tables[st.dt] = st
     self._send_tables = send_tables
+    self._flatten_send_tables()
 
   @property
   def recv_tables(self):
@@ -151,30 +152,6 @@ class Demo(object):
       class_info[c.class_id] = d_ci.Class(_id, name, dt)
     self._class_info = class_info
 
-  @property
-  def string_tables(self):
-    return self._string_tables
-
-  @string_tables.setter
-  def string_tables(self, pbmsg):
-    string_tables = {}
-    for t in pbmsg.tables:
-      _ii, _iic = [], []
-      for i in t.items:
-        _ii.append(d_st.String(i.str, i.data))
-      for i in t.items_clientside:
-        _iic.append(d_st.String(i.str, i.data))
-      name, flags = t.table_name, t.table_flags
-      string_tables[name] = d_st.StringTable(name, flags, _ii, _iic)
-    self._string_tables = string_tables
-
-  def flatten_send_tables(self):
-    test_needs_decoder = lambda st: st.needs_decoder
-    recv_tables = {}
-    for st in filter(test_needs_decoder, self.send_tables.values()):
-      recv_tables[st.dt] = Flattener(self).flatten(st)
-    self._recv_tables = recv_tables
-
   def generate_entity_templates(self):
     ib_st = self.string_tables['instancebaseline']
 
@@ -182,7 +159,8 @@ class Demo(object):
     for string in ib_st.items:
       io = io_b.Bitstream(string.data)
       cls = int(string.name)
-      recv_table = self.recv_tables[self.class_info[cls].dt]
+      dt = self.class_info[cls].dt
+      recv_table = self.recv_tables[dt]
 
       baseline = collections.OrderedDict()
       dp = r_ent.read_prop_list(io)
@@ -194,3 +172,10 @@ class Demo(object):
       templates[cls] = d_ent.Template(cls, recv_table, baseline)
 
     self.templates = templates
+
+  def _flatten_send_tables(self):
+    test_needs_decoder = lambda st: st.needs_decoder
+    recv_tables = {}
+    for st in filter(test_needs_decoder, self.send_tables.values()):
+      recv_tables[st.dt] = Flattener(self).flatten(st)
+    self._recv_tables = recv_tables

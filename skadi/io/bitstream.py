@@ -37,15 +37,23 @@ class Bitstream(object):
 
     return rebuild & ((1 << length) - 1)
 
-  def read_string(self, length):
-    remaining, i, bytes = length, 0, []
-
-    while remaining >= 8:
-      bytes.append(self.read(8))
+  def read_long(self, length):
+    remaining, bytes = length, []
+    while remaining > 7:
       remaining -= 8
+      bytes.append(self.read(8))
     if remaining:
       bytes.append(self.read(remaining))
+    return str(bytearray(bytes))
 
+  def read_string(self, length):
+    i, bytes = 0, []
+    while i < length:
+      byte = self.read(8)
+      if byte == 0:
+        return str(bytearray(bytes))
+      bytes.append(byte)
+      i += 1
     return str(bytearray(bytes))
 
   def read_varint_35(self):

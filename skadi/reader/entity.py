@@ -179,7 +179,7 @@ def _read_VectorXY(io, prop):
 
 def _read_String(io, prop):
   length = io.read(9)
-  return io.read_string(length * 8)
+  return io.read_string(length)
 
 def _read_Array(io, prop):
   n, bits = prop.num_elements, 0
