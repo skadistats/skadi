@@ -12,22 +12,17 @@ In Progress
 
 Currently, skadi:
 
-* flattens "send tables" into "receive tables"
+* **parses 100% of replay data correctly**
 * creates and uses state containers for entities based off of entity 'baselines'
-* parses packet entities (in both CDemoPacket and CDemoFullPacket) into updates for these containers
-* applies these updates as the replay progresses
 * scaffolds all known 'user messages' (ex. particle management, combat log, chat, and more)
 
-Next, I aim to:
+It does not yet:
 
-* refine the code and add tests
-* understand how world state evolves over time
-* author a better API for accessing time-based game state
-* implement user message handling for all interesting types
-* implement game event handling for all interesting types
-* present obtained data in a way much more easily consumed by skadi users (csv, json)
+* relate all the different kinds of data in a replay coherently
+* have an api for getting at data in a developer-friendly way
+* have adequate testing or optimization
 
-Skadi will likely undergo heavy rewriting as I do this. New to Python.
+Skadi will likely continue to change in terms of the API.
 
 Usage
 =====
