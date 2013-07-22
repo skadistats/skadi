@@ -25,9 +25,8 @@ class StringTable(object):
   def __repr__(self):
     n, f = self.name, hex(int(self.flags))
     lenitems = len(self.items)
-    lenitemsc = len(self.items_clientside)
-    _repr = "<StringTable '{0}' f:{1} ({2} items, {3} items clientside)"
-    return _repr.format(n, f, lenitems, lenitemsc)
+    _repr = "<StringTable '{0}' f:{1} ({2} items)"
+    return _repr.format(n, f, lenitems)
 
   def __getitem__(self, key):
     gen = (i for i in self.items if i.name == key)
