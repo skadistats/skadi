@@ -7,7 +7,6 @@ from skadi.domain import class_info as d_ci
 from skadi.domain import dt as d_dt
 from skadi.domain import entity as d_ent
 from skadi.domain import game_event as d_ge
-from skadi.domain import string_table as d_st
 from skadi.io import bitstream as io_b
 from skadi.io import protobuf as io_p
 from skadi.reader import entity as r_ent

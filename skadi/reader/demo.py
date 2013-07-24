@@ -3,13 +3,13 @@ import re
 
 from skadi.domain import demo as d_demo
 from skadi.domain import dt as d_dt
-from skadi.domain import string_table as d_st
 from skadi.generated import demo_pb2 as pb_d
 from skadi.generated import netmessages_pb2 as pb_n
 from skadi.io import bitstream as io_b
 from skadi.io import protobuf as io_p
 from skadi.reader import chronology as r_chron
-from skadi.reader import string_table as r_st
+
+from skadi.meta import string_table
 
 DEMO_PRESYNC = (
   pb_d.CDemoFileHeader, pb_d.CDemoSendTables, pb_d.CDemoClassInfo
@@ -39,15 +39,8 @@ def read(io):
         match = re.match(r'C(SVC|NET)Msg_(.*)$', _pbmsg.__class__.__name__)
         attr = underscore(match.group(2))
         if isinstance(_pbmsg, pb_n.CSVCMsg_CreateStringTable):
-          name, flags = _pbmsg.name, _pbmsg.flags
-          me, ne = _pbmsg.max_entries, _pbmsg.num_entries
-          udfs = _pbmsg.user_data_fixed_size
-          uds, udsb = _pbmsg.user_data_size, _pbmsg.user_data_size_bits
-          st = d_st.StringTable(name, me, ne, udfs, uds, udsb, flags)
-
-          if _pbmsg.string_data:
-            st.items = r_st.read(io_b.Bitstream(_pbmsg.string_data), st)
-            dem.string_tables[name] = st
+          st = string_table.parse(_pbmsg)
+          dem.string_tables[st.name] = st
         if isinstance(_pbmsg, SVC_RELEVANT):
           setattr(dem, attr, _pbmsg)
     elif isinstance(pbmsg, DEMO_PRESYNC):

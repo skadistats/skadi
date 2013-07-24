@@ -18,7 +18,8 @@ from skadi.io import bitstream as io_b
 from skadi.io import protobuf as io_p
 from skadi.reader import demo as r_demo
 from skadi.reader import entity as r_ent
-from skadi.reader import string_table as r_st
+
+from skadi.meta import string_table
 
 option_parser = optparse.OptionParser()
 (options, args) = option_parser.parse_args()
@@ -50,7 +51,7 @@ for arg in args:
         table_name = dem.string_tables.keys()[table_id]
         table = dem.string_tables[table_name]
         io_bs = io_b.Bitstream(_pbmsg.string_data)
-        items = r_st.read(io_bs, table, _pbmsg.num_changed_entries)
+        items = string_table.decode(io_bs, table, _pbmsg.num_changed_entries)
         for i in items:
           item = table[i.name]
           if item:
