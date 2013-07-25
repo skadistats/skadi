@@ -89,6 +89,7 @@ class Demo(object):
     self.norm = norm
 
   def at(self, tick):
+    # This needs serious optimization.
     norm_gen = (t for t in reversed(self.norm.keys()) if t <= tick)
     full_gen = (t for t in reversed(self.full.keys()) if t <= tick)
     return self.full[next(full_gen)], self.norm[next(norm_gen)]
