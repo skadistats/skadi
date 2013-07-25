@@ -11,7 +11,6 @@ root = os.path.join(pwd, '..')
 sys.path.append(root)
 
 from skadi.domain import entity as d_ent
-from skadi.domain import snapshot as d_snap
 from skadi.generated import demo_pb2 as pb_d
 from skadi.generated import netmessages_pb2 as pb_n
 from skadi.io import bitstream as io_b
@@ -35,7 +34,7 @@ for arg in args:
   demo_io.seek(dem.post_sync)
   iter_d = iter(demo_io)
 
-  snapshot = d_snap.Snapshot()
+  snapshot = {}
 
   for pbmsg in iter_d:
     if isinstance(pbmsg, pb_d.CDemoFullPacket):
@@ -67,29 +66,27 @@ for arg in args:
           io,
           _pbmsg.updated_entries, _pbmsg.is_delta,
           dem.class_bits, dem.class_info, dem.recv_tables,
-          snapshot.instances
+          snapshot
         )
 
         templates = dem.templates      # entity templates (via baseline)
-        instances = snapshot.instances # entity instances
 
         # Creations
         for spec, delta in c.items():
           i, cls, serial = spec
-          instances[i] = d_ent.Instance(i, templates[cls], delta=delta)
+          snapshot[i] = d_ent.Instance(i, templates[cls], delta=delta)
           print '  + {0} #{1}'.format(dem.class_info[cls].dt, str(i).ljust(4))
           print '    delta: {0}'.format(delta)
 
         # Updates
         for i, delta in u.items():
-          ent = instances[i]
-          dt = ent.template.recv_table.dt
-          ent.apply(delta)
+          dt = snapshot[i].template.recv_table.dt
+          snapshot[i].apply(delta)
           print '  . {0} #{1}'.format(dt, str(i).ljust(4))
           print '    delta: {0}'.format(delta)
 
         # Deletions
         for i in d:
-          dt = instances[i].template.recv_table.dt
-          del instances[i]
+          dt = snapshot[i].template.recv_table.dt
+          del snapshot[i]
           print '  - {0} #{1}'.format(dt, str(i).ljust(4))
