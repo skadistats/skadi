@@ -6,7 +6,6 @@ from skadi.generated import demo_pb2 as pb_d
 from skadi.generated import netmessages_pb2 as pb_n
 from skadi.io import bitstream as io_b
 from skadi.io import protobuf as io_p
-from skadi.reader import chronology as r_chron
 
 from skadi.meta import prop
 from skadi.meta import string_table
@@ -62,9 +61,7 @@ def read(io):
 
   dem.post_sync = io.tell()
 
-  # Parse remainder of demo for a chronology of CDemoFullPacket.
   max_classes = dem.server_info['max_classes']
   dem.class_bits = int(math.ceil(math.log(max_classes, 2)))
-  dem.chronology = r_chron.read(io)
 
   return dem
