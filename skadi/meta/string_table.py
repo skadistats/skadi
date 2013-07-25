@@ -16,7 +16,7 @@ def parse(pbmsg):
   uds, udsb = pbmsg.user_data_size, pbmsg.user_data_size_bits
 
   st = StringTable(name, me, ne, udfs, uds, udsb, flags)
-  items =string_table.decode(io_bs.Bitstream(pbmsg.string_data), st)
+  items = string_table.decode(io_bs.Bitstream(pbmsg.string_data), st)
 
   for name, data in items:
     st.items.append(String(name, data))

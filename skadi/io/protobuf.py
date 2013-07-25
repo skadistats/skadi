@@ -145,7 +145,7 @@ class Demo(Stream):
     message = Demo.PROTOBUF_CLASS_BY_SIGNATURE[sig]()
     message.ParseFromString(data)
 
-    return message
+    return tick, message
 
   def seek(self, offset, whence=io.SEEK_SET):
     self._io.seek(offset, whence)

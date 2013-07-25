@@ -2,19 +2,14 @@ import collections
 
 
 def parse(pbmsg):
-  game_events = collections.OrderedDict()
+  game_event_list = collections.OrderedDict()
 
   for desc in pbmsg.descriptors:
     _id, name = desc.eventid, desc.name
     keys = [(k.type, k.name) for k in desc.keys]
-    game_events[_id] = GameEvent(_id, name, keys)
+    game_event_list[_id] = GameEvent(_id, name, keys)
 
-  return GameEventList(game_events)
-
-
-class GameEventList(object):
-  def __init__(self, game_events):
-    self.game_events = game_events
+  return game_event_list
 
 
 class GameEvent(object):

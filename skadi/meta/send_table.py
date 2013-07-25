@@ -20,6 +20,11 @@ def parse(pbmsg):
     }
     props.append(prop.Prop(dt, attributes))
 
+  # assign properties used for parsing array elements
+  for i, p in enumerate(props):
+    if p.type == prop.Type.Array:
+      p.array_prop = props[i - 1]
+
   return SendTable(dt, props, pbmsg.is_end, pbmsg.needs_decoder)
 
 def flatten(send_table, send_tables):
