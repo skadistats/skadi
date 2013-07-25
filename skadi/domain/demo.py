@@ -4,7 +4,6 @@ import collections
 import itertools
 
 from skadi.domain import class_info as d_ci
-from skadi.domain import dt as d_dt
 from skadi.domain import entity as d_ent
 from skadi.domain import game_event as d_ge
 from skadi.io import bitstream as io_b
@@ -12,44 +11,8 @@ from skadi.io import protobuf as io_p
 from skadi.reader import entity as r_ent
 
 from skadi.meta import prop
+from skadi.meta import recv_table
 from skadi.meta import send_table
-
-class Flattener(object):
-  def __init__(self, demo):
-    self.demo = demo
-
-  def flatten(self, st):
-    props = self._build(st, [], self._aggregate_exclusions(st))
-    return d_dt.RecvTable.construct(st.dt, props)
-
-  def _build(self, st, onto, excl):
-    [onto.append(p) for p in self._compile(st, onto, excl)]
-    return onto
-
-  def _compile(self, st, onto, excl, collapsed=None):
-    collapsed = collapsed or []
-
-    def test_excluded(prop):
-      return (st.dt, prop.var_name) not in excl
-
-    for p in st.dt_props:
-      if prop.test_data_table(p) and test_excluded(p):
-        _st = self.demo.send_tables[p.dt_name]
-        if prop.test_collapsible(p):
-          collapsed += self._compile(_st, onto, excl, collapsed)
-        else:
-          self._build(_st, onto, excl)
-
-    return collapsed + filter(test_excluded, st.non_dt_props)
-
-  def _aggregate_exclusions(self, st):
-    def recurse(_dt_prop):
-      st = self.demo.send_tables[_dt_prop.dt_name]
-      return self._aggregate_exclusions(st)
-
-    inherited = map(recurse, st.dt_props)
-
-    return st.exclusions + list(itertools.chain(*inherited))
 
 class Demo(object):
   def __init__(self):
@@ -60,7 +23,7 @@ class Demo(object):
     self._set_view = None
     self._class_info = None
     self._send_tables = None
-    self._recv_tables = None
+    self.recv_tables = {}
     self.string_tables = collections.OrderedDict()
 
   def __repr__(self):
@@ -135,10 +98,6 @@ class Demo(object):
     self._flatten_send_tables()
 
   @property
-  def recv_tables(self):
-    return self._recv_tables
-
-  @property
   def class_info(self):
     return self._class_info
 
@@ -163,9 +122,9 @@ class Demo(object):
       baseline = collections.OrderedDict()
       dp = r_ent.read_prop_list(io)
       for prop_index in dp:
-        prop = recv_table.props[prop_index]
-        key = '{0}.{1}'.format(prop.origin_dt, prop.var_name)
-        baseline[key] = r_ent.read_prop(io, prop)
+        p = recv_table.props[prop_index]
+        key = '{0}.{1}'.format(p.origin_dt, p.var_name)
+        baseline[key] = r_ent.read_prop(io, p)
 
       templates[cls] = d_ent.Template(cls, recv_table, baseline)
 
@@ -173,7 +132,7 @@ class Demo(object):
 
   def _flatten_send_tables(self):
     test_needs_decoder = lambda st: st.needs_decoder
-    recv_tables = {}
+    _recv_tables = {}
     for st in filter(test_needs_decoder, self.send_tables.values()):
-      recv_tables[st.dt] = Flattener(self).flatten(st)
-    self._recv_tables = recv_tables
+      _recv_tables[st.dt] = recv_table.flatten(st, self.send_tables)
+    self.recv_tables = _recv_tables
