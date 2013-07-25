@@ -3,7 +3,6 @@ from __future__ import absolute_import
 import collections
 import itertools
 
-from skadi.domain import class_info as d_ci
 from skadi.domain import entity as d_ent
 from skadi.domain import game_event as d_ge
 from skadi.io import bitstream as io_b
@@ -96,18 +95,6 @@ class Demo(object):
       send_tables[st.dt] = st
     self._send_tables = send_tables
     self._flatten_send_tables()
-
-  @property
-  def class_info(self):
-    return self._class_info
-
-  @class_info.setter
-  def class_info(self, pbmsg):
-    class_info = {}
-    for c in pbmsg.classes:
-      _id, dt, name = c.class_id, c.table_name, c.network_name
-      class_info[c.class_id] = d_ci.Class(_id, name, dt)
-    self._class_info = class_info
 
   def generate_entity_templates(self):
     ib_st = self.string_tables['instancebaseline']

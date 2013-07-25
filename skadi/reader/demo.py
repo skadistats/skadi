@@ -7,6 +7,7 @@ from skadi.generated import netmessages_pb2 as pb_n
 from skadi.io import bitstream as io_b
 from skadi.io import protobuf as io_p
 
+from skadi.meta import class_info
 from skadi.meta import prop
 from skadi.meta import string_table
 
@@ -42,6 +43,8 @@ def read(io):
           dem.string_tables[st.name] = st
         if isinstance(_pbmsg, SVC_RELEVANT):
           setattr(dem, attr, _pbmsg)
+    elif isinstance(pbmsg, pb_d.CDemoClassInfo):
+      dem.class_info = class_info.parse(pbmsg)
     elif isinstance(pbmsg, DEMO_PRESYNC):
       matches = re.match(r'CDemo(.*)$', pbmsg.__class__.__name__)
       attr = underscore(matches.group(1))
