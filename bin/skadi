@@ -11,8 +11,8 @@ root = os.path.join(pwd, '..')
 sys.path.append(root)
 
 from skadi.domain import entity as d_ent
-from skadi.generated import demo_pb2 as pb_d
-from skadi.generated import netmessages_pb2 as pb_n
+from skadi.protoc import demo_pb2 as pb_d
+from skadi.protoc import netmessages_pb2 as pb_n
 from skadi.io import bitstream as io_b
 from skadi.io import protobuf as io_p
 from skadi.reader import demo as r_demo

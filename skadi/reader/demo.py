@@ -2,8 +2,8 @@ import math
 import re
 
 from skadi.domain import demo as d_demo
-from skadi.generated import demo_pb2 as pb_d
-from skadi.generated import netmessages_pb2 as pb_n
+from skadi.protoc import demo_pb2 as pb_d
+from skadi.protoc import netmessages_pb2 as pb_n
 from skadi.io import bitstream as io_b
 from skadi.io import protobuf as io_p
 

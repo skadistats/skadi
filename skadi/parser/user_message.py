@@ -1,5 +1,5 @@
-from skadi.generated import usermessages_pb2 as pb_um
-from skadi.generated import dota_usermessages_pb2 as pb_dota_um
+from skadi.protoc import usermessages_pb2 as pb_um
+from skadi.protoc import dota_usermessages_pb2 as pb_dota_um
 
 DOTA_UM_ID_BASE = 64
 

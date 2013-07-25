@@ -2,8 +2,8 @@ import io
 import math
 import snappy
 
-from skadi.generated import demo_pb2 as pb_d
-from skadi.generated import netmessages_pb2 as pb_n
+from skadi.protoc import demo_pb2 as pb_d
+from skadi.protoc import netmessages_pb2 as pb_n
 
 VI_BIT_MAX = 32
 VI_SHIFT = 7
