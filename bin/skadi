@@ -10,15 +10,15 @@ pwd = os.path.dirname(__file__)
 root = os.path.join(pwd, '..')
 sys.path.append(root)
 
-from skadi.domain import entity as d_ent
 from skadi.protoc import demo_pb2 as pb_d
 from skadi.protoc import netmessages_pb2 as pb_n
 from skadi.io import bitstream as io_b
 from skadi.io import protobuf as io_p
-from skadi.reader import demo as r_demo
 from skadi.reader import entity as r_ent
 
+from skadi import demo
 from skadi.meta import string_table
+from skadi.snapshot import entity
 
 option_parser = optparse.OptionParser()
 (options, args) = option_parser.parse_args()
@@ -29,7 +29,7 @@ for arg in args:
   # Build a demo from the file.
   stream = io.open(os.path.join(root, arg), 'r+b')
   demo_io = io_p.Demo(stream)
-  dem = r_demo.read(demo_io)
+  dem = demo.decode(demo_io)
 
   demo_io.seek(dem.post_sync)
   iter_d = iter(demo_io)
@@ -74,7 +74,7 @@ for arg in args:
         # Creations
         for spec, delta in c.items():
           i, cls, serial = spec
-          snapshot[i] = d_ent.Instance(i, templates[cls], delta=delta)
+          snapshot[i] = entity.Instance(i, templates[cls], delta=delta)
           print '  + {0} #{1}'.format(dem.class_info[cls].dt, str(i).ljust(4))
           print '    delta: {0}'.format(delta)
 
