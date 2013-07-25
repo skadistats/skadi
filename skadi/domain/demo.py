@@ -134,5 +134,6 @@ class Demo(object):
     test_needs_decoder = lambda st: st.needs_decoder
     _recv_tables = {}
     for st in filter(test_needs_decoder, self.send_tables.values()):
-      _recv_tables[st.dt] = recv_table.flatten(st, self.send_tables)
+      props = send_table.flatten(st, self.send_tables)
+      _recv_tables[st.dt] = recv_table.construct(st.dt, props)
     self.recv_tables = _recv_tables
