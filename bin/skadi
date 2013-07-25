@@ -15,9 +15,9 @@ from skadi.protoc import netmessages_pb2 as pb_n
 from skadi.io import bitstream as io_b
 from skadi.io import protobuf as io_p
 
-from skadi import demo
 from skadi.decoder import entity as d_entity
 from skadi.decoder import string_table as d_string_table
+from skadi.meta import demo
 from skadi.meta import string_table
 from skadi.snapshot import entity
 
