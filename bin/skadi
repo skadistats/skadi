@@ -14,9 +14,10 @@ from skadi.protoc import demo_pb2 as pb_d
 from skadi.protoc import netmessages_pb2 as pb_n
 from skadi.io import bitstream as io_b
 from skadi.io import protobuf as io_p
-from skadi.reader import entity as r_ent
 
 from skadi import demo
+from skadi.decoder import entity as d_entity
+from skadi.decoder import string_table as d_string_table
 from skadi.meta import string_table
 from skadi.snapshot import entity
 
@@ -50,19 +51,19 @@ for arg in args:
         table_name = dem.string_tables.keys()[table_id]
         table = dem.string_tables[table_name]
         io_bs = io_b.Bitstream(_pbmsg.string_data)
-        items = string_table.decode(io_bs, table, _pbmsg.num_changed_entries)
-        for i in items:
-          item = table[i.name]
+        ii = d_string_table.decode(io_bs, table, _pbmsg.num_changed_entries)
+        for name, data in ii:
+          item = table[name]
           if item:
-            item.data = i.data
+            item.data = data
           else:
-            table.items.append(i)
+            table.items.append(string_table.String(name, data))
         if table_name == 'instancebaseline':
           dem.generate_entity_templates()
       elif isinstance(_pbmsg, pb_n.CSVCMsg_PacketEntities):
         io = io_b.Bitstream(_pbmsg.entity_data)
 
-        c, u, d = r_ent.read(
+        c, u, d = d_entity.read(
           io,
           _pbmsg.updated_entries, _pbmsg.is_delta,
           dem.class_bits, dem.class_info, dem.recv_tables,

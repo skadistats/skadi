@@ -2,9 +2,8 @@ import collections
 import math
 import re
 
-from skadi.snapshot import entity
-from skadi.reader import entity as r_ent
-
+from skadi.decoder import entity as d_entity
+from skadi.decoder import prop as d_prop
 from skadi.io import protobuf as io_p
 from skadi.io import bitstream as io_b
 from skadi.meta import class_info
@@ -16,10 +15,10 @@ from skadi.meta import send_table
 from skadi.meta import string_table
 from skadi.protoc import demo_pb2 as pb_d
 from skadi.protoc import netmessages_pb2 as pb_n
+from skadi.snapshot import entity
 
 
 DEMO_EXTRANEOUS = (pb_d.CDemoStringTables)
-
 SVC_EXTRANEOUS = (
   pb_n.CNETMsg_SetConVar, pb_n.CNETMsg_SignonState, pb_n.CNETMsg_Tick,
   pb_n.CSVCMsg_ClassInfo
@@ -104,11 +103,11 @@ class Demo(object):
       recv_table = self.recv_tables[dt]
 
       baseline = collections.OrderedDict()
-      dp = r_ent.read_prop_list(io)
+      dp = d_entity.read_prop_list(io)
       for prop_index in dp:
         p = recv_table.props[prop_index]
         key = '{0}.{1}'.format(p.origin_dt, p.var_name)
-        baseline[key] = r_ent.read_prop(io, p)
+        baseline[key] = d_prop.decode(io, p)
 
       templates[cls] = entity.Template(cls, recv_table, baseline)
 
