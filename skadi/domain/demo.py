@@ -11,6 +11,9 @@ from skadi.io import bitstream as io_b
 from skadi.io import protobuf as io_p
 from skadi.reader import entity as r_ent
 
+from skadi.meta import prop
+from skadi.meta import send_table
+
 class Flattener(object):
   def __init__(self, demo):
     self.demo = demo
@@ -20,11 +23,7 @@ class Flattener(object):
     return d_dt.RecvTable.construct(st.dt, props)
 
   def _build(self, st, onto, excl):
-    non_dt_props = self._compile(st, onto, excl)
-
-    for prop in non_dt_props:
-      onto.append(prop)
-
+    [onto.append(p) for p in self._compile(st, onto, excl)]
     return onto
 
   def _compile(self, st, onto, excl, collapsed=None):
@@ -33,10 +32,10 @@ class Flattener(object):
     def test_excluded(prop):
       return (st.dt, prop.var_name) not in excl
 
-    for prop in st.dt_props:
-      if d_dt.test_data_table(prop) and test_excluded(prop):
-        _st = self.demo.send_tables[prop.dt_name]
-        if d_dt.test_collapsible(prop):
+    for p in st.dt_props:
+      if prop.test_data_table(p) and test_excluded(p):
+        _st = self.demo.send_tables[p.dt_name]
+        if prop.test_collapsible(p):
           collapsed += self._compile(_st, onto, excl, collapsed)
         else:
           self._build(_st, onto, excl)
@@ -130,7 +129,7 @@ class Demo(object):
     packet_io = io_p.Packet.wrapping(pbmsg.data)
     send_tables = {}
     for svc_message in iter(packet_io):
-      st = d_dt.SendTable.construct(svc_message)
+      st = send_table.parse(svc_message)
       send_tables[st.dt] = st
     self._send_tables = send_tables
     self._flatten_send_tables()

@@ -3,11 +3,12 @@ import math
 import sys
 
 from skadi import enum
-from skadi.domain import dt as d_dt
+
+from skadi.meta import prop
 
 PVS = enum(Enter = 0x01, Leave = 0x02, Delete = 0x04)
 TYPE_EXCL = ('DataTable')
-BY_TYPE = {v:k for k,v in d_dt.Type.tuples.items() if k not in TYPE_EXCL}
+BY_TYPE = {v:k for k,v in prop.Type.tuples.items() if k not in TYPE_EXCL}
 
 def read(io, count, delta, cb, ci, rt, ent):
   create, update, delete = {}, {}, []
@@ -70,32 +71,32 @@ def read_props(io, prop_list, recv_table):
   delta = {}
 
   for prop_index in prop_list:
-    prop = recv_table.props[prop_index]
-    key = '{0}.{1}'.format(prop.origin_dt, prop.var_name)
-    delta[key] = read_prop(io, prop)
+    p = recv_table.props[prop_index]
+    key = '{0}.{1}'.format(p.origin_dt, p.var_name)
+    delta[key] = read_prop(io, p)
 
   return delta
 
-def read_prop(io, prop):
-  fn_reader = '_read_{0}'.format(BY_TYPE[prop.type])
-  return getattr(sys.modules[__name__], fn_reader)(io, prop)
+def read_prop(io, p):
+  fn_reader = '_read_{0}'.format(BY_TYPE[p.type])
+  return getattr(sys.modules[__name__], fn_reader)(io, p)
 
-def _read_Int(io, prop):
-  if prop.flags & d_dt.Flag.EncodedAgainstTickcount:
-    if prop.flags & d_dt.Flag.Unsigned:
+def _read_Int(io, p):
+  if p.flags & prop.Flag.EncodedAgainstTickcount:
+    if p.flags & prop.Flag.Unsigned:
       return io.read_varint_35()
     else:
       value = io.read_varint_35()
       return (-(value & 1)) ^ (value >> 1)
 
-  value = io.read(prop.num_bits)
-  l = 0x80000000 >> (32 - prop.num_bits)
-  r = (prop.flags & d_dt.Flag.Unsigned) - 1
+  value = io.read(p.num_bits)
+  l = 0x80000000 >> (32 - p.num_bits)
+  r = (p.flags & prop.Flag.Unsigned) - 1
 
   return (value ^ (l & r)) - (l & r)
 
-def _read_Float(io, prop):
-  if prop.flags & d_dt.Flag.Coord:
+def _read_Float(io, p):
+  if p.flags & prop.Flag.Coord:
     integer = io.read(1)
     fraction = io.read(1)
 
@@ -117,16 +118,16 @@ def _read_Float(io, prop):
       value *= -1
 
     return value
-  elif prop.flags & d_dt.Flag.CoordMP:
+  elif p.flags & prop.Flag.CoordMP:
     raise NotImplementedError('! CoordMP')
-  elif prop.flags & d_dt.Flag.CoordMPLowPrecision:
+  elif p.flags & prop.Flag.CoordMPLowPrecision:
     raise NotImplementedError('! CoordMPLowPrecision')
-  elif prop.flags & d_dt.Flag.CoordMPIntegral:
+  elif p.flags & prop.Flag.CoordMPIntegral:
     raise NotImplementedError('! CoordMPIntegral')
-  elif prop.flags & d_dt.Flag.NoScale:
+  elif p.flags & prop.Flag.NoScale:
     bit_array = bitstring.BitArray(uint=io.read(32), length=32)
     return bit_array.float
-  elif prop.flags & d_dt.Flag.Normal:
+  elif p.flags & prop.Flag.Normal:
     sign = io.read(1)
     bit_array = bitstring.BitArray(uint=io.read(11), length=32)
 
@@ -138,29 +139,29 @@ def _read_Float(io, prop):
       value *= -1
 
     return value
-  elif prop.flags & d_dt.Flag.CellCoord:
-    value = io.read(prop.num_bits)
+  elif p.flags & prop.Flag.CellCoord:
+    value = io.read(p.num_bits)
     return value + 0.03125 * io.read(5)
-  elif prop.flags & d_dt.Flag.CellCoordLowPrecision:
+  elif p.flags & prop.Flag.CellCoordLowPrecision:
     raise NotImplementedError('! CellCoordLowPrecision')
-  elif prop.flags & d_dt.Flag.CellCoordIntegral:
-    value = io.read(prop.num_bits)
+  elif p.flags & prop.Flag.CellCoordIntegral:
+    value = io.read(p.num_bits)
     if value >> 31:
       value += 4.2949673e9 # wat, edith?
     return float(value)
 
-  dividend = io.read(prop.num_bits);
-  divisor = (1 << prop.num_bits) - 1;
+  dividend = io.read(p.num_bits);
+  divisor = (1 << p.num_bits) - 1;
 
   f = float(dividend) / divisor
-  r = prop.high_value - prop.low_value
-  return f * r + prop.low_value;
+  r = p.high_value - p.low_value
+  return f * r + p.low_value;
 
-def _read_Vector(io, prop):
-  x = _read_Float(io, prop)
-  y = _read_Float(io, prop)
+def _read_Vector(io, p):
+  x = _read_Float(io, p)
+  y = _read_Float(io, p)
 
-  if prop.flags & d_dt.Flag.Normal:
+  if p.flags & prop.Flag.Normal:
     f = x * x + y * y
     z = 0 if (f <= 1) else math.sqrt(1 - f)
 
@@ -168,40 +169,40 @@ def _read_Vector(io, prop):
     if sign:
       z *= -1
   else:
-    z = _read_Float(io, prop)
+    z = _read_Float(io, p)
 
   return x, y, z
 
-def _read_VectorXY(io, prop):
-  x = _read_Float(io, prop)
-  y = _read_Float(io, prop)
+def _read_VectorXY(io, p):
+  x = _read_Float(io, p)
+  y = _read_Float(io, p)
   return x, y
 
-def _read_String(io, prop):
+def _read_String(io, p):
   length = io.read(9)
   return io.read_string(length)
 
-def _read_Array(io, prop):
-  n, bits = prop.num_elements, 0
+def _read_Array(io, p):
+  n, bits = p.num_elements, 0
   while n:
     bits += 1
     n >>= 1
 
   count, i, elements = io.read(bits), 0, []
   while i < count:
-    elements.append(read_prop(io, prop.array_prop))
+    elements.append(read_prop(io, p.array_prop))
     i += 1
 
   return elements
 
-def _read_Int64(io, prop):
-  if prop.flags & d_dt.Flag.EncodedAgainstTickcount:
+def _read_Int64(io, p):
+  if p.flags & prop.Flag.EncodedAgainstTickcount:
     raise NotImplementedError('int64 cant be encoded against tickcount')
 
   negate = False
-  second_bits = prop.num_bits - 32
+  second_bits = p.num_bits - 32
 
-  if not (prop.flags & d_dt.Flag.Unsigned):
+  if not (p.flags & prop.Flag.Unsigned):
     second_bits -= 1
     if io.read(1):
       negate = True

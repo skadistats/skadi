@@ -2,13 +2,13 @@ import math
 import re
 
 from skadi.domain import demo as d_demo
-from skadi.domain import dt as d_dt
 from skadi.generated import demo_pb2 as pb_d
 from skadi.generated import netmessages_pb2 as pb_n
 from skadi.io import bitstream as io_b
 from skadi.io import protobuf as io_p
 from skadi.reader import chronology as r_chron
 
+from skadi.meta import prop
 from skadi.meta import string_table
 
 DEMO_PRESYNC = (
@@ -53,9 +53,9 @@ def read(io):
 
   # For array props, we need to associate the element property.
   for send_table in dem.send_tables.values():
-    for i, prop in enumerate(send_table.props):
-      if prop.type == d_dt.Type.Array:
-        prop.array_prop = send_table.props[i - 1]
+    for i, p in enumerate(send_table.props):
+      if p.type == prop.Type.Array:
+        p.array_prop = send_table.props[i - 1]
 
   # Generate entity templates upon which instances will be based.
   dem.generate_entity_templates()
