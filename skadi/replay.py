@@ -1,14 +1,71 @@
+import collections
+import copy
+
+from skadi.meta import string_table
+
+
+def construct(demo, io):
+  replay = Replay(demo, io)
+  replay.tick = 0
+  return replay
+
+
+class Snapshot(object):
+  def __init__(self, tick, user_messages, game_events, entities):
+    self.tick = tick
+    self.user_messages = user_messages
+    self.game_events = game_events
+    self.entities = entities
+
+
+class Frame(object):
+  def __init__(self, string_tables, snapshot=None):
+    self.string_tables = string_tables
+    self.snapshot = snapshot
+
+
+class Replay(object):
+  def __init__(self, demo, io):
+    self.demo = demo
+    self.io = io
+    self.tick = 0
+    self._cache = collections.OrderedDict()
+
+  @property
+  def snapshot(self):
+    pass
+
+  def _optimize(self, tick):
+    string_tables = copy.deepcopy(self.demo.string_tables)
+
+    for tick, offset in self.demo.full.items():
+      string_tables = copy.deepcopy(string_tables)
+
+      self.io.seek(offset)
+      _, pb_full_packet = self.io.read()
+      pb_string_tables = pb_full_packet.string_table
+
+      for pb_string_table in pb_string_tables.tables:
+        st = string_tables[pb_string_table.table_name]
+        ii = []
+
+        for pb_string in pb_string_table.items:
+          string = string_table.String(pb_string.str, pb_string.data)
+          ii.append(string)
+
+        st.items = ii
+
+      self._cache[tick] = Frame(string_tables)
+
+  def rewind(self):
+    self.tick = 0
+
   #demo_io.seek(dem.post_sync)
   # iter_d = iter(demo_io)
 
   # snapshot = {}
 
   # for pbmsg in iter_d:
-  #   if isinstance(pbmsg, pb_d.CDemoFullPacket):
-  #     data = pbmsg.packet.data
-  #   elif isinstance(pbmsg, pb_d.CDemoPacket):
-  #     data = pbmsg.data
-
   #   for _pbmsg in io_p.Packet.wrapping(data):
   #     if isinstance(_pbmsg, pb_n.CNETMsg_Tick):
   #       print 'tick {0}'.format(_pbmsg.tick)

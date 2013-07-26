@@ -85,17 +85,23 @@ class Demo(object):
 
   def __init__(self, meta, full, norm):
     self.meta = meta
-    self.full = full
-    self.norm = norm
+    self.full = collections.OrderedDict(full.items())
+    self.norm = collections.OrderedDict(norm.items())
+    self._full_keys = reversed(self.full.keys()) # easy optimization
+    self._norm_keys = reversed(self.norm.keys())
 
   def at(self, tick):
-    # This needs serious optimization.
-    norm_gen = (t for t in reversed(self.norm.keys()) if t <= tick)
-    full_gen = (t for t in reversed(self.full.keys()) if t <= tick)
-    return self.full[next(full_gen)], self.norm[next(norm_gen)]
+    full_gen = (k for k in self._full_keys if k <= tick)
+    norm_gen = (k for k in self._norm_keys if k <= tick)
+    return next(full_gen), next(norm_gen)
 
-  def __getitem__(self, key):
-    if key in self._attributes:
-      return self._attributes[key]
+  def full_pos(self, tick):
+    return self.full[tick]
 
-    raise KeyError('unknown attribute {0}'.format(key))
+  def norm_pos(self, tick):
+    return self.norm[tick]
+
+  def __getattr__(self, key):
+    if key in Demo.DELEGATED:
+      return self.meta[key]
+    raise KeyError

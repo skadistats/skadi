@@ -39,11 +39,11 @@ class Prop(object):
     self.origin_dt = origin_dt
     self._attributes = attributes
 
-  def __getattribute__(self, name):
+  def __getattr__(self, name):
     if name in Prop.DELEGATED:
       return self._attributes[name]
     else:
-      return object.__getattribute__(self, name)
+      return object.__getattr__(self, name)
 
   def __repr__(self):
     odt, vn, t = self.origin_dt, self.var_name, self._type()

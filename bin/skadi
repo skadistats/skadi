@@ -10,6 +10,7 @@ pwd = os.path.dirname(__file__)
 root = os.path.join(pwd, '..')
 sys.path.append(root)
 
+from skadi import replay
 from skadi.io import protobuf as io_p
 from skadi.meta import demo
 
@@ -23,7 +24,4 @@ for arg in args:
   d_io = io_p.Demo(f_io)
   demo = demo.parse(d_io)
 
-  for tick in demo.norm.keys():
-    msg = 'nearest full packet: {0}; normal packet: {1}'
-    full, norm = demo.at(tick)
-    print msg.format(full, norm)
+  _replay = replay.construct(demo, d_io)

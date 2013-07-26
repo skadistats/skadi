@@ -13,8 +13,7 @@ class GenericStateContainer(object):
   def __getitem__(self, key):
     if key in self._attributes:
       return self._attributes[key]
-
-    raise KeyError('unknown attribute {0}'.format(key))
+    raise KeyError
 
 
 class FileHeader(GenericStateContainer):
