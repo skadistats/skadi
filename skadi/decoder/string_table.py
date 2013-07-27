@@ -21,7 +21,7 @@ def decode(io, string_table, num_entries=None):
     else:
       index += 1
 
-    name = None
+    name, value = None, ''
 
     if io.read(1):
       if first and io.read(1):
@@ -47,8 +47,8 @@ def decode(io, string_table, num_entries=None):
         bit_length = length * 8
 
       value = io.read_long(bit_length)
-      entries.append((name, value))
 
+    entries.append((index, name, value))
     entries_read += 1
 
   return entries
