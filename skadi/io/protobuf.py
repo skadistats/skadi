@@ -121,6 +121,10 @@ class Demo(Stream):
     pb_d.DEM_FullPacket:          pb_d.CDemoFullPacket
   }
 
+  @classmethod
+  def wrapping(cls, io):
+    return cls(io)
+
   def __init__(self, io):
     super(Demo, self).__init__(io)
     self._verify()

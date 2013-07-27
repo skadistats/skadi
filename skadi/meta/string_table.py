@@ -17,10 +17,10 @@ def parse(pbmsg):
   uds, udsb = pbmsg.user_data_size, pbmsg.user_data_size_bits
 
   st = StringTable(name, me, ne, udfs, uds, udsb, flags)
-  items = string_table.decode(io_bs.Bitstream(pbmsg.string_data), st)
+  items = string_table.decode(io_bs.Bitstream.wrapping(pbmsg.string_data), st)
 
-  for name, data in items:
-    st.items.append(String(name, data))
+  for _, name, data in items:
+    st.items[name] = String(name, data)
 
   return st
 
@@ -35,7 +35,7 @@ class String(object):
 
   def __repr__(self):
     n, d = self.name, self.data
-    return "<String '{0}' ({1} bytes)>".format(n, len(d))
+    return "<String '{0}' ({1} bytes)>".format(n, len(d or ''))
 
 
 class StringTable(object):
@@ -47,19 +47,19 @@ class StringTable(object):
     self.user_data_size = uds
     self.user_data_size_bits = udsb
     self.flags = flags
-    self.items = ii or []
+    self.items = ii or collections.OrderedDict()
 
     self.entry_bits = int(math.ceil(math.log(self.max_entries, 2)))
 
   def __copy__(self):
     name = self.name
-    max_ent = sefl.max_entries
+    max_ent = self.max_entries
     num_ent = self.num_entries
     udfs = self.user_data_fixed_size
     uds = self.user_data_size
     udsb = self.user_data_size_bits
     flags = self.flags
-    ii = copy.deepcopy(self.items)
+    ii = copy.copy(self.items)
 
     return StringTable(name, max_ent, num_ent, udfs, uds, udsb, flags, ii)
 
@@ -72,3 +72,11 @@ class StringTable(object):
   def __getitem__(self, key):
     gen = (i for i in self.items if i.name == key)
     return next(gen, None)
+
+  def merge(self, strings):
+    st = copy.copy(self)
+
+    for name, data in strings:
+      st.items[name] = String(name, data)
+
+    return st

@@ -21,7 +21,11 @@ for arg in args:
   print '> parsing {0}'.format(os.path.basename(arg))
 
   f_io = io.open(os.path.join(root, arg), 'r+b')
-  d_io = io_p.Demo(f_io)
+  d_io = io_p.Demo.wrapping(f_io)
   demo = demo.parse(d_io)
 
   _replay = replay.construct(demo, d_io)
+
+  for tick in list(reversed(demo._norm_keys)):
+    #print 'snapshot: {0}'.format(tick)
+    _replay.snapshot(tick)

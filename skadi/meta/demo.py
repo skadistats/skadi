@@ -1,4 +1,5 @@
 import collections
+import math
 
 from skadi.io import protobuf as io_p
 from skadi.meta import class_info, game_event_list, string_table
@@ -46,6 +47,8 @@ def parse(io):
         if isinstance(_pbmsg, pb_n.CSVCMsg_CreateStringTable):
           st = string_table.parse(_pbmsg)
           meta['string_tables'][st.name] = st
+          if st.name == 'instancebaseline':
+            baselines = collections.OrderedDict()
         elif isinstance(_pbmsg, pb_n.CSVCMsg_GameEventList):
           meta['game_event_list'] = game_event_list.parse(_pbmsg)
         elif isinstance(_pbmsg, pb_n.CSVCMsg_ServerInfo):
@@ -85,15 +88,19 @@ class Demo(object):
 
   def __init__(self, meta, full, norm):
     self.meta = meta
+    self.class_bits = int(math.ceil(math.log(meta['server_info']['max_classes'], 2)))
     self.full = collections.OrderedDict(full.items())
     self.norm = collections.OrderedDict(norm.items())
-    self._full_keys = reversed(self.full.keys()) # easy optimization
-    self._norm_keys = reversed(self.norm.keys())
+    self._full_keys = list(reversed(self.full.keys())) # easy optimization
+    self._norm_keys = list(reversed(self.norm.keys()))
 
   def at(self, tick):
-    full_gen = (k for k in self._full_keys if k <= tick)
-    norm_gen = (k for k in self._norm_keys if k <= tick)
-    return next(full_gen), next(norm_gen)
+    full = next(k for k in self._full_keys if k <= tick)
+    norm = next(k for k in self._full_keys if k <= tick)
+    return full, norm
+
+  def within(self, first, last):
+    return [t for t in self._norm_keys if t >= first and t <= last]
 
   def full_pos(self, tick):
     return self.full[tick]

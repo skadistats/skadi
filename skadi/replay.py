@@ -1,13 +1,50 @@
+from __future__ import absolute_import
+
 import collections
 import copy
+import io as iolol
+import sys
 
+from skadi.decoder import entity as d_entity
+from skadi.decoder import string_table as d_string_table
+from skadi.io import bitstream as io_b
+from skadi.io import protobuf as io_p
+from skadi.protoc import netmessages_pb2 as pb_n
 from skadi.meta import string_table
 
 
+test_update_st = lambda m: isinstance(m, pb_n.CSVCMsg_UpdateStringTable)
+test_packet_entities = lambda m: isinstance(m, pb_n.CSVCMsg_PacketEntities)
+test_voice_data = lambda m: isinstance(m, pb_n.CSVCMsg_VoiceData)
+
+
 def construct(demo, io):
-  replay = Replay(demo, io)
-  replay.tick = 0
-  return replay
+  keyframes = collections.OrderedDict()
+
+  stt = demo.string_tables
+
+  for tick, offset in demo.full.items():
+    io.seek(offset)
+    _, pb_full_packet = io.read()
+
+    pb_string_tables, base = pb_full_packet.string_table, stt
+    stt = Replay.derive_string_tables(pb_string_tables, base)
+    keyframes[tick] = Frame(tick, string_tables=stt)
+
+    messages = list(io_p.Packet.wrapping(pb_full_packet.packet.data))
+    pb_pent = next(m for m in messages if test_packet_entities(m))
+
+    # snapshot = Snapshot(tick, [], [], collections.OrderedDict())
+    # c, u, d = d_entity.read(
+    #   io_b.Bitstream.wrapping(pb_pent.entity_data),
+    #   pb_pent.updated_entries, pb_pent.is_delta,
+    #   demo.class_bits, demo.class_info, demo.recv_tables,
+    #   snapshot.entities
+    # )
+    #
+    # print c, u, d
+
+  return Replay(demo, io, keyframes=keyframes)
 
 
 class Snapshot(object):
@@ -19,98 +56,118 @@ class Snapshot(object):
 
 
 class Frame(object):
-  def __init__(self, string_tables, snapshot=None):
+  def __init__(self, tick, string_tables=None, snapshot=None):
+    self.tick = tick
     self.string_tables = string_tables
     self.snapshot = snapshot
 
 
 class Replay(object):
-  def __init__(self, demo, io):
+  @classmethod
+  def derive_string_tables(cls, pb_string_tables, base):
+    string_tables = collections.OrderedDict()
+
+    def pb_string_tables_find(pb_stt, name):
+      gen = (pb_st for pb_st in pb_stt if pb_st.table_name == name)
+      return next(gen, None)
+
+    for st_name, st in base.items():
+      pb_st = pb_string_tables_find(pb_string_tables.tables, st_name)
+      if pb_st:
+        strings = [(pb_s.str, pb_s.data) for pb_s in pb_st.items]
+        string_tables[st_name] = st.merge(strings)
+      else:
+        string_tables[st_name] = st
+
+    return string_tables
+
+  def __init__(self, demo, io, keyframes=None):
+    self.voice = iolol.open('rollerskates', 'wb')
+    self.xuid = None
     self.demo = demo
     self.io = io
-    self.tick = 0
-    self._cache = collections.OrderedDict()
+    self.keyframes = keyframes or collections.OrderedDict()
+    self._frame_cache = None
 
-  @property
-  def snapshot(self):
-    pass
+  def snapshot(self, tick):
+    if not self._frame_cache or self._frame_cache_stale(tick):
+      print 'resetting frame cache'
+      self._reset_frame_cache()
+    self._populate_frame_cache(tick)
 
-  def _optimize(self, tick):
-    string_tables = copy.deepcopy(self.demo.string_tables)
+  def _populate_frame_cache(self, upto):
+    full, current = self.demo.at(upto)
+    string_tables = self.keyframes[full].string_tables
+    snapshot = self.keyframes[full].snapshot
 
-    for tick, offset in self.demo.full.items():
-      string_tables = copy.deepcopy(string_tables)
+    ticks = self.demo.within(full, upto + 1)
 
-      self.io.seek(offset)
-      _, pb_full_packet = self.io.read()
-      pb_string_tables = pb_full_packet.string_table
+    for tick in ticks:
+      if tick in self._frame_cache:
+        continue
 
-      for pb_string_table in pb_string_tables.tables:
-        st = string_tables[pb_string_table.table_name]
-        ii = []
+      self.io.seek(self.demo.norm_pos(tick))
 
-        for pb_string in pb_string_table.items:
-          string = string_table.String(pb_string.str, pb_string.data)
-          ii.append(string)
+      _, packet = self.io.read()
 
-        st.items = ii
+      messages = list(io_p.Packet.wrapping(packet.data))
 
-      self._cache[tick] = Frame(string_tables)
+      pb_st_updates = filter(test_update_st, messages)
+      pb_pent = next((m for m in messages if test_packet_entities(m)), None)
+      pb_voice_data = next((m for m in messages if test_voice_data(m)), None)
 
-  def rewind(self):
-    self.tick = 0
+      if pb_st_updates:
+        string_tables = copy.copy(string_tables)
 
-  #demo_io.seek(dem.post_sync)
-  # iter_d = iter(demo_io)
+        for st_update in pb_st_updates:
+          st_name = string_tables.keys()[st_update.table_id]
+          st = string_tables[st_name]
+          io = io_b.Bitstream.wrapping(st_update.string_data)
+          num_ent = st_update.num_changed_entries
 
-  # snapshot = {}
+          for entry in d_string_table.decode(io, st, num_ent):
+            index, name, data = entry
+            if name:
+              string = string_table.String(name, data)
+              print '> creating {0}'.format(string)
+              st.items[name] = string
+            else:
+              string = st.items.values()[index]
+              print '> updating {0}'.format(string)
+              string.data = data
 
-  # for pbmsg in iter_d:
-  #   for _pbmsg in io_p.Packet.wrapping(data):
-  #     if isinstance(_pbmsg, pb_n.CNETMsg_Tick):
-  #       print 'tick {0}'.format(_pbmsg.tick)
-  #     elif isinstance(_pbmsg, pb_n.CSVCMsg_UpdateStringTable):
-  #       table_id = _pbmsg.table_id
-  #       table_name = dem.string_tables.keys()[table_id]
-  #       table = dem.string_tables[table_name]
-  #       io_bs = io_b.Bitstream(_pbmsg.string_data)
-  #       ii = d_string_table.decode(io_bs, table, _pbmsg.num_changed_entries)
-  #       for name, data in ii:
-  #         item = table[name]
-  #         if item:
-  #           item.data = data
-  #         else:
-  #           table.items.append(string_table.String(name, data))
-  #       if table_name == 'instancebaseline':
-  #         dem.generate_entity_templates()
-  #     elif isinstance(_pbmsg, pb_n.CSVCMsg_PacketEntities):
-  #       io = io_b.Bitstream(_pbmsg.entity_data)
+      # if pb_pent:
+      #   io = io_b.Bitstream.wrapping(pb_pent.entity_data)
+      #
+      #   c, u, d = d_entity.read(
+      #     io,
+      #     pb_pent.updated_entries, pb_pent.is_delta,
+      #     self.demo.class_bits, self.demo.class_info, self.demo.recv_tables,
+      #     snapshot.entities
+      #   )
+      #
+      #   print c, u, d
 
-  #       c, u, d = d_entity.read(
-  #         io,
-  #         _pbmsg.updated_entries, _pbmsg.is_delta,
-  #         dem.class_bits, dem.class_info, dem.recv_tables,
-  #         snapshot
-  #       )
+      self._frame_cache[tick] = Frame(tick, string_tables)
 
-  #       templates = dem.templates      # entity templates (via baseline)
+  def _frame_cache_empty(self):
+    return len(self._frame_cache) == 0
 
-  #       # Creations
-  #       for spec, delta in c.items():
-  #         i, cls, serial = spec
-  #         snapshot[i] = entity.Instance(i, templates[cls], delta=delta)
-  #         print '  + {0} #{1}'.format(dem.class_info[cls].dt, str(i).ljust(4))
-  #         print '    delta: {0}'.format(delta)
+  def _frame_cache_stale(self, tick):
+    full1, _ = self.demo.at(tick)
+    full2, _ = self.demo.at(tick - 1)
+    return full1 != full2
 
-  #       # Updates
-  #       for i, delta in u.items():
-  #         dt = snapshot[i].template.recv_table.dt
-  #         snapshot[i].apply(delta)
-  #         print '  . {0} #{1}'.format(dt, str(i).ljust(4))
-  #         print '    delta: {0}'.format(delta)
+  def _reset_frame_cache(self):
+    self._frame_cache = collections.OrderedDict()
 
-  #       # Deletions
-  #       for i in d:
-  #         dt = snapshot[i].template.recv_table.dt
-  #         del snapshot[i]
-  #         print '  - {0} #{1}'.format(dt, str(i).ljust(4))
+  # templates = dem.templates      # entity templates (via baseline)
+  # for spec, delta in c.items():
+  #   i, cls, serial = spec
+  #   snapshot[i] = entity.Instance(i, templates[cls], delta=delta)
+  # for i, delta in u.items():
+  #   dt = snapshot[i].template.recv_table.dt
+  #   snapshot[i].apply(delta)
+  # for i in d:
+  #   dt = snapshot[i].template.recv_table.dt
+  #   del snapshot[i]
