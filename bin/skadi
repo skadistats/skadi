@@ -11,21 +11,31 @@ root = os.path.join(pwd, '..')
 sys.path.append(root)
 
 from skadi import replay
-from skadi.io import protobuf as io_p
+from skadi.io.protobuf import demo as demo_io
 from skadi.meta import demo
+
 
 option_parser = optparse.OptionParser()
 (options, args) = option_parser.parse_args()
+
+HEADER = "PBUFDEM\0"
+
+
+class InvalidDemo(RuntimeError):
+  pass
+
 
 for arg in args:
   print '> parsing {0}'.format(os.path.basename(arg))
 
   f_io = io.open(os.path.join(root, arg), 'r+b')
-  d_io = io_p.Demo.wrapping(f_io)
-  demo = demo.parse(d_io)
+  if f_io.read(len(HEADER)) != HEADER:
+    raise InvalidDemo('header invalid')
+  f_io.read(4) # game summary offset in bytes, in file.
 
-  _replay = replay.construct(demo, d_io)
+  demo = demo.parse(f_io)
 
+  _replay = replay.construct(demo, f_io)
   for tick in list(reversed(demo._norm_keys)):
-    #print 'snapshot: {0}'.format(tick)
+    print tick
     _replay.snapshot(tick)
