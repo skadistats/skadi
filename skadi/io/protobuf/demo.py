@@ -1,4 +1,5 @@
 import collections
+import io
 import snappy
 
 from skadi.io.protobuf import read_varint_32, InvalidProtobufMessage
@@ -52,13 +53,11 @@ class Scanner(object):
     self.stream = stream
 
   def __iter__(self):
-    def next_message():
-      tick, peek = self.peek()
-      self.stream.seek(peek.offset + peek.size)
-      return tick, peek
-    return iter(next_message, None)
+    def next_peek():
+      return self.scan()
+    return iter(next_peek, None)
 
-  def peek(self):
+  def scan(self):
     start = self.stream.tell()
 
     try:
@@ -70,10 +69,10 @@ class Scanner(object):
       enum = (enum ^ pb_d.DEM_IsCompressed) if compressed else enum
 
       offset = self.stream.tell()
+
+      self.stream.seek(size, io.SEEK_CUR)
     except EOFError, e:
       return None
-    finally:
-      self.stream.seek(start)
 
     cls, o, s, c = PBMSG_BY_ENUM[enum], offset, size, compressed
 
