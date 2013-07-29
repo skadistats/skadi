@@ -30,6 +30,10 @@ PBMSG_BY_ENUM = {
 Peek = collections.namedtuple('Peek', ['cls', 'offset', 'size'])
 
 
+def wrap(bytes):
+  return io.BufferedReader(io.BytesIO(bytes))
+
+
 def read(stream, peek):
   if peek.cls not in PBMSG_BY_ENUM.values():
     msg = 'please update netmessages.proto: {0}'.format(cls)

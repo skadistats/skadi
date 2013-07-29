@@ -1,15 +1,17 @@
 import bitstring
 import io
 
+
 SIZEOF_BYTE = 4
 SIZEOF_BIT = SIZEOF_BYTE * 8
 FORMAT = 'uintle:{0}'.format(SIZEOF_BIT)
 
-class Bitstream(object):
-  @classmethod
-  def wrapping(cls, bytes):
-    return cls(bytes)
 
+def wrap(bytes):
+  return Bitstream(bytes)
+
+
+class Bitstream(object):
   def __init__(self, bytes):
     self.pos = 0
     self.data = []

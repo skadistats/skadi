@@ -3,26 +3,10 @@ import copy
 import math
 
 from skadi import enum
-from skadi.decoder import string_table
-from skadi.io import bitstream as io_bs
+from skadi.io import bitstream as bitstream_io
 
 
 Flag = enum(Unknown = 0x01, ProbablyPrecache = 0x02, FixedLength = 0x08)
-
-
-def parse(pbmsg):
-  name, flags = pbmsg.name, pbmsg.flags
-  me, ne = pbmsg.max_entries, pbmsg.num_entries
-  udfs = pbmsg.user_data_fixed_size
-  uds, udsb = pbmsg.user_data_size, pbmsg.user_data_size_bits
-
-  st = StringTable(name, me, ne, udfs, uds, udsb, flags)
-  items = string_table.decode(io_bs.Bitstream.wrapping(pbmsg.string_data), st)
-
-  for _, name, data in items:
-    st.items[name] = String(name, data)
-
-  return st
 
 
 class String(object):

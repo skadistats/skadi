@@ -1,3 +1,4 @@
+import collections
 import math
 import sys
 
@@ -9,7 +10,10 @@ PVS = enum(Enter = 0x01, Leave = 0x02, Delete = 0x04)
 
 
 def read(io, count, delta, cb, ci, rt, ent):
-  create, update, delete = {}, {}, []
+  create = collections.OrderedDict()
+  update = collections.OrderedDict()
+  delete = []
+
   index, i = -1, 0
 
   while i < count:

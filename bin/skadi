@@ -10,9 +10,8 @@ pwd = os.path.dirname(__file__)
 root = os.path.join(pwd, '..')
 sys.path.append(root)
 
+from skadi import demo
 from skadi import replay
-from skadi.io.protobuf import demo as demo_io
-from skadi.meta import demo
 
 
 option_parser = optparse.OptionParser()
@@ -34,8 +33,13 @@ for arg in args:
   f_io.read(4) # game summary offset in bytes, in file.
 
   demo = demo.parse(f_io)
+  tick = 50000
 
   _replay = replay.construct(demo, f_io)
-  for tick in list(reversed(demo._norm_keys)):
-    print tick
-    _replay.snapshot(tick)
+  _replay.tick = tick
+
+  print 'at tick #{0}'.format(tick)
+  for index, entity in _replay.snapshot.entities.items():
+    print '  #{0}: {1}'.format(index, entity.template.recv_table.dt)
+    for prop, value in iter(entity):
+      print '    {0}: {1}'.format(prop, value)
