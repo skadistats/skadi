@@ -10,9 +10,9 @@ pwd = os.path.dirname(__file__)
 root = os.path.join(pwd, '..')
 sys.path.append(root)
 
-from skadi import demo
-from skadi import replay
-
+from skadi import meta as m
+from skadi import replay as r
+from skadi.index import demo as idx_demo
 
 option_parser = optparse.OptionParser()
 (options, args) = option_parser.parse_args()
@@ -29,17 +29,23 @@ for arg in args:
 
   f_io = io.open(os.path.join(root, arg), 'r+b')
   if f_io.read(len(HEADER)) != HEADER:
-    raise InvalidDemo('header invalid')
+    raise InvalidDemo('malformed header')
   f_io.read(4) # game summary offset in bytes, in file.
 
-  demo = demo.parse(f_io)
-  tick = 50000
+  index = idx_demo.construct(f_io)
 
-  _replay = replay.construct(demo, f_io)
-  _replay.tick = tick
+  meta = m.construct(index.prologue, f_io)
+  replay = r.construct(meta, index.match, f_io, tick=70000)
 
-  print 'at tick #{0}'.format(tick)
-  for index, entity in _replay.snapshot.entities.items():
+  for index, entity in replay.snapshot.entities.items():
+    print '  #{0}: {1}'.format(index, entity.template.recv_table.dt)
+    for prop, value in iter(entity):
+      print '    {0}: {1}'.format(prop, value)
+
+  print 'going earlier in the replay...'
+
+  replay.tick = 30
+  for index, entity in replay.snapshot.entities.items():
     print '  #{0}: {1}'.format(index, entity.template.recv_table.dt)
     for prop, value in iter(entity):
       print '    {0}: {1}'.format(prop, value)

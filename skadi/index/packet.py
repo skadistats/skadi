@@ -1,7 +1,8 @@
 import collections
 import io
 
-from skadi.io.protobuf import read_varint_32, InvalidProtobufMessage
+from skadi.index import InvalidProtobufMessage, Index
+from skadi.io import read_varint
 from skadi.protoc import netmessages_pb2 as pb_n
 
 
@@ -30,13 +31,13 @@ PBMSG_BY_ENUM = {
 Peek = collections.namedtuple('Peek', ['cls', 'offset', 'size'])
 
 
-def wrap(bytes):
-  return io.BufferedReader(io.BytesIO(bytes))
+def construct(stream):
+  return PacketIndex(Indexer(stream))
 
 
 def read(stream, peek):
   if peek.cls not in PBMSG_BY_ENUM.values():
-    msg = 'please update netmessages.proto: {0}'.format(cls)
+    msg = 'please update netmessages.proto: {0}'.format(peek.cls)
     raise InvalidProtobufMessage(msg)
 
   stream.seek(peek.offset)
@@ -47,27 +48,38 @@ def read(stream, peek):
   return message
 
 
-def scan(stream):
-  return iter(Scanner(stream))
+class PacketIndex(Index):
+  def __init__(self, iterable):
+    super(PacketIndex, self).__init__(iterable)
+
+  @property
+  def full_packets(self):
+    return filter(lambda p: self.find(pb_d.CDemoFullPacket), self.replay)
+
+  @property
+  def packets(self):
+    return filter(lambda p: self.find(pb_d.CDemoPacket), self.replay)
 
 
-class Scanner(object):
+class Indexer(object):
   def __init__(self, stream):
     self.stream = stream
 
   def __iter__(self):
-    def next_peek():
-      return self.scan()
-    return iter(next_peek, None)
+    def next():
+      return self.next()
+    return iter(next, None)
 
-  def scan(self):
+  def next(self):
     start = self.stream.tell()
 
     try:
-      enum = read_varint_32(self.stream)
-      size = read_varint_32(self.stream)
+      enum = read_varint(self.stream)
+      size = read_varint(self.stream)
+
       offset = self.stream.tell()
-      self.stream.seek(size, io.SEEK_CUR)
+
+      self.stream.seek(offset + size)
     except EOFError, e:
       return None
 
