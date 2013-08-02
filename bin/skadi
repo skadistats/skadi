@@ -32,11 +32,12 @@ for arg in args:
     raise InvalidDemo('malformed header')
   f_io.read(4) # game summary offset in bytes, in file.
 
-  index = idx_demo.construct(f_io)
+  demo_index = idx_demo.construct(f_io)
 
-  meta = m.construct(index.prologue, f_io)
-  replay = r.construct(meta, index.match, f_io, tick=70000)
+  meta = m.construct(demo_index.prologue, f_io)
+  replay = r.construct(meta, demo_index.match, f_io, tick=70000)
 
+  print len(replay.snapshot.entities)
   for index, entity in replay.snapshot.entities.items():
     print '  #{0}: {1}'.format(index, entity.template.recv_table.dt)
     for prop, value in iter(entity):
@@ -45,6 +46,7 @@ for arg in args:
   print 'going earlier in the replay...'
 
   replay.tick = 30
+  print len(replay.snapshot.entities)
   for index, entity in replay.snapshot.entities.items():
     print '  #{0}: {1}'.format(index, entity.template.recv_table.dt)
     for prop, value in iter(entity):
