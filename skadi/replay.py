@@ -130,6 +130,7 @@ class Replay(object):
 
     for tick in self.match_index.locate_between(full_tick, self.tick):
       if tick in self._snapshots:
+        entities = self._snapshots[tick].entities
         continue
 
       strtab = self.stt_by_tick[tick]
