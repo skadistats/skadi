@@ -108,7 +108,7 @@ class MatchIndex(Index):
   def __init__(self, iterable):
     super(MatchIndex, self).__init__(iterable)
     self.full_ticks = map(lambda p: p.tick, self.full_packet_peeks)
-    self.ticks = map(lambda p: p.tick, self.packet_peeks)
+    self.ticks = map(lambda p: p.tick, self.packet_peeks)[1:]
     self._ft, self._t = None, None
 
   def find_earlier(self, tick):
@@ -122,7 +122,7 @@ class MatchIndex(Index):
 
   def locate_full_tick(self, near):
     self._ft = self._ft or list(reversed(self.full_ticks))
-    return next(t for t in self._ft if t <= near)
+    return next(t for t in self._ft if t < near)
 
   def locate_tick(self, near):
     self._t = self._t or list(reversed(self.ticks))
@@ -132,7 +132,7 @@ class MatchIndex(Index):
     return self.locate_full_tick(tick), self.locate_tick(tick)
 
   def locate_between(self, low, high):
-    return (t for t in self.ticks if t >= low and t <= high)
+    return (t for t in self.ticks if t > low and t <= high)
 
   def lookup_full(self, tick):
     when = self.find_when(tick)

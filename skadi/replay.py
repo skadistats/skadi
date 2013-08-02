@@ -87,8 +87,9 @@ class Replay(object):
   @property
   def snapshot(self):
     def snapshots_stale():
+      prev_tick = self.match_index.locate_tick(self.tick - 1)
       current_full_packet = self.match_index.locate_full_tick(self.tick)
-      earlier_full_packet = self.match_index.locate_full_tick(self.tick - 1)
+      earlier_full_packet = self.match_index.locate_full_tick(prev_tick)
       return current_full_packet != earlier_full_packet
 
     if not self._snapshots or snapshots_stale():
