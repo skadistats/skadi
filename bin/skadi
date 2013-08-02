@@ -37,17 +37,11 @@ for arg in args:
   meta = m.construct(demo_index.prologue, f_io)
   replay = r.construct(meta, demo_index.match, f_io, tick=70000)
 
-  print len(replay.snapshot.entities)
-  for index, entity in replay.snapshot.entities.items():
-    print '  #{0}: {1}'.format(index, entity.template.recv_table.dt)
-    for prop, value in iter(entity):
-      print '    {0}: {1}'.format(prop, value)
-
-  print 'going earlier in the replay...'
-
-  replay.tick = 30
-  print len(replay.snapshot.entities)
-  for index, entity in replay.snapshot.entities.items():
-    print '  #{0}: {1}'.format(index, entity.template.recv_table.dt)
-    for prop, value in iter(entity):
-      print '    {0}: {1}'.format(prop, value)
+  for tick in demo_index.match.ticks:
+    replay.tick = tick
+    snapshot = replay.snapshot
+    #print 'tick {0}: {1} entities'.format(tick, len(snapshot.entities))
+    # for index, entity in replay.snapshot.entities.items():
+    #   print '  #{0}: {1}'.format(index, entity.template.recv_table.dt)
+    #   for prop, value in iter(entity):
+    #     print '    {0}: {1}'.format(prop, value)
