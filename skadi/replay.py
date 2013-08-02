@@ -100,10 +100,11 @@ class Replay(object):
 
   @property
   def full_snapshot(self):
-    if self.tick in self._full_snapshots:
-      return self._full_snapshots[self.tick]
-
     full_tick = self.match_index.locate_full_tick(self.tick)
+
+    if full_tick in self._full_snapshots:
+      return self._full_snapshots[full_tick]
+
     strtab = self.stt_by_tick[full_tick]
     templates = self.tpl_by_tick[full_tick]
 
