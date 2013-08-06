@@ -81,7 +81,7 @@ class Replay(object):
     self.stt_by_tick = stt
     self.tpl_by_tick = tpl
     self.tick = match_index.locate_tick(tick)
-    self._full_snapshots = collections.OrderedDict()
+    self._full_snapshot = None
     self._snapshots = collections.OrderedDict()
 
   @property
@@ -93,6 +93,8 @@ class Replay(object):
       return current_full_packet != earlier_full_packet
 
     if not self._snapshots or snapshots_stale():
+      self._full_snapshot = None
+      self.full_snapshot
       self._snapshots = collections.OrderedDict()
 
     self._populate_snapshots()
@@ -101,10 +103,10 @@ class Replay(object):
 
   @property
   def full_snapshot(self):
-    full_tick = self.match_index.locate_full_tick(self.tick)
+    if self._full_snapshot:
+      return self._full_snapshot
 
-    if full_tick in self._full_snapshots:
-      return self._full_snapshots[full_tick]
+    full_tick = self.match_index.locate_full_tick(self.tick)
 
     strtab = self.stt_by_tick[full_tick]
     templates = self.tpl_by_tick[full_tick]
@@ -121,11 +123,11 @@ class Replay(object):
     entities = derive_entities(self.meta, pb_pent, templates, entcoll)
 
     s = snapshot.construct(strtab, templates, entities)
-    self._full_snapshots[full_tick] = s
+    self._full_snapshot = s
     return s
 
   def _populate_snapshots(self):
-    string_tables, templates, entities = self.full_snapshot.unpack()
+    string_tables, templates, entities = self._full_snapshot.unpack()
 
     full_tick = self.match_index.locate_full_tick(self.tick)
     entities = self.full_snapshot.entities
