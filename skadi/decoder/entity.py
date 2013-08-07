@@ -10,7 +10,7 @@ PVS = enum(Enter = 0x01, Leave = 0x02, Delete = 0x04)
 
 
 def read(io, count, delta, cb, rt, ent):
-  create, update, delete = {}, {}, []
+  create, update, delete = {}, {}, set()
   index, i = -1, 0
 
   while i < count:
@@ -19,7 +19,7 @@ def read(io, count, delta, cb, rt, ent):
       cls, serial, pl = io.read(cb), io.read(10), read_prop_list(io)
       create[(index, cls, serial)] = read_delta(io, pl, rt[str(cls)])
     elif flags & (PVS.Leave | PVS.Delete):
-      delete.append(index)
+      delete.add(index)
     else:
       pl = read_prop_list(io)
       _rt = ent[index].template.recv_table
@@ -27,7 +27,7 @@ def read(io, count, delta, cb, rt, ent):
     i += 1
 
   while delta and io.read(1):
-    delete.append(io.read(11))
+    delete.add(io.read(11))
 
   return create, update, delete
 

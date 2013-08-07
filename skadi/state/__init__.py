@@ -46,6 +46,7 @@ def derive_entities(meta, pb_pent, templates, entities):
     entities[i].apply(delta)
 
   for i in deleted:
-    del entities[i]
+    if i in entities:
+      del entities[i]
 
   return entities
