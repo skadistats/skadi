@@ -10,10 +10,7 @@ PVS = enum(Enter = 0x01, Leave = 0x02, Delete = 0x04)
 
 
 def read(io, count, delta, cb, rt, ent):
-  create = collections.OrderedDict()
-  update = collections.OrderedDict()
-  delete = []
-
+  create, update, delete = {}, {}, []
   index, i = -1, 0
 
   while i < count:
@@ -30,7 +27,7 @@ def read(io, count, delta, cb, rt, ent):
     i += 1
 
   while delta and io.read(1):
-    index = io.read(11)
+    delete.append(io.read(11))
 
   return create, update, delete
 
