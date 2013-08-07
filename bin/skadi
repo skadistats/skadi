@@ -25,7 +25,7 @@ class InvalidDemo(RuntimeError):
 
 
 for arg in args:
-  print '> parsing {0}'.format(os.path.basename(arg))
+  print '> opening {0}'.format(os.path.basename(arg))
 
   f_io = io.open(os.path.join(root, arg), 'r+b')
   if f_io.read(len(HEADER)) != HEADER:
@@ -34,14 +34,16 @@ for arg in args:
 
   demo_index = idx_demo.construct(f_io)
 
+  print '> parsing demo metadata'
   meta = m.construct(demo_index.prologue, f_io)
-  replay = r.construct(meta, demo_index.match, f_io, tick=70000)
+
+  print '> indexing replay'
+  replay = r.construct(meta, demo_index.match, f_io)
 
   for tick in demo_index.match.ticks:
     replay.tick = tick
     snapshot = replay.snapshot
-    #print 'tick {0}: {1} entities'.format(tick, len(snapshot.entities))
-    # for index, entity in replay.snapshot.entities.items():
-    #   print '  #{0}: {1}'.format(index, entity.template.recv_table.dt)
-    #   for prop, value in iter(entity):
-    #     print '    {0}: {1}'.format(prop, value)
+
+    for index, entity in replay.snapshot.entities.items():
+      for prop, value in iter(entity):
+        print prop, value

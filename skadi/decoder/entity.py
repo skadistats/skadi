@@ -9,7 +9,7 @@ from skadi.decoder import prop as d_prop
 PVS = enum(Enter = 0x01, Leave = 0x02, Delete = 0x04)
 
 
-def read(io, count, delta, cb, ci, rt, ent):
+def read(io, count, delta, cb, rt, ent):
   create = collections.OrderedDict()
   update = collections.OrderedDict()
   delete = []
@@ -20,7 +20,7 @@ def read(io, count, delta, cb, ci, rt, ent):
     index, flags = read_header(io, index)
     if flags & PVS.Enter:
       cls, serial, pl = io.read(cb), io.read(10), read_prop_list(io)
-      create[(index, cls, serial)] = read_delta(io, pl, rt[ci[cls].dt])
+      create[(index, cls, serial)] = read_delta(io, pl, rt[str(cls)])
     elif flags & (PVS.Leave | PVS.Delete):
       delete.append(index)
     else:
@@ -74,7 +74,6 @@ def read_delta(io, prop_list, recv_table):
 
   for prop_index in prop_list:
     p = recv_table.props[prop_index]
-    key = '{0}.{1}'.format(p.origin_dt, p.var_name)
-    delta[key] = d_prop.decode(io, p)
+    delta[p] = d_prop.decode(io, p)
 
   return delta

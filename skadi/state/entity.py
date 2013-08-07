@@ -7,13 +7,12 @@ class Template(object):
   def __repr__(self):
     return '{0} ({1} props)'.format(self.recv_table.dt, len(self.baseline))
 
+
 class Instance(object):
-  def __init__(self, _id, template, delta=None):
-    self.id = _id
+  def __init__(self, template, delta=None):
     self.template = template
-    self.state = template.baseline.copy() if template else {}
-    if delta:
-      self.apply(delta)
+    self._state = {}
+    self._delta = delta or {}
 
   def __iter__(self):
     return iter(self.state.items())
@@ -22,6 +21,15 @@ class Instance(object):
     dt, state = self.template.recv_table.dt, self.state
     return '<Instance dt: {0}, state:{1}>'.format(dt, state)
 
+  @property
+  def state(self):
+    state = self.template.baseline.copy()
+
+    for p, value in self._delta.items():
+      state[p] = value
+
+    return state
+
   def apply(self, delta):
-    for name, value in delta.items():
-      self.state[name] = value
+    for p, value in delta.items():
+      self._delta[p] = value

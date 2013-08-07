@@ -29,13 +29,13 @@ def pb_string_tables_find(pb_stt, name):
   return next(gen, None)
 
 
-def construct(meta, match_index, stream, tick=0):
+def construct(meta, match_index, stream, tick=None):
   # index string tables, templates at each tick
   stt = collections.OrderedDict()
   tpl = collections.OrderedDict()
 
-  string_tables = meta['string_tables']
-  templates = meta['templates']
+  string_tables = meta.string_tables
+  templates = meta.templates
 
   for peek in match_index.find_all(pb_d.CDemoPacket):
     pbmsg = d_index.read(stream, peek)
@@ -64,8 +64,7 @@ def construct(meta, match_index, stream, tick=0):
             st.items[name] = (name, data)
 
         if st.name == 'instancebaseline':
-          ci, rt = meta['class_info'], meta['recv_tables']
-          templates = derive_templates(ci, rt, st, templates)
+          templates = derive_templates(meta.recv_tables, st, templates)
 
     stt[peek.tick] = string_tables
     tpl[peek.tick] = templates
@@ -74,7 +73,7 @@ def construct(meta, match_index, stream, tick=0):
 
 
 class Replay(object):
-  def __init__(self, meta, match_index, stream, stt, tpl, tick=0):
+  def __init__(self, meta, match_index, stream, stt, tpl, tick=None):
     self.meta = meta
     self.match_index = match_index
     self.stream = stream

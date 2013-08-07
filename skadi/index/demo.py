@@ -126,7 +126,11 @@ class MatchIndex(Index):
 
   def locate_tick(self, near):
     self._t = self._t or list(reversed(self.ticks))
-    return next(t for t in self._t if t <= near)
+    try:
+      tick = next(t for t in self._t if t <= near)
+    except StopIteration:
+      tick = self.ticks[0]
+    return tick
 
   def locate(self, near):
     return self.locate_full_tick(tick), self.locate_tick(tick)

@@ -22,6 +22,12 @@ SVC_EXTRANEOUS = (
 )
 
 
+Meta = recordtype('Meta', [
+  'file_header', 'class_info', 'send_tables', 'recv_tables', 'string_tables',
+  'server_info', 'class_bits', 'voice_init', 'templates'
+])
+
+
 Class = recordtype('Class', ['id', 'dt', 'name'])
 
 
@@ -55,63 +61,54 @@ RECORD_BY_PBMSG = {
 }
 
 
+test_needs_decoder = lambda st: st.needs_decoder
+
+
 def construct(prologue, stream):
-  meta = {
-    'string_tables': collections.OrderedDict(),
-    'send_tables': collections.OrderedDict(),
-    'recv_tables': collections.OrderedDict()
-  }
+  demo_file_header = d_index.read(stream, prologue.file_header_peek)
+  file_header = parse_generic(demo_file_header)
 
   demo_class_info = d_index.read(stream, prologue.class_info_peek)
-  meta['class_info'] = parse_CDemoClassInfo(demo_class_info)
+  class_info = parse_CDemoClassInfo(demo_class_info)
 
-  demo_file_header = d_index.read(stream, prologue.file_header_peek)
-  meta['file_header'] = parse_generic(demo_file_header)
-
-  # parse send tables
   demo_send_tables = d_index.read(stream, prologue.send_tables_peek)
-  st_buffer = skadi.io.buffer(demo_send_tables.data)
-  st_index = p_index.construct(st_buffer)
-  for peek in st_index.find_all(pb_n.CSVCMsg_SendTable):
-    pbmsg = p_index.read(st_buffer, peek)
-    st = parse_CSVCMsg_SendTable(pbmsg)
-    meta['send_tables'][st.dt] = st
+  send_tables = parse_send_tables(demo_send_tables)
+  recv_tables = flatten(class_info, send_tables)
 
-  # send tables -> recv tables
-  test_needs_decoder = lambda st: st.needs_decoder
-  for st in filter(test_needs_decoder, meta['send_tables'].values()):
-    props = send_table.flatten(st, meta['send_tables'])
-    meta['recv_tables'][st.dt] = recv_table.construct(st.dt, props)
-
+  server_info = None
+  class_bits = None
+  voice_init = None
+  templates = None
+  string_tables = collections.OrderedDict()
+ 
   for peek in prologue.packet_peeks:
     demo_packet = d_index.read(stream, peek)
-    packet_stream = skadi.io.buffer(demo_packet.data)
-    packet_index = p_index.construct(packet_stream)
+    dp_stream = skadi.io.buffer(demo_packet.data)
 
-    for _peek in packet_index:
-      pbmsg = p_index.read(packet_stream, _peek)
+    for _peek in p_index.construct(dp_stream):
+      pbmsg = p_index.read(dp_stream, _peek)
 
       if isinstance(pbmsg, pb_n.CSVCMsg_CreateStringTable):
         string_table = parse_CSVCMsg_CreateStringTable(pbmsg)
-        meta['string_tables'][string_table.name] = string_table
+        string_tables[string_table.name] = string_table
       elif isinstance(pbmsg, pb_n.CSVCMsg_GameEventList):
         pass
       elif isinstance(pbmsg, pb_n.CSVCMsg_ServerInfo):
         server_info = parse_generic(pbmsg)
-        meta['server_info'] = server_info
-        meta['class_bits'] = \
-          int(math.ceil(math.log(server_info.max_classes, 2)))
+        class_bits = int(math.ceil(math.log(server_info.max_classes, 2)))
       elif isinstance(pbmsg, pb_n.CSVCMsg_VoiceInit):
-        meta['voice_init'] = parse_generic(pbmsg)
+        voice_init = parse_generic(pbmsg)
       elif not isinstance(pbmsg, SVC_EXTRANEOUS):
         raise RuntimeError('unknown pbmsg {0}', pbmsg.__class__)
 
-  ci, rt = meta['class_info'], meta['recv_tables']
-  st_ib = meta['string_tables']['instancebaseline']
-  templates = state.derive_templates(ci, rt, st_ib, collections.OrderedDict())
-  meta['templates'] = templates
+  st_ib = string_tables['instancebaseline']
+  templates = \
+    state.derive_templates(recv_tables, st_ib, collections.OrderedDict())
 
-  return meta
+  return Meta(
+    file_header, class_info, send_tables, recv_tables, string_tables,
+    server_info, class_bits, voice_init, templates
+  )
 
 
 def parse_generic(pbmsg):
@@ -124,12 +121,35 @@ def parse_generic(pbmsg):
   return getattr(sys.modules[__name__], parser)(pbmsg)
 
 
+def parse_send_tables(pbmsg):
+  send_tables = collections.OrderedDict()
+  st_buffer = skadi.io.buffer(pbmsg.data)
+  st_index = p_index.construct(st_buffer)
+
+  for peek in st_index.find_all(pb_n.CSVCMsg_SendTable):
+    pbmsg = p_index.read(st_buffer, peek)
+    send_tables[pbmsg.net_table_name] = parse_CSVCMsg_SendTable(pbmsg)
+
+  return send_tables
+
+
+def flatten(class_info, send_tables):
+  recv_tables = collections.OrderedDict()
+
+  for st in filter(test_needs_decoder, send_tables.values()):
+    props = send_table.flatten(st, send_tables)
+    cls = next(c.id for c in class_info.values() if c.dt == st.dt)
+    recv_tables[cls] = recv_table.construct(st.dt, props)
+
+  return recv_tables
+
+
 def parse_CDemoClassInfo(pbmsg):
   class_info = collections.OrderedDict()
 
   for c in pbmsg.classes:
-    _id, dt, name = c.class_id, c.table_name, c.network_name
-    class_info[c.class_id] = Class(_id, dt, name)
+    _id, dt, name = str(c.class_id), c.table_name, c.network_name
+    class_info[_id] = Class(_id, dt, name)
 
   return class_info
 
