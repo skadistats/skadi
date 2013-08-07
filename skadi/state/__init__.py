@@ -20,7 +20,8 @@ def derive_templates(recv_tables, st_ib, base):
     prop_list = dec_entity.read_prop_list(b_stream)
     for index in prop_list:
       prop = rt.props[index]
-      baseline[prop] = dec_prop.decode(b_stream, prop)
+      k = '{0}.{1}'.format(prop.origin_dt, prop.var_name)
+      baseline[k] = dec_prop.decode(b_stream, prop)
 
     templates[cls] = entity.Template(cls, rt, baseline)
 

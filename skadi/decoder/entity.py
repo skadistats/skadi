@@ -70,7 +70,8 @@ def read_delta(io, prop_list, recv_table):
   delta = {}
 
   for prop_index in prop_list:
-    p = recv_table.props[prop_index]
-    delta[p] = d_prop.decode(io, p)
+    prop = recv_table.props[prop_index]
+    k = '{0}.{1}'.format(prop.origin_dt, prop.var_name)
+    delta[k] = d_prop.decode(io, prop)
 
   return delta
