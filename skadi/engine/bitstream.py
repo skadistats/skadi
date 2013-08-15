@@ -1,5 +1,4 @@
 import bitstring
-import io
 
 
 SIZEOF_WORD_BYTES = 4

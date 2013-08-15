@@ -49,50 +49,51 @@ def parse_cdemo_send_tables(pbmsg):
   return send_tables
 
 
-def flatten(class_info, send_tables):
-  class Flattener(object):
-    def __init__(self, send_tables):
-      self.send_tables = send_tables
+class Flattener(object):
+  def __init__(self, send_tables):
+    self.send_tables = send_tables
 
-    def flatten(self, st):
-      aggregate = []
-      exclusions = self._aggregate_exclusions(st)
-      self._build(st, aggregate, exclusions, [])
-      return aggregate
+  def flatten(self, st):
+    aggregate = []
+    exclusions = self._aggregate_exclusions(st)
+    self._build(st, aggregate, exclusions, [])
+    return aggregate
 
-    def _build(self, st, aggregate, exclusions, props):
-      self._compile(st, aggregate, exclusions, props)
-      for p in props:
-        aggregate.append(p)
+  def _build(self, st, aggregate, exclusions, props):
+    self._compile(st, aggregate, exclusions, props)
+    for p in props:
+      aggregate.append(p)
 
-    def _compile(self, st, aggregate, exclusions, props):
-      def test_excluded(p):
-        return 
+  def _compile(self, st, aggregate, exclusions, props):
+    def test_excluded(p):
+      return 
 
-      for p in st.props:
-        excluded = (st.dt, p.var_name) in exclusions
-        ineligible = p.flags & (dt_prop.Flag.Exclude | dt_prop.Flag.InsideArray)
-        if excluded or ineligible:
-          continue
+    for p in st.props:
+      excluded = (st.dt, p.var_name) in exclusions
+      ineligible = p.flags & (dt_prop.Flag.Exclude | dt_prop.Flag.InsideArray)
+      if excluded or ineligible:
+        continue
 
-        if p.type == dt_prop.Type.DataTable:
-          _st = self.send_tables[p.dt_name]
-          if dt_prop.test_collapsible(p):
-            self._compile(_st, aggregate, exclusions, props)
-          else:
-            self._build(_st, aggregate, exclusions, [])
+      if p.type == dt_prop.Type.DataTable:
+        _st = self.send_tables[p.dt_name]
+        if dt_prop.test_collapsible(p):
+          self._compile(_st, aggregate, exclusions, props)
         else:
-          props.append(p)
+          self._build(_st, aggregate, exclusions, [])
+      else:
+        props.append(p)
 
-    def _aggregate_exclusions(self, st):
-      def recurse(_dt_prop):
-        st = self.send_tables[_dt_prop.dt_name]
-        return self._aggregate_exclusions(st)
+  def _aggregate_exclusions(self, st):
+    def recurse(_dt_prop):
+      st = self.send_tables[_dt_prop.dt_name]
+      return self._aggregate_exclusions(st)
 
-      inherited = map(recurse, st.dt_props)
+    inherited = map(recurse, st.dt_props)
 
-      return st.exclusions + list(itertools.chain(*inherited))
+    return st.exclusions + list(itertools.chain(*inherited))
 
+
+def flatten(class_info, send_tables):
   flattener = Flattener(send_tables)
   recv_tables = collections.OrderedDict()
 
