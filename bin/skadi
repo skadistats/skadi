@@ -1,7 +1,6 @@
 #!/usr/bin/env python
 
 import io
-import math
 import optparse
 import os
 import sys
@@ -10,40 +9,16 @@ pwd = os.path.dirname(__file__)
 root = os.path.join(pwd, '..')
 sys.path.append(root)
 
-from skadi import meta as m
-from skadi import replay as r
-from skadi.index import demo as idx_demo
+from skadi import demo
+
 
 option_parser = optparse.OptionParser()
 (options, args) = option_parser.parse_args()
 
-HEADER = "PBUFDEM\0"
+path = os.path.join(root, args[0])
 
+print '> opening {0}'.format(os.path.basename(path))
 
-class InvalidDemo(RuntimeError):
-  pass
-
-
-for arg in args:
-  print '> opening {0}'.format(os.path.basename(arg))
-
-  f_io = io.open(os.path.join(root, arg), 'r+b')
-  if f_io.read(len(HEADER)) != HEADER:
-    raise InvalidDemo('malformed header')
-  f_io.read(4) # game summary offset in bytes, in file.
-
-  demo_index = idx_demo.construct(f_io)
-
-  print '> parsing demo metadata'
-  meta = m.construct(demo_index.prologue, f_io)
-
-  print '> indexing replay'
-  replay = r.construct(meta, demo_index.match, f_io)
-
-  for tick in demo_index.match.ticks:
-    replay.tick = tick
-    snapshot = replay.snapshot
-
-    for index, entity in replay.snapshot.entities.items():
-      for prop, value in iter(entity):
-        print prop, value
+with io.open(path, 'r+b') as infile:
+  replay = demo.construct(infile)
+  replay.bootstrap()
