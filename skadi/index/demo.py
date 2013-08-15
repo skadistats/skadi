@@ -1,8 +1,8 @@
 import collections
 import snappy
 
+from skadi.index import read_varint
 from skadi.index import InvalidProtobufMessage, Index
-from skadi.io import read_varint
 from skadi.protoc import demo_pb2 as pb_d
 
 
@@ -10,7 +10,7 @@ test_full_packet = lambda p: p.cls is pb_d.CDemoFullPacket
 test_packet = lambda p: p.cls is pb_d.CDemoPacket
 
 
-PBMSG_BY_ENUM = {
+PBMSG_BY_KIND = {
   pb_d.DEM_Stop:                pb_d.CDemoStop,
   pb_d.DEM_FileHeader:          pb_d.CDemoFileHeader,
   pb_d.DEM_FileInfo:            pb_d.CDemoFileInfo,
@@ -32,12 +32,30 @@ peek_attrs = ['tick', 'cls', 'offset', 'size', 'compressed']
 Peek = collections.namedtuple('Peek', peek_attrs)
 
 
-def construct(stream):
-  return DemoIndex(Indexer(stream))
+def index(stream):
+  def read_demo_message():
+    try:
+      kind = read_varint(stream)
+      tick = read_varint(stream)
+      size = read_varint(stream)
+
+      comp = pb_d.DEM_IsCompressed & kind
+      kind = (kind ^ pb_d.DEM_IsCompressed) if comp else kind
+      tell = stream.tell()
+
+      stream.seek(tell + size)
+    except EOFError, e:
+      return None
+
+    cls, tell, sz, c = PBMSG_BY_KIND[kind], tell, size, comp
+
+    return Peek(tick=tick, cls=cls, offset=tell, size=sz, compressed=c)
+
+  return DemoIndex(iter(read_demo_message, None))
 
 
 def read(stream, peek):
-  if peek.cls not in PBMSG_BY_ENUM.values():
+  if peek.cls not in PBMSG_BY_KIND.values():
     msg = 'please update demo.proto: {0}'.format(peek.cls)
     raise InvalidProtobufMessage(msg)
 
@@ -108,7 +126,7 @@ class MatchIndex(Index):
   def __init__(self, iterable):
     super(MatchIndex, self).__init__(iterable)
     self.full_ticks = map(lambda p: p.tick, self.full_packet_peeks)
-    self.ticks = map(lambda p: p.tick, self.packet_peeks)[1:]
+    self.ticks = map(lambda p: p.tick, self.packet_peeks)
     self._ft, self._t = None, None
 
   def find_earlier(self, tick):
@@ -126,11 +144,7 @@ class MatchIndex(Index):
 
   def locate_tick(self, near):
     self._t = self._t or list(reversed(self.ticks))
-    try:
-      tick = next(t for t in self._t if t <= near)
-    except StopIteration:
-      tick = self.ticks[0]
-    return tick
+    return next(t for t in self._t if t <= near)
 
   def locate(self, near):
     return self.locate_full_tick(tick), self.locate_tick(tick)
@@ -162,34 +176,3 @@ class EpilogueIndex(Index):
   @property
   def file_info_peek(self):
     return self.find(pb_d.CDemoFileInfo)
-
-
-class Indexer(object):
-  def __init__(self, stream):
-    self.stream = stream
-
-  def __iter__(self):
-    def next():
-      return self.next()
-    return iter(next, None)
-
-  def next(self):
-    start = self.stream.tell()
-
-    try:
-      enum = read_varint(self.stream)
-      tick = read_varint(self.stream)
-      size = read_varint(self.stream)
-
-      compressed = (pb_d.DEM_IsCompressed & enum) == pb_d.DEM_IsCompressed
-      enum = (enum ^ pb_d.DEM_IsCompressed) if compressed else enum
-
-      offset = self.stream.tell()
-
-      self.stream.seek(offset + size)
-    except EOFError, e:
-      return None
-
-    cls, o, s, c = PBMSG_BY_ENUM[enum], offset, size, compressed
-
-    return Peek(tick=tick, cls=cls, offset=o, size=s, compressed=c)

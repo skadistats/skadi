@@ -1,12 +1,12 @@
 import collections
 import io
 
+from skadi.index import read_varint
 from skadi.index import InvalidProtobufMessage, Index
-from skadi.io import read_varint
 from skadi.protoc import netmessages_pb2 as pb_n
 
 
-PBMSG_BY_ENUM = {
+PBMSG_BY_KIND = {
   pb_n.net_SetConVar:         pb_n.CNETMsg_SetConVar,
   pb_n.net_SignonState:       pb_n.CNETMsg_SignonState,
   pb_n.net_Tick:              pb_n.CNETMsg_Tick,
@@ -31,12 +31,24 @@ PBMSG_BY_ENUM = {
 Peek = collections.namedtuple('Peek', ['cls', 'offset', 'size'])
 
 
-def construct(stream):
-  return PacketIndex(Indexer(stream))
+def index(stream):
+  def read_packet_message():
+    try:
+      kind = read_varint(stream)
+      size = read_varint(stream)
+      tell = stream.tell()
+
+      stream.seek(tell + size)
+    except EOFError, e:
+      return None
+
+    return Peek(cls=PBMSG_BY_KIND[kind], offset=tell, size=size)
+
+  return PacketIndex(iter(read_packet_message, None))
 
 
 def read(stream, peek):
-  if peek.cls not in PBMSG_BY_ENUM.values():
+  if peek.cls not in PBMSG_BY_KIND.values():
     msg = 'please update netmessages.proto: {0}'.format(peek.cls)
     raise InvalidProtobufMessage(msg)
 
@@ -59,28 +71,3 @@ class PacketIndex(Index):
   @property
   def packets(self):
     return filter(lambda p: self.find(pb_d.CDemoPacket), self.replay)
-
-
-class Indexer(object):
-  def __init__(self, stream):
-    self.stream = stream
-
-  def __iter__(self):
-    def next():
-      return self.next()
-    return iter(next, None)
-
-  def next(self):
-    start = self.stream.tell()
-
-    try:
-      enum = read_varint(self.stream)
-      size = read_varint(self.stream)
-
-      offset = self.stream.tell()
-
-      self.stream.seek(offset + size)
-    except EOFError, e:
-      return None
-
-    return Peek(cls=PBMSG_BY_ENUM[enum], offset=offset, size=size)
