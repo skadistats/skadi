@@ -22,6 +22,5 @@ print '> opening {0}'.format(os.path.basename(path))
 with io.open(path, 'r+b') as infile:
   replay = demo.construct(infile)
 
-  streamer = replay.stream(tick=0)
-  for tick, string_tables, entities in streamer:
+  for tick, string_tables, entities in replay.stream(tick=0):
     print 'at tick {0}: {1} entities'.format(tick, len(entities))
