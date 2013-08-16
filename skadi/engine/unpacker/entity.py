@@ -3,7 +3,7 @@ from skadi.engine import unpacker
 from skadi.engine.unpacker import prop as pu
 
 
-PVS = enum(Preserving = 0, Entering = 0x01, Deleting = 0x04)
+PVS = enum(Leaving = 1, Entering = 2, Deleting = 4)
 
 
 class Unpacker(unpacker.Unpacker):
@@ -23,13 +23,14 @@ class Unpacker(unpacker.Unpacker):
       try:
         deletion = self.bitstream.read(1)
         if deletion:
-          return PVS.Deleting, self.bitstream.read(10)
-        return
-      except EOFError:
+          return PVS.Deleting, self.bitstream.read(self.class_bits), ()
+        raise unpacker.UnpackComplete()
+      except:
         raise unpacker.UnpackComplete()
 
     try:
       self._index, mode = self._read_header()
+
       if mode & PVS.Entering:
         cls = str(self.bitstream.read(self.class_bits))
         serial = self.bitstream.read(10)
@@ -37,16 +38,18 @@ class Unpacker(unpacker.Unpacker):
         delta = self._read_delta(prop_list, self.recv_tables[cls])
 
         return PVS.Entering, self._index, (cls, serial, delta)
-      elif mode & PVS.Deleting:
-        return PVS.Deleting, self._index, ()
+      elif mode & PVS.Leaving:
+        if mode & PVS.Deleting:
+          return PVS.Deleting, self._index, ()
+        return PVS.Leaving, self._index, ()
 
       # otherwise, we're "preserving" (aka "updating") the entity
       cls = self.entities[self._index][0]
-      delta = self._read_delta(self.read_prop_list(), self.recv_tables[cls])
       prop_list = self._read_prop_list()
       delta = self._read_delta(prop_list, self.recv_tables[cls])
 
-      return PVS.Preserving, self._index, (delta,)
+      return 0, self._index, delta
+
     finally:
       self._entities_read += 1
 
@@ -63,13 +66,14 @@ class Unpacker(unpacker.Unpacker):
       encoded_index = \
         self.bitstream.read(4 * a + b) << 4 | (encoded_index & 0x0f)
 
-    mode = PVS.Preserving
-
+    mode = 0
     if not self.bitstream.read(1):
       if self.bitstream.read(1):
-        mode = PVS.Entering
-    elif self.bitstream.read(1):
-      mode = PVS.Deleting
+        mode |= PVS.Entering
+    else:
+      mode |= PVS.Leaving
+      if self.bitstream.read(1):
+        mode |= PVS.Deleting
 
     return self._index + encoded_index + 1, mode
 
@@ -100,7 +104,6 @@ class Unpacker(unpacker.Unpacker):
         key = '{0}.{1}'.format(prop.origin_dt, prop.var_name)
         delta[key] = packet_unpacker.unpack()
     except unpacker.UnpackComplete:
-      print key
       raise RuntimeError()
 
     return delta

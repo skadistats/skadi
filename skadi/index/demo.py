@@ -127,7 +127,7 @@ class MatchIndex(Index):
     super(MatchIndex, self).__init__(iterable)
     self.full_ticks = map(lambda p: p.tick, self.full_packet_peeks)
     self.ticks = map(lambda p: p.tick, self.packet_peeks)
-    self._ft, self._t = None, None
+    self._t, self._ft = None, None
 
   def find_earlier(self, tick):
     return filter(lambda p: p.tick < tick, self.peeks)
@@ -139,26 +139,35 @@ class MatchIndex(Index):
     return filter(lambda p: p.tick > tick, self.peeks)
 
   def locate_full_tick(self, near):
-    self._ft = self._ft or list(reversed(self.full_ticks))
-    return next(t for t in self._ft if t < near)
+    self._ft = self._ft or reversed(self.full_ticks)
+    return next(t for t in self._ft if t <= near)
 
   def locate_tick(self, near):
-    self._t = self._t or list(reversed(self.ticks))
+    self._t = self._t or reversed(self.ticks)
     return next(t for t in self._t if t <= near)
 
   def locate(self, near):
-    return self.locate_full_tick(tick), self.locate_tick(tick)
+    return self.locate_full_tick(near), self.locate_tick(near)
 
   def locate_between(self, low, high):
-    return (t for t in self.ticks if t > low and t <= high)
+    gen = (t for t in self.ticks if low <= t <= high)
+    return gen
 
   def lookup_full(self, tick):
-    when = self.find_when(tick)
-    return next((p for p in when if test_full_packet(p)), None)
+    gen = (p for p in self.peeks if p.tick == tick and test_full_packet(p))
+    return next(gen, None)
+
+  def lookup_full_between(self, l, h):
+    gen = (p for p in self.peeks if l <= p.tick <= h and test_full_packet(p))
+    return gen
 
   def lookup(self, tick):
-    when = self.find_when(tick)
-    return next((p for p in when if test_packet(p)), None)
+    gen = (p for p in self.peeks if p.tick == tick and test_packet(p))
+    return next(gen, None)
+
+  def lookup_between(self, l, h):
+    gen = (p for p in self.peeks if l <= p.tick <= h and test_packet(p))
+    return gen
 
   @property
   def full_packet_peeks(self):
