@@ -14,19 +14,18 @@ class Unpacker(unpacker.Unpacker):
     self.entry_bits = ent_bits
     self.ud_fixed_size = ud_fixed_sz
     self.ud_size_bits = ud_sz_bits
+    self._option = self.bitstream.read(1)
     self._key_history = collections.deque()
     self._index = -1
     self._entries_read = 0
 
   def unpack(self):
-    option = self.bitstream.read(1)
-
     if self._entries_read == self.num_entries:
-      raise EntriesReadOverflow()
+      raise unpacker.UnpackComplete()
 
     consecutive = self.bitstream.read(1)
     if consecutive:
-      self._index = self._index + 1
+      self._index += 1
     else:
       self._index = self.bitstream.read(self.entry_bits)
 
@@ -34,9 +33,10 @@ class Unpacker(unpacker.Unpacker):
 
     has_name = self.bitstream.read(1)
     if has_name:
-      assert not (option and self.bitstream.read(1)), 'unhandled data format'
+      assert not (self._option and self.bitstream.read(1))
 
       additive = self.bitstream.read(1)
+
       if additive:
         basis, length = self.bitstream.read(5), self.bitstream.read(5)
         name = self._key_history[basis][0:length]
@@ -60,4 +60,4 @@ class Unpacker(unpacker.Unpacker):
 
     self._entries_read += 1
 
-    return index, name, value
+    return self._index, name, value

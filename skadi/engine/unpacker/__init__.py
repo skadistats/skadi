@@ -15,4 +15,4 @@ class Unpacker(object):
       except UnpackComplete:
         raise StopIteration()
 
-    return iter(next(unpack, None))
+    return iter(unpack, None)

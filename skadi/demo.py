@@ -1,6 +1,12 @@
+import collections
+import copy
+import io
 import math
+import pprint
 
 from skadi.engine import *
+from skadi.engine import bitstream as bs
+from skadi.engine.unpacker import entity as uent
 from skadi.index import demo as di
 from skadi.index import packet as pi
 from skadi.protoc import demo_pb2 as pb_d
@@ -23,6 +29,11 @@ def construct(io):
   io.read(4) # game summary offset in file in bytes
 
   return Demo(io, di.index(io))
+
+
+class Stream(object):
+  def __init__(self, demo_index, string_tables, entities):
+    pass
 
 
 class Demo(object):
@@ -71,3 +82,58 @@ class Demo(object):
 
     max_classes = self.server_info['max_classes']
     self.class_bits = int(math.ceil(math.log(max_classes, 2)))
+
+  def stream(self, tick=0):
+    match = self.index.match
+    state = filter(lambda peek: peek.tick < tick, match.full_packet_peeks)
+
+    string_tables = copy.deepcopy(self.string_tables)
+    entities = collections.OrderedDict()
+
+    for peek in state:
+      full_packet = di.read(self.io, peek)
+      string_table_updates = full_packet.string_table.tables
+
+      for table in string_table_updates:
+        assert not table.items_clientside # unsupported, not used
+
+        pick = table.table_name
+        entries = [(i, _i.str, _i.data) for i, _i in enumerate(table.items)]
+
+        mapped = map(lambda (i,n,d): (i,(n,d)), entries)
+        string_tables[pick]['by_index'] = collections.OrderedDict(mapped)
+
+        mapped = map(lambda (i,n,d): (n,(i,d)), entries)
+        string_tables[pick]['by_name'] = collections.OrderedDict(mapped)
+
+    full_packet = di.read(self.io, state[-1])
+    p_io = io.BufferedReader(io.BytesIO(full_packet.packet.data))
+    packet = pi.index(p_io)
+
+    csvc_packet_entities = \
+      pi.read(p_io, packet.find(pb_n.CSVCMsg_PacketEntities))
+
+    bitstream = bs.construct(csvc_packet_entities.entity_data)
+    ct = csvc_packet_entities.updated_entries
+    cb, rt = self.class_bits, self.recv_tables
+
+    entities = collections.OrderedDict()
+    unpacker = uent.Unpacker(bitstream, -1, ct, False, cb, rt, {})
+    baselines = string_tables['instancebaseline']
+
+    for mode, index, context in list(unpacker):
+      assert mode == uent.PVS.Entering
+
+      cls, serial, diff = context
+
+      bitstream = bs.construct(baselines['by_name'][cls][1]) # baseline data
+      _unpacker = uent.Unpacker(bitstream, -1, 1, False, cb, rt, {})
+      state = _unpacker.unpack_baseline(self.recv_tables[cls])
+      state.update(diff)
+
+      print index, self.recv_tables[cls]
+      pp = pprint.PrettyPrinter(depth=2)
+      pp.pprint(state)
+
+      entities[index] = (cls, serial, state)
+

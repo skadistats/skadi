@@ -5,10 +5,10 @@ import math
 
 from skadi.index import packet as pi
 from skadi.engine import bitstream as bs
-from skadi.engine import string_table as st
 from skadi.engine.dt import prop as dt_prop
 from skadi.engine.dt import recv as dt_recv
 from skadi.engine.dt import send as dt_send
+from skadi.engine.unpacker import string_table as ust
 
 
 test_needs_decoder = lambda st: st.needs_decoder
@@ -114,9 +114,13 @@ def parse_all_csvc_create_string_table(pbmsgs):
     udfs = pbmsg.user_data_fixed_size
     udsb = pbmsg.user_data_size_bits
 
-    unpacked = st.unpack(bs.construct(pbmsg.string_data), ne, eb, udfs, udsb)
-    by_i = collections.OrderedDict(map(lambda (i,n,d): (i,(n,d)), unpacked))
-    by_n = collections.OrderedDict(map(lambda (i,n,d): (n,(i,d)), unpacked))
+    bitstream = bs.construct(pbmsg.string_data)
+    unpacked = list(ust.Unpacker(bitstream, ne, eb, udfs, udsb))
+
+    mapped = map(lambda (i,n,d): (i,(n,d)), unpacked)
+    by_i = collections.OrderedDict(mapped)
+    mapped = map(lambda (i,n,d): (n,(i,d)), unpacked)
+    by_n = collections.OrderedDict(mapped)
 
     string_tables[pbmsg.name] = {
       'num_entries': ne, 'entry_bits': eb,

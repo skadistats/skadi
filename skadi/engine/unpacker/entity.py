@@ -12,18 +12,19 @@ class Unpacker(unpacker.Unpacker):
     self.base_index = b_ind
     self.count = ct
     self.is_delta = delt
-    self.cls_bits = cls_bits
+    self.class_bits = cls_bits
     self.recv_tables = recv_tables
     self.entities = ents
     self._index = -1
     self._entities_read = 0
 
   def unpack(self):
-    if _entries_read == self.count:
+    if self._entities_read == self.count:
       try:
         deletion = self.bitstream.read(1)
         if deletion:
           return PVS.Deleting, self.bitstream.read(10)
+        return
       except EOFError:
         raise unpacker.UnpackComplete()
 
@@ -31,7 +32,7 @@ class Unpacker(unpacker.Unpacker):
       self._index, mode = self._read_header()
       if mode & PVS.Entering:
         cls = str(self.bitstream.read(self.class_bits))
-        serial = self.read(10)
+        serial = self.bitstream.read(10)
         prop_list = self._read_prop_list()
         delta = self._read_delta(prop_list, self.recv_tables[cls])
 
@@ -48,6 +49,10 @@ class Unpacker(unpacker.Unpacker):
       return PVS.Preserving, self._index, (delta,)
     finally:
       self._entities_read += 1
+
+  def unpack_baseline(self, recv_table):
+    prop_list = self._read_prop_list()
+    return self._read_delta(prop_list, recv_table)
 
   def _read_header(self):
     encoded_index = self.bitstream.read(6)
@@ -66,7 +71,7 @@ class Unpacker(unpacker.Unpacker):
     elif self.bitstream.read(1):
       mode = PVS.Deleting
 
-    return self._index + index + 1, mode
+    return self._index + encoded_index + 1, mode
 
   def _read_prop_list(self):
     prop_list, cursor = [], -1
@@ -87,11 +92,15 @@ class Unpacker(unpacker.Unpacker):
 
   def _read_delta(self, prop_list, recv_table):
     props = [recv_table.props[i] for i in prop_list]
-    unpacker = pu.Unpacker(self.bitstream, props)
+    packet_unpacker = pu.Unpacker(self.bitstream, props)
     delta = {}
 
-    for prop in props:
-      key = '{0}.{1}'.format(prop.origin_dt, prop.var_name)
-      delta[k] = unpacker.unpack()
+    try:
+      for prop in props:
+        key = '{0}.{1}'.format(prop.origin_dt, prop.var_name)
+        delta[key] = packet_unpacker.unpack()
+    except unpacker.UnpackComplete:
+      print key
+      raise RuntimeError()
 
     return delta
