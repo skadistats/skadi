@@ -13,24 +13,29 @@ In Progress
 Currently, skadi:
 
 * **parses 100% of replay data correctly**
-* creates and uses state containers for entities based off of entity 'baselines'
+* **has a friendly api for random access of full entity data**
 * scaffolds all known 'user messages' (ex. particle management, combat log, chat, and more)
 
 It does not yet:
 
 * relate all the different kinds of data in a replay coherently
-* have an api for getting at data in a developer-friendly way
 * have adequate testing or optimization
+* parse user messages or game events
 
 Skadi will likely continue to change in terms of the API.
 
 Usage
 =====
 
-I am unable to provide instructions at this time, but to run skadi you will need the following libraries:
+I am unable to provide instructions at this time, but to run skadi you will need the following libraries *and* python bindings:
 
 * protobuf (the bedrock of the whole implementation)
 * snappy (a quick compression library used to compress some replay data)
+
+There is an additional python-only dependency:
+
+* bitstring
+
 
 Attribution
 ===========
@@ -45,3 +50,5 @@ License
 Skadi is offered under the [MIT license](https://github.com/onethirtyfive/skadi/blob/master/LICENSE).
 
 This license applies to all revisions of source code.
+
+**Visible (textual) attribution is kindly requested. I want Dota 2 fants to know about this project!**
