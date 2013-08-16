@@ -28,8 +28,11 @@ class Bitstream(object):
         break
 
   def read(self, length): # in bits
-    l = self.data[self.pos / SIZEOF_WORD_BITS]
-    r = self.data[(self.pos + length - 1) / SIZEOF_WORD_BITS]
+    try:
+      l = self.data[self.pos / SIZEOF_WORD_BITS]
+      r = self.data[(self.pos + length - 1) / SIZEOF_WORD_BITS]
+    except IndexError:
+      raise EOFError('bitstream at end of data')
 
     pos_shift = self.pos & (SIZEOF_WORD_BITS - 1)
     rebuild = r << (SIZEOF_WORD_BITS - pos_shift) | l >> pos_shift

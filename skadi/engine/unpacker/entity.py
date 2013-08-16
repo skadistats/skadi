@@ -20,12 +20,14 @@ class Unpacker(unpacker.Unpacker):
 
   def unpack(self):
     if self._entities_read == self.count:
+      if not self.is_delta:
+        raise unpacker.UnpackComplete()
       try:
         deletion = self.bitstream.read(1)
         if deletion:
-          return PVS.Deleting, self.bitstream.read(self.class_bits), ()
-        raise unpacker.UnpackComplete()
-      except:
+          return PVS.Deleting, self.bitstream.read(11), ()
+      except EOFError:
+        print 'eof on bitstream'
         raise unpacker.UnpackComplete()
 
     try:
