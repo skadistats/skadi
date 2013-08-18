@@ -25,7 +25,7 @@ class Stream(object):
     self.recv_tables = rt
     self.string_tables = copy.deepcopy(string_tables)
     self.entities = copy.deepcopy(entities)
-    self._bootstrap_tick = tick
+    self._bootstrap_tick = index.locate_tick(tick)
 
   def __iter__(self):
     def _apply():
