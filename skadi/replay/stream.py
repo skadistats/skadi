@@ -20,11 +20,12 @@ class Stream(object):
   def __init__(self, io, index, tick, cb, rt, string_tables, entities):
     self.io = io
     self.index = index
-    self.tick = tick
+    self.tick = None
     self.class_bits = cb
     self.recv_tables = rt
     self.string_tables = copy.deepcopy(string_tables)
     self.entities = copy.deepcopy(entities)
+    self._bootstrap_tick = tick
 
   def __iter__(self):
     def _apply():
@@ -34,19 +35,20 @@ class Stream(object):
     return iter(_apply, None)
 
   def bootstrap(self):
-    full_packet_tick = self.index.locate_full_tick(self.tick)
+    full_packet_tick = self.index.locate_full_tick(self._bootstrap_tick)
     peeks = self.index.lookup_between(full_packet_tick, self.index.ticks[-1])
 
     for peek in peeks:
       self.apply(peek)
-      if self.tick == peek.tick:
+      if self._bootstrap_tick == peek.tick:
         break
 
-    self.peeks = peeks # use the generator from here on out
+    self.peeks = peeks # peeks is a generator, so will continue from here
 
   def apply(self, peek):
     self.tick = peek.tick
     st, cb, rt = self.string_tables, self.class_bits, self.recv_tables
+    st_ib = st['instancebaseline']
 
     packet = di.read(self.io, peek)
     p_io = io.BufferedReader(io.BytesIO(packet.data))
@@ -80,11 +82,7 @@ class Stream(object):
       if mode & PVS.Entering:
         cls, serial, diff = context
 
-        baseline = self.string_tables['instancebaseline'].get(cls)[1]
-        bitstream = bs.construct(baseline)
-        _unpacker = uent.unpack(bitstream, -1, 1, False, cb, rt, {})
-
-        state = _unpacker.unpack_baseline(self.recv_tables[cls])
+        state = st_ib.getbaseline(cls, cb, rt)
         state.update(diff)
 
         self.entities[index] = (cls, serial, state)

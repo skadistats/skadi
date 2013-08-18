@@ -77,6 +77,7 @@ class Demo(object):
     match = self.index.match
     cb, rt = self.class_bits, self.recv_tables
     st = copy.deepcopy(self.string_tables)
+    st_ib = st['instancebaseline']
 
     full_packet_peeks = \
       filter(lambda peek: peek.tick <= tick, match.full_packet_peeks)
@@ -106,11 +107,7 @@ class Demo(object):
     for mode, index, (cls, serial, diff) in unpacker:
       assert mode & PVS.Entering
 
-      baseline = st['instancebaseline'].get(cls)[1]
-      bitstream = bs.construct(baseline)
-      _unpacker = uent.unpack(bitstream, -1, 1, False, cb, rt, {})
-
-      state = _unpacker.unpack_baseline(self.recv_tables[cls])
+      state = st_ib.getbaseline(cls, cb, rt)
       state.update(diff)
 
       entities[index] = (cls, serial, state)
