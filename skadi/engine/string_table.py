@@ -42,6 +42,8 @@ class StringTable(object):
     mapped = map(lambda (i,n,d): (n,(i,d)), entries)
     self.by_name = collections.OrderedDict(mapped)
 
+    self._baseline_cache = {}
+
   def update(self, entry):
     i, n, d = entry
 
@@ -49,6 +51,11 @@ class StringTable(object):
       self.by_name[n] = (i, d)
       self.by_index[i] = (n, d)
     else:
-      name, _ = self.by_index[i]
+      n, _ = self.by_index[i]
       self.by_name[n] = (i, d)
       self.by_index[i] = (n, d)
+
+    try:
+      del self._baseline_cache[n]
+    except KeyError:
+      pass
