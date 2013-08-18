@@ -3,8 +3,10 @@ import io
 import itertools
 import math
 
+from skadi import bitlength
 from skadi.index import packet as pi
 from skadi.engine import bitstream as bs
+from skadi.engine import string_table as stab
 from skadi.engine.dt import prop as dt_prop
 from skadi.engine.dt import recv as dt_recv
 from skadi.engine.dt import send as dt_send
@@ -109,24 +111,15 @@ def parse_all_csvc_create_string_table(pbmsgs):
   string_tables = collections.OrderedDict()
 
   for pbmsg in pbmsgs:
-    ne = pbmsg.num_entries
-    eb = int(math.ceil(math.log(pbmsg.max_entries, 2)))
-    udfs = pbmsg.user_data_fixed_size
-    udsb = pbmsg.user_data_size_bits
-
     bitstream = bs.construct(pbmsg.string_data)
-    unpacked = list(ust.Unpacker(bitstream, ne, eb, udfs, udsb))
+    ne = pbmsg.num_entries
+    eb = bitlength(pbmsg.max_entries)
+    sf = pbmsg.user_data_fixed_size
+    sb = pbmsg.user_data_size_bits
+    entries = list(ust.Unpacker(bitstream, ne, eb, sf, sb))
 
-    mapped = map(lambda (i,n,d): (i,(n,d)), unpacked)
-    by_i = collections.OrderedDict(mapped)
-    mapped = map(lambda (i,n,d): (n,(i,d)), unpacked)
-    by_n = collections.OrderedDict(mapped)
-
-    string_tables[pbmsg.name] = {
-      'num_entries': ne, 'entry_bits': eb,
-      'user_data_fixed_size': udfs, 'user_data_size_bits': udsb,
-      'by_index': by_i, 'by_name': by_n
-    }
+    name = pbmsg.name
+    string_tables[name] = stab.construct(name, eb, sf, sb, entries)
 
   return string_tables
 

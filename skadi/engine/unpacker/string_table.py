@@ -7,13 +7,17 @@ MAX_NAME_LENGTH = 0x400
 KEY_HISTORY_SIZE = 32
 
 
+def unpack(*args):
+  return Unpacker(*args)
+
+
 class Unpacker(unpacker.Unpacker):
-  def __init__(self, bitstream, num_ent, ent_bits, ud_fixed_sz, ud_sz_bits):
+  def __init__(self, bitstream, num_ent, ent_bits, sz_fixed, sz_bits):
     super(Unpacker, self).__init__(bitstream)
     self.num_entries = num_ent
     self.entry_bits = ent_bits
-    self.ud_fixed_size = ud_fixed_sz
-    self.ud_size_bits = ud_sz_bits
+    self.size_fixed = sz_fixed
+    self.size_bits = sz_bits
     self._option = self.bitstream.read(1)
     self._key_history = collections.deque()
     self._index = -1
@@ -51,8 +55,8 @@ class Unpacker(unpacker.Unpacker):
 
     has_value = self.bitstream.read(1)
     if has_value:
-      if self.ud_fixed_size:
-        bit_length = self.ud_size_bits
+      if self.size_fixed:
+        bit_length = self.size_bits
       else:
         bit_length = self.bitstream.read(14) * 8
 

@@ -6,6 +6,10 @@ from skadi.engine.unpacker import prop as pu
 PVS = enum(Leaving = 1, Entering = 2, Deleting = 4)
 
 
+def unpack(bitstream, b_ind, ct, delt, cls_bits, recv_tables, ents):
+  return Unpacker(bitstream, b_ind, ct, delt, cls_bits, recv_tables, ents)
+
+
 class Unpacker(unpacker.Unpacker):
   def __init__(self, bitstream, b_ind, ct, delt, cls_bits, recv_tables, ents):
     super(Unpacker, self).__init__(bitstream)
@@ -23,11 +27,9 @@ class Unpacker(unpacker.Unpacker):
       if not self.is_delta:
         raise unpacker.UnpackComplete()
       try:
-        deletion = self.bitstream.read(1)
-        if deletion:
+        if self.bitstream.read(1):
           return PVS.Deleting, self.bitstream.read(11), ()
       except EOFError:
-        print 'eof on bitstream'
         raise unpacker.UnpackComplete()
 
     try:
@@ -83,9 +85,7 @@ class Unpacker(unpacker.Unpacker):
     prop_list, cursor = [], -1
 
     while True:
-      consecutive = self.bitstream.read(1)
-
-      if consecutive:
+      if self.bitstream.read(1):
         cursor += 1
       else:
         offset = self.bitstream.read_varint()

@@ -4,6 +4,10 @@ from skadi.engine import unpacker
 from skadi.engine.dt.prop import Flag, Type
 
 
+def unpack(bitstream, props):
+  return Unpacker(bitstream, props)
+
+
 class Unpacker(unpacker.Unpacker):
   def __init__(self, bitstream, props):
     self.bitstream = bitstream
