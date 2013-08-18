@@ -1,4 +1,5 @@
 import collections
+import copy
 
 from skadi.engine import bitstream as bs
 from skadi.engine.unpacker import entity as uent
@@ -24,16 +25,14 @@ class StringTable(object):
   def getbaseline(self, name, cb, rt):
     assert self.name == 'instancebaseline'
 
-    if name in self._baseline_cache:
-      return self._baseline_cache[name]
+    if name not in self._baseline_cache:
+      bitstream = bs.construct(self.get(name)[1])
+      unpacker = uent.unpack(bitstream, -1, 1, False, cb, rt, {})
+      baseline = unpacker.unpack_baseline(rt[name])
 
-    bitstream = bs.construct(self.get(name)[1])
-    unpacker = uent.unpack(bitstream, -1, 1, False, cb, rt, {})
-    baseline = unpacker.unpack_baseline(rt[name])
+      self._baseline_cache[name] = baseline
 
-    self._baseline_cache[name] = baseline
-
-    return baseline
+    return copy.copy(self._baseline_cache[name])
 
   def update_all(self, entries):
     mapped = map(lambda (i,n,d): (i,(n,d)), entries)
