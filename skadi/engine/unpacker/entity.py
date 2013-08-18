@@ -98,14 +98,6 @@ class Unpacker(unpacker.Unpacker):
 
   def _read_delta(self, prop_list, recv_table):
     props = [recv_table.props[i] for i in prop_list]
-    packet_unpacker = pu.Unpacker(self.bitstream, props)
-    delta = {}
+    unpacker = pu.Unpacker(self.bitstream, props)
 
-    try:
-      for prop in props:
-        key = '{0}.{1}'.format(prop.origin_dt, prop.var_name)
-        delta[key] = packet_unpacker.unpack()
-    except unpacker.UnpackComplete:
-      raise RuntimeError()
-
-    return delta
+    return {(p.origin_dt, p.var_name):unpacker.unpack() for p in props}
