@@ -17,22 +17,9 @@ class StringTable(object):
     self.size_fixed = size_fixed
     self.size_bits = size_bits
     self.update_all(entries)
-    self._baseline_cache = {}
 
   def get(self, name):
     return self.by_name[name]
-
-  def getbaseline(self, name, cb, rt):
-    assert self.name == 'instancebaseline'
-
-    if name not in self._baseline_cache:
-      bitstream = bs.construct(self.get(name)[1])
-      unpacker = uent.unpack(bitstream, -1, 1, False, cb, rt, {})
-      baseline = unpacker.unpack_baseline(rt[name])
-
-      self._baseline_cache[name] = baseline
-
-    return copy.copy(self._baseline_cache[name])
 
   def update_all(self, entries):
     mapped = map(lambda (i,n,d): (i,(n,d)), entries)
@@ -40,9 +27,6 @@ class StringTable(object):
 
     mapped = map(lambda (i,n,d): (n,(i,d)), entries)
     self.by_name = collections.OrderedDict(mapped)
-
-    if self.name == 'instancebaseline':
-      self._baseline_cache = {}
 
   def update(self, entry):
     i, n, d = entry
@@ -54,9 +38,3 @@ class StringTable(object):
       n, _ = self.by_index[i]
       self.by_name[n] = (i, d)
       self.by_index[i] = (n, d)
-
-    if self.name == 'instancebaseline':
-      try:
-        del self._baseline_cache[n]
-      except KeyError:
-        pass

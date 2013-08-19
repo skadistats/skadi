@@ -6,19 +6,18 @@ from skadi.engine.unpacker import prop as pu
 PVS = enum(Leaving = 1, Entering = 2, Deleting = 4)
 
 
-def unpack(bitstream, b_ind, ct, delt, cls_bits, recv_tables, ents):
-  return Unpacker(bitstream, b_ind, ct, delt, cls_bits, recv_tables, ents)
+def unpack(*args):
+  return Unpacker(*args)
 
 
 class Unpacker(unpacker.Unpacker):
-  def __init__(self, bitstream, b_ind, ct, delt, cls_bits, recv_tables, ents):
+  def __init__(self, bitstream, base_index, count, delta, class_bits, world):
     super(Unpacker, self).__init__(bitstream)
-    self.base_index = b_ind
-    self.count = ct
-    self.is_delta = delt
-    self.class_bits = cls_bits
-    self.recv_tables = recv_tables
-    self.entities = ents
+    self.base_index = base_index
+    self.count = count
+    self.is_delta = delta
+    self.class_bits = class_bits
+    self.world = world
     self._index = -1
     self._entities_read = 0
 
@@ -38,21 +37,17 @@ class Unpacker(unpacker.Unpacker):
       if mode & PVS.Entering:
         cls = str(self.bitstream.read(self.class_bits))
         serial = self.bitstream.read(10)
-        prop_list = self._read_prop_list()
-        delta = self._read_delta(prop_list, self.recv_tables[cls])
+        rt = self.world.recv_tables[cls]
+        delta = self._read_delta(self._read_prop_list(), rt)
 
-        return PVS.Entering, self._index, (cls, serial, delta)
+        context = (cls, serial, delta)
       elif mode & PVS.Leaving:
-        if mode & PVS.Deleting:
-          return PVS.Deleting, self._index, ()
-        return PVS.Leaving, self._index, ()
+        context = ()
+      else:
+        rt = self.world.fetch_recv_table(self.world.by_index[self._index])
+        context = self._read_delta(self._read_prop_list(), rt)
 
-      # otherwise, we're "preserving" (aka "updating") the entity
-      cls = self.entities[self._index][0]
-      prop_list = self._read_prop_list()
-      delta = self._read_delta(prop_list, self.recv_tables[cls])
-
-      return 0, self._index, delta
+      return self._index, mode, context
 
     finally:
       self._entities_read += 1

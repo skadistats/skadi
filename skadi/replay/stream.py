@@ -2,6 +2,7 @@ import copy
 import io
 
 from skadi.engine import bitstream as bs
+from skadi.engine import world as w
 from skadi.engine.unpacker import entity as uent
 from skadi.engine.unpacker import string_table as ust
 from skadi.engine.unpacker.entity import PVS
@@ -17,15 +18,16 @@ def construct(*args):
 
 
 class Stream(object):
-  def __init__(self, io, index, tick, cb, rt, string_tables, entities):
+  def __init__(self, io, index, tick, cb, rt, string_tables, world):
     self.io = io
     self.index = index
     self.tick = None
     self.class_bits = cb
     self.recv_tables = rt
     self.string_tables = copy.deepcopy(string_tables)
-    self.entities = copy.deepcopy(entities)
+    self.world = copy.deepcopy(world)
     self._bootstrap_tick = index.locate_tick(tick)
+    self._baseline_cache = {}
 
   def __iter__(self):
     def _apply():
@@ -76,22 +78,28 @@ class Stream(object):
     bitstream = bs.construct(csvc_packet_entities.entity_data)
     ct = csvc_packet_entities.updated_entries
 
-    unpacker = uent.unpack(bitstream, -1, ct, False, cb, rt, self.entities)
+    unpacker = uent.unpack(bitstream, -1, ct, False, cb, self.world)
 
-    for mode, index, context in unpacker:
+    for index, mode, context in unpacker:
       if mode & PVS.Entering:
         cls, serial, diff = context
 
-        state = st_ib.getbaseline(cls, cb, rt)
+        if cls not in self._baseline_cache:
+          bitstream = bs.construct(st['instancebaseline'].get(cls)[1])
+          unpacker = uent.unpack(bitstream, -1, 1, False, cb, self.world)
+
+          self._baseline_cache[cls] = unpacker.unpack_baseline(rt[cls])
+
+        state = dict(self._baseline_cache[cls])
         state.update(diff)
 
-        self.entities[index] = (cls, serial, state)
+        self.world.create(cls, index, serial, state)
       elif mode & PVS.Deleting:
-        del self.entities[index]
+        self.world.delete(index)
       elif mode ^ PVS.Leaving:
-        cls, serial, state = self.entities[index]
+        state = dict(self.world.find_index(index))
         state.update(context)
 
-        self.entities[index] = (cls, serial, state)
+        self.world.update(index, state)
 
-    return peek.tick, self.string_tables, self.entities
+    return peek.tick, self.string_tables, self.world

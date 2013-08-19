@@ -1,6 +1,7 @@
 import copy
 
 from skadi.engine import *
+from skadi.engine import world as w
 from skadi.engine.unpacker import entity as uent
 from skadi.engine.unpacker.entity import PVS
 from skadi.index import demo as di
@@ -91,8 +92,6 @@ class Demo(object):
         entries = [(i, e.str, e.data) for i, e in enumerate(table.items)]
         st[table.table_name].update_all(entries)
 
-    entities = collections.OrderedDict()
-
     full_packet = di.read(self.io, full_packet_peeks[-1])
     p_io = io.BufferedReader(io.BytesIO(full_packet.packet.data))
     index = pi.index(p_io)
@@ -100,16 +99,21 @@ class Demo(object):
     csvc_packet_entities = \
       pi.read(p_io, index.find(pb_n.CSVCMsg_PacketEntities))
 
+    world = w.construct(rt)
+
     bitstream = bs.construct(csvc_packet_entities.entity_data)
     ct = csvc_packet_entities.updated_entries
-    unpacker = uent.unpack(bitstream, -1, ct, False, cb, rt, {})
+    unpacker = uent.unpack(bitstream, -1, ct, False, cb, world)
 
-    for mode, index, (cls, serial, diff) in unpacker:
-      assert mode & PVS.Entering
-
-      state = st_ib.getbaseline(cls, cb, rt)
+    for index, mode, (cls, serial, diff) in unpacker:
+      bitstream = bs.construct(st['instancebaseline'].get(cls)[1])
+      unpacker = uent.unpack(bitstream, -1, 1, False, cb, world)
+      state = dict(unpacker.unpack_baseline(rt[cls]))
       state.update(diff)
 
-      entities[index] = (cls, serial, state)
+      try:
+        world.create(cls, index, serial, state)
+      except AssertionError, e:
+        print e
 
-    return stream.construct(self.io, match, tick, cb, rt, st, entities)
+    return stream.construct(self.io, match, tick, cb, rt, st, world)
