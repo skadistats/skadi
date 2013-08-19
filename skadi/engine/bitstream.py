@@ -6,20 +6,20 @@ SIZEOF_WORD_BITS = SIZEOF_WORD_BYTES * 8
 FORMAT = 'uintle:{0}'.format(SIZEOF_WORD_BITS)
 
 
-def construct(bytes):
-  return Bitstream(bytes)
+def construct(_bytes):
+  return Bitstream(_bytes)
 
 
 class Bitstream(object):
-  def __init__(self, bytes):
+  def __init__(self, _bytes):
     self.pos = 0
     self.data = []
 
-    remainder = len(bytes) % 4
+    remainder = len(_bytes) % 4
     if remainder:
-      bytes = bytes + '\0' * (4 - remainder)
+      _bytes = _bytes + '\0' * (4 - remainder)
 
-    bs = bitstring.ConstBitStream(bytes=bytes)
+    bs = bitstring.ConstBitStream(bytes=_bytes)
     while True:
       try:
         word = bs.read('uintle:32')
@@ -42,23 +42,23 @@ class Bitstream(object):
     return rebuild & ((1 << length) - 1)
 
   def read_long(self, length):
-    remaining, bytes = length, []
+    remaining, _bytes = length, []
     while remaining > 7:
       remaining -= 8
-      bytes.append(self.read(8))
+      _bytes.append(self.read(8))
     if remaining:
-      bytes.append(self.read(remaining))
-    return str(bytearray(bytes))
+      _bytes.append(self.read(remaining))
+    return str(bytearray(_bytes))
 
   def read_string(self, length):
-    i, bytes = 0, []
+    i, _bytes = 0, []
     while i < length:
       byte = self.read(8)
       if byte == 0:
-        return str(bytearray(bytes))
-      bytes.append(byte)
+        return str(bytearray(_bytes))
+      _bytes.append(byte)
       i += 1
-    return str(bytearray(bytes))
+    return str(bytearray(_bytes))
 
   def read_varint(self):
     run, value = 0, 0
