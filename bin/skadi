@@ -9,7 +9,8 @@ pwd = os.path.dirname(__file__)
 root = os.path.join(pwd, '..')
 sys.path.append(root)
 
-from skadi import demo
+from skadi.engine import world as w
+from skadi.replay import demo as rd
 
 
 option_parser = optparse.OptionParser()
@@ -20,7 +21,17 @@ path = os.path.join(root, args[0])
 print '> opening {0}'.format(os.path.basename(path))
 
 with io.open(path, 'r+b') as infile:
-  replay = demo.construct(infile)
+  demo = rd.construct(infile)
 
-  for tick, string_tables, entities in replay.stream(tick=0):
-    print 'at tick {0}: {1} entities'.format(tick, len(entities))
+  for tick, string_tables, world in demo.stream(tick=5000):
+    lane_creep_dt = 'DT_DOTA_BaseNPC_Creep_Lane'
+    lane_creeps = world.find_all_by_dt(lane_creep_dt)
+
+    # FASCINATING USAGE EXAMPLE:
+    if lane_creeps:
+      print 'lane creeps at {0}: {1}'.format(tick, len(lane_creeps))
+      for ehandle, state in lane_creeps.items():
+        index, _ = w.from_ehandle(ehandle)
+        health = state[('DT_DOTA_BaseNPC_Creep_Lane', 'm_iHealthPercentage')]
+        health = int(float(health + 1) / 127.0 * 100)
+        print 'creep #{0}; {1}% health'.format(index, health)
