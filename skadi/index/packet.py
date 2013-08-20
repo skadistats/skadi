@@ -67,8 +67,8 @@ class PacketIndex(Index):
 
   @property
   def full_packets(self):
-    return filter(lambda p: self.find(pb_d.CDemoFullPacket), self.replay)
+    return filter(lambda p: self.find(pb_d.CDemoFullPacket), self.peeks)
 
   @property
   def packets(self):
-    return filter(lambda p: self.find(pb_d.CDemoPacket), self.replay)
+    return filter(lambda p: self.find(pb_d.CDemoPacket), self.peeks)
