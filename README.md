@@ -101,7 +101,7 @@ If you're on a different distribution or have environmental particularities, you
 
 * snappy
 
-And **python** libs for:
+And python **bindings** for:
 
 * protobuf
 * bitstring
