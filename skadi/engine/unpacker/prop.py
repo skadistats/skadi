@@ -1,4 +1,5 @@
 import bitstring
+import math
 
 from skadi.engine import unpacker
 from skadi.engine.dt.prop import Flag, Type
@@ -25,8 +26,6 @@ class Unpacker(unpacker.Unpacker):
     finally:
       self._props_read += 1
 
-    raise NotImplementedError('prop type {0}'.format(prop.type))
-
   def _actually_unpack(self, prop):
     if prop.type == Type.Int:
       return self._unpack_int(prop.flags, prop.num_bits)
@@ -45,6 +44,8 @@ class Unpacker(unpacker.Unpacker):
       return self._unpack_array(prop.num_elements, prop.array_prop)
     elif prop.type == Type.Int64:
       return self._unpack_int64(prop.flags, prop.num_bits)
+
+    raise NotImplementedError('prop type {0}'.format(prop.type))
 
   def _unpack_int(self, flags, num_bits):
     if flags & Flag.EncodedAgainstTickcount:
@@ -91,7 +92,7 @@ class Unpacker(unpacker.Unpacker):
       bit_array = bitstring.BitArray(uint=self.bitstream.read(11), length=32)
 
       value = bit_array.float
-      if (bit_array >> 31):
+      if bit_array >> 31:
         value += 4.2949673e9
       value *= 4.885197850512946e-4
       if sign:
@@ -107,12 +108,12 @@ class Unpacker(unpacker.Unpacker):
         value += 4.2949673e9 # wat, edith?
       return float(value)
 
-    dividend = self.bitstream.read(num_bits);
-    divisor = (1 << num_bits) - 1;
+    dividend = self.bitstream.read(num_bits)
+    divisor = (1 << num_bits) - 1
 
     f = float(dividend) / divisor
     r = high_value - low_value
-    return f * r + low_value;
+    return f * r + low_value
 
   def _unpack_vector(self, flags, num_bits, high_value, low_value):
     x = self._unpack_float(flags, num_bits, high_value, low_value)
