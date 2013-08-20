@@ -6,7 +6,7 @@ import os
 import sys
 
 pwd = os.path.dirname(__file__)
-root = os.path.join(pwd, '..')
+root = os.path.abspath(os.path.join(pwd, '..'))
 sys.path.append(root)
 
 from skadi.engine import world as w
@@ -16,7 +16,7 @@ from skadi.replay import demo as rd
 option_parser = optparse.OptionParser()
 (options, args) = option_parser.parse_args()
 
-path = os.path.join(root, args[0])
+path = args[0]
 
 print '> opening {0}'.format(os.path.basename(path))
 
