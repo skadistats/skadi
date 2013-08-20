@@ -4,6 +4,7 @@ import io
 from skadi.index import read_varint
 from skadi.index import InvalidProtobufMessage, Index
 from skadi.protoc import netmessages_pb2 as pb_n
+from skadi.protoc import demo_pb2 as pb_d
 
 
 PBMSG_BY_KIND = {
