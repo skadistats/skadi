@@ -65,10 +65,4 @@ class PacketIndex(Index):
   def __init__(self, iterable):
     super(PacketIndex, self).__init__(iterable)
 
-  @property
-  def full_packets(self):
-    return filter(lambda p: self.find(pb_d.CDemoFullPacket), self.peeks)
-
-  @property
-  def packets(self):
-    return filter(lambda p: self.find(pb_d.CDemoPacket), self.peeks)
+  # TODO: peek properties for svc msgs in packets, i.e packet_entities_peek
