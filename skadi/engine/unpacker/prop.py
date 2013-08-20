@@ -1,4 +1,5 @@
 import bitstring
+import math
 
 from skadi.engine import unpacker
 from skadi.engine.dt.prop import Flag, Type
@@ -25,8 +26,6 @@ class Unpacker(unpacker.Unpacker):
     finally:
       self._props_read += 1
 
-    raise NotImplementedError('prop type {0}'.format(prop.type))
-
   def _actually_unpack(self, prop):
     if prop.type == Type.Int:
       return self._unpack_int(prop.flags, prop.num_bits)
@@ -45,6 +44,8 @@ class Unpacker(unpacker.Unpacker):
       return self._unpack_array(prop.num_elements, prop.array_prop)
     elif prop.type == Type.Int64:
       return self._unpack_int64(prop.flags, prop.num_bits)
+
+    raise NotImplementedError('prop type {0}'.format(prop.type))
 
   def _unpack_int(self, flags, num_bits):
     if flags & Flag.EncodedAgainstTickcount:
