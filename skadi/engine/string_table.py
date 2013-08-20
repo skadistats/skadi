@@ -22,10 +22,10 @@ class StringTable(object):
     return self.by_name[name]
 
   def update_all(self, entries):
-    mapped = map(lambda (i,n,d): (i,(n,d)), entries)
+    mapped = map(lambda (i, n, d): (i, (n, d)), entries)
     self.by_index = collections.OrderedDict(mapped)
 
-    mapped = map(lambda (i,n,d): (n,(i,d)), entries)
+    mapped = map(lambda (i, n, d): (n, (i, d)), entries)
     self.by_name = collections.OrderedDict(mapped)
 
   def update(self, entry):

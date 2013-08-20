@@ -3,7 +3,7 @@ from skadi.engine import unpacker
 from skadi.engine.unpacker import prop as pu
 
 
-PVS = enum(Leaving = 1, Entering = 2, Deleting = 4)
+PVS = enum(Leaving=1, Entering=2, Deleting=4)
 
 
 def unpack(*args):
@@ -95,4 +95,4 @@ class Unpacker(unpacker.Unpacker):
     props = [recv_table.props[i] for i in prop_list]
     unpacker = pu.Unpacker(self.bitstream, props)
 
-    return {(p.origin_dt, p.var_name):unpacker.unpack() for p in props}
+    return {(p.origin_dt, p.var_name): unpacker.unpack() for p in props}

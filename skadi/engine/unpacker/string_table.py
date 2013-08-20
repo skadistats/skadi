@@ -44,7 +44,7 @@ class Unpacker(unpacker.Unpacker):
       if additive:
         basis, length = self.bitstream.read(5), self.bitstream.read(5)
         name = self._key_history[basis][0:length]
-        name += self.bitstream.read_string(MAX_NAME_LENGTH - length);
+        name += self.bitstream.read_string(MAX_NAME_LENGTH - length)
       else:
         name = self.bitstream.read_string(MAX_NAME_LENGTH)
 
