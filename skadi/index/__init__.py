@@ -64,3 +64,6 @@ class Index(object):
 
   def find_ahead(self, offset):
     return filter(lambda p: p.offset > offset, self.peeks)
+
+  def find_between(self, start, stop):
+    return filter(lambda p: start < p.offset < stop, self.peeks)

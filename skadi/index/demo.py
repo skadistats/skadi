@@ -82,10 +82,8 @@ class DemoIndex(Index):
 
   @property
   def match(self):
-    b = self.find_behind(self._stop.offset)
-    a = self.find_ahead(self._sync.offset)
-    i = list(set(a) & set(b))
-    return MatchIndex(sorted(i, key=lambda p: p.tick))
+    matches = self.find_between(self._sync.offset, self._stop.offset)
+    return MatchIndex(sorted(matches, key=lambda p: p.tick))
 
   @property
   def epilogue(self):
