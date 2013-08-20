@@ -1,3 +1,4 @@
+import sys
 from skadi.protoc import usermessages_pb2 as pb_um
 from skadi.protoc import dota_usermessages_pb2 as pb_dota_um
 
@@ -49,10 +50,11 @@ def parse(pbmsg):
   _id = pbmsg.msg_type
 
   if _id == 106: # wtf one-off?
+    ns = pb_dota_um
     cls = 'CDOTA_UM_GamerulesStateChanged'
   else:
     ns = pb_um if _id < DOTA_UM_ID_BASE else pb_dota_um
-    infix = 'DOTA' if ns is dota_um else ''
+    infix = 'DOTA' if ns is pb_dota_um else ''
     cls = 'C{0}UserMsg_{1}'.format(infix, BY_ID[_id])
 
   try:
@@ -61,15 +63,15 @@ def parse(pbmsg):
   except AttributeError:
     err = '! protobuf {0}: open an issue at github.com/onethirtyfive/skadi'
     print err.format(cls)
+  else:
+    try:
+      result = getattr(sys.modules[__name__], 'parse_{0}'.format(cls))(_pbmsg)
+    except AttributeError:
+      result = None
+      err = '! unparsed UM {0}: open an issue at github.com/onethirtyfive/skadi'
+      print err.format(cls)
 
-  try:
-    result = getattr(sys.modules[__name__], 'parse_{0}'.format(cls))(_pbmsg)
-  except AttributeError:
-    result = None
-    err = '! unparsed UM {0}: open an issue at github.com/onethirtyfive/skadi'
-    print err.format(cls)
-
-  return result
+    return result
 
 def parse_CUserMsg_SayText2(pbmsg):
   pass
