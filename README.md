@@ -4,6 +4,13 @@ Skadi
 Skadi parses [Dota 2](http://www.dota2.com) replay files.
 
 
+The Wiki
+========
+
+I hereby resolve that the Wiki pages of this repository will not suck. In them, you will find as much information as I have time to type.
+
+Start [here](https://github.com/onethirtyfive/skadi/wiki/Skadi:-More-Than-You-Ever-Wanted-to-Know)
+
 About Dota 2 Replay Files
 =========================
 
