@@ -1,5 +1,3 @@
-import itertools
-
 from skadi.engine.dt import prop
 
 
@@ -42,8 +40,7 @@ class SendTable(object):
 
   @property
   def baseclass(self):
-    p = next((p for p in self.filter(prop.test_baseclass)), None)
-    return p.dt if p else None
+    return next((p.dt for p in self.props if prop.test_baseclass(p)), None)
 
   @property
   def exclusions(self):
