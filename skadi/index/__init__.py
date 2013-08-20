@@ -1,5 +1,5 @@
 import math
-
+from itertools import ifilter
 
 VI_BIT_MAX = 35
 VI_SHIFT = 7
@@ -51,7 +51,7 @@ class Index(object):
     return iter(self.peeks)
 
   def find(self, cls):
-    return next(iter(filter(lambda p: p.cls == cls, self.peeks)), None)
+    return next(ifilter(lambda p: p.cls == cls, self.peeks), None)
 
   def find_all(self, cls):
     return filter(lambda p: p.cls == cls, self.peeks)
