@@ -80,20 +80,20 @@ class World(object):
     return collections.OrderedDict(coll)
 
   def find_by_cls(self, cls):
-    items = self.find_all_by_cls(cls).items()
-    if not items:
-      return
-    return items[0]
+    try:
+      return next(self.find_all_by_cls(cls).iteritems())
+    except StopIteration:
+      raise KeyError(cls)
 
   def find_all_by_dt(self, dt):
     coll = [(ehandle, self.find(ehandle)) for ehandle in self.by_dt[dt]]
     return collections.OrderedDict(coll)
 
   def find_by_dt(self, dt):
-    items = self.find_all_by_dt(dt).items()
-    if not items:
-      return
-    return items[0]
+    try:
+      return next(self.find_all_by_dt(dt).iteritems())
+    except StopIteration:
+      raise KeyError(dt)
 
   def fetch_cls(self, ehandle):
     return self.classes[ehandle]
