@@ -41,7 +41,9 @@ Actual game data is encapsulated in two types of `demo.proto` messages, each wit
 
 What complicates things is what happens before `CDemoSyncTick`. You can find this implementation in `skadi.replay.demo` if interested, but it will likely leave you scratching your head. There is much complexity setting up a demo.
 
-**Start here if you have a short attention span.**
+
+For the Hurried
+===============
 
 But when you do want to stream, you'll need a `demo`:
 
