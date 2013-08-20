@@ -13,7 +13,7 @@ Skadi parses Dota 2 replays, which are in essence a one-way stream of messages f
 
 * server info
 * the types (aka **entity classes**) of things (aka **entities**) in the game, and their associated properties
-* the entities in the game at each 1/30th of a second in the game (aka 'tick')
+* the entities in the game at each 1/30th of a second in the game (aka **tick**)
 
 And, finally, the way these entities' data changes over time during the game.
 
@@ -21,7 +21,7 @@ This is a simplified explanation, but it's good enough to get started.
 
 **tl;dr** There is no tl;dr. You need to know this stuff right now to use Skadi.
 
-Included in skadi is a simple script [script](https://github.com/onethirtyfive/skadi/blob/master/bin/skadi) which illustrates some usage. This script will evolve alongside the library, and will eventually be a command-line tool for extracting data.
+Included in Skadi is a simple script [script](https://github.com/onethirtyfive/skadi/blob/master/bin/skadi) which illustrates some usage. This script will evolve alongside the library, and will eventually be a command-line tool for extracting data.
 
 
 For the Curious
@@ -31,7 +31,7 @@ For the Curious
 
 Dota 2 replays are comprised entirely of Google protobuf messages. Enquiring minds can inspect the protobuf language definitions in the [protobuf](https://github.com/onethirtyfive/skadi/blob/master/protobuf) directory.
 
-`demo.proto` defines messages that are immediately readable from the demo file. (I refer to them as 'top-level' messages.) Confusingly, some `demo.proto` messages have *their own* messages embedded within a `bytes` property. `CDemoPacket`, `CDemoSendTables`, and a few others, do this. These embedded messages are defined in `netmessages.proto`. These include `CSVCMsg_PacketEntities` (where the magic happens!), `CSVCMsg_UserMsg' (many things, including mouseclicks and chat!), and more.
+`demo.proto` defines messages that are immediately readable from the demo file. (I refer to them as 'top-level' messages.) Confusingly, some `demo.proto` messages have *their own* messages embedded within a `bytes` property. `CDemoPacket`, `CDemoSendTables`, and a few others, do this. These embedded messages are defined in `netmessages.proto`. These include `CSVCMsg_PacketEntities` (where the magic happens!), `CSVCMsg_UserMsg` (many things, including mouse clicks and chat!), and more.
 
 Skadi indexes all **top-level** messages into `peeks` when it opens a demo file. Peeks are a little summary of the messages Skadi encountered as it was indexing. You don't have to worry about this, but it helps to know if you're peeking into index data structures.
 
