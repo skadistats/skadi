@@ -86,7 +86,13 @@ class World(object):
       raise KeyError(cls)
 
   def find_all_by_dt(self, dt):
-    coll = [(ehandle, self.find(ehandle)) for ehandle in self.by_dt[dt]]
+    coll = []
+    if dt.endswith('*'): # handle wildcard
+      dt = dt.strip('*')
+      for wc_dt in (k for k in self.by_dt.keys() if k.startswith(dt)):
+        coll.extend(((h, self.find(h)) for h in self.by_dt[wc_dt]))
+    else:
+      coll = [(ehandle, self.find(ehandle)) for ehandle in self.by_dt[dt]]
     return collections.OrderedDict(coll)
 
   def find_by_dt(self, dt):
