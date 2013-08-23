@@ -89,6 +89,11 @@ class Demo(object):
       for table in full_packet.string_table.tables:
         assert not table.items_clientside
 
+        if table.table_name == 'ActiveModifiers':
+          observer = o_am.construct()
+        else:
+          observer = None
+
         entries = [(i, e.str, e.data) for i, e in enumerate(table.items)]
         st[table.table_name].update_all(entries)
 

@@ -11,30 +11,32 @@ def construct(*args):
 
 
 class StringTable(object):
-  def __init__(self, name, entry_bits, size_fixed, size_bits, entries):
+  def __init__(self, name, ent_bits, sz_fixed, sz_bits, ents, observer=None):
     self.name = name
-    self.entry_bits = entry_bits
-    self.size_fixed = size_fixed
-    self.size_bits = size_bits
-    self.update_all(entries)
+    self.entry_bits = ent_bits
+    self.size_fixed = sz_fixed
+    self.size_bits = sz_bits
+    self.observer = observer
+    self.update_all(ents)
 
   def get(self, name):
     return self.by_name[name]
 
   def update_all(self, entries):
-    mapped = map(lambda (i, n, d): (i, (n, d)), entries)
-    self.by_index = collections.OrderedDict(mapped)
+    self.by_index = collections.OrderedDict()
+    self.by_name = collections.OrderedDict()
 
-    mapped = map(lambda (i, n, d): (n, (i, d)), entries)
-    self.by_name = collections.OrderedDict(mapped)
+    if self.observer:
+      self.observer.reset()
+
+    [self.update(entry) for entry in entries]
 
   def update(self, entry):
     i, n, d = entry
 
+    self.by_index[i] = (n, d)
     if n:
       self.by_name[n] = (i, d)
-      self.by_index[i] = (n, d)
-    else:
-      n, _ = self.by_index[i]
-      self.by_name[n] = (i, d)
-      self.by_index[i] = (n, d)
+
+    if self.observer:
+      self.observer.note((i, n, d))

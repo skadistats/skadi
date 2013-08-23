@@ -10,6 +10,7 @@ from skadi.engine import string_table as stab
 from skadi.engine.dt import prop as dt_prop
 from skadi.engine.dt import recv as dt_recv
 from skadi.engine.dt import send as dt_send
+from skadi.engine.observer import active_modifier as o_am
 from skadi.engine.unpacker import string_table as ust
 
 
@@ -119,7 +120,12 @@ def parse_all_csvc_create_string_table(pbmsgs):
     entries = list(ust.Unpacker(bitstream, ne, eb, sf, sb))
 
     name = pbmsg.name
-    string_tables[name] = stab.construct(name, eb, sf, sb, entries)
+    if name == 'ActiveModifiers':
+      observer = o_am.construct()
+    else:
+      observer = None
+
+    string_tables[name] = stab.construct(name, eb, sf, sb, entries, observer)
 
   return string_tables
 
