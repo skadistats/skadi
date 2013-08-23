@@ -88,8 +88,9 @@ class World(object):
   def find_all_by_dt(self, dt):
     coll = []
     if dt.endswith('*'): # handle wildcard
-      for wc_dt in [k for k in self.by_dt.keys() if k.startswith(dt.strip('*'))]:
-          coll.extend( [(ehandle, self.find(ehandle)) for ehandle in self.by_dt[wc_dt]] )
+      dt = dt.strip('*')
+      for wc_dt in (k for k in self.by_dt.keys() if k.startswith(dt)):
+        coll.extend(((h, self.find(h)) for h in self.by_dt[wc_dt]))
     else:
       coll = [(ehandle, self.find(ehandle)) for ehandle in self.by_dt[dt]]
     return collections.OrderedDict(coll)
