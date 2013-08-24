@@ -1,3 +1,4 @@
+import collections as c
 import copy
 import io
 
@@ -17,14 +18,20 @@ def construct(*args):
   return stream
 
 
+Snapshot = c.namedtuple('Snapshot', [
+  'tick', 'modifiers', 'world'
+])
+
+
 class Stream(object):
-  def __init__(self, io, index, tick, cb, rt, string_tables, world):
+  def __init__(self, io, index, tick, cb, rt, st, modifiers, world):
     self.io = io
     self.index = index
     self.tick = None
     self.class_bits = cb
     self.recv_tables = rt
-    self.string_tables = copy.deepcopy(string_tables)
+    self.modifiers = copy.deepcopy(modifiers)
+    self.string_tables = copy.deepcopy(st)
     self.world = copy.deepcopy(world)
     self._bootstrap_tick = index.locate_tick(tick)
     self._baseline_cache = {}
@@ -102,4 +109,4 @@ class Stream(object):
 
         self.world.update(index, state)
 
-    return peek.tick, self.string_tables, self.world
+    return Snapshot(self.tick, self.modifiers, self.world)

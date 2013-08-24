@@ -2,6 +2,7 @@ import copy
 
 from skadi.engine import *
 from skadi.engine import world as w
+from skadi.engine.observer import active_modifier as o_am
 from skadi.engine.unpacker import entity as uent
 from skadi.engine.unpacker.entity import PVS
 from skadi.index import demo as di
@@ -37,6 +38,8 @@ class Demo(object):
   def bootstrap(self):
     prologue_index = self.index.prologue
 
+    self.modifiers = o_am.construct()
+
     cdemo_file_header = di.read(self.io, prologue_index.file_header_peek)
     self.file_header = parse_cdemo_file_header(cdemo_file_header)
 
@@ -59,7 +62,7 @@ class Demo(object):
     all_csvc_create_string_table = \
       [pi.read(p_io, peek) for peek in csvc_create_string_table_peeks]
     self.string_tables = \
-      parse_all_csvc_create_string_table(all_csvc_create_string_table)
+      parse_all_csvc_create_string_table(all_csvc_create_string_table, self.modifiers)
 
     csvc_voice_init = pi.read(p_io, packet_index.find(pb_n.CSVCMsg_VoiceInit))
     self.voice_init = parse_csvc_voice_init(csvc_voice_init)
@@ -77,6 +80,7 @@ class Demo(object):
   def stream(self, tick=0):
     match = self.index.match
     cb, rt = self.class_bits, self.recv_tables
+    mm = self.modifiers
     st = copy.deepcopy(self.string_tables)
     st_ib = st['instancebaseline']
 
@@ -121,4 +125,4 @@ class Demo(object):
       except AssertionError, e:
         print e
 
-    return stream.construct(self.io, match, tick, cb, rt, st, world)
+    return stream.construct(self.io, match, tick, cb, rt, st, mm, world)

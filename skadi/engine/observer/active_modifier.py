@@ -10,14 +10,17 @@ def construct(*args):
 
 class ActiveModifierObserver(object):
   optionals = [
-    'name', 'ability_level', 'stack_count', 'creation_time', 'duration',
-    'caster', 'ability', 'armor', 'fade_time', 'channel_time',
-    'portal_loop_appear', 'portal_loop_disappear', 'hero_loop_appear',
-    'hero_loop_disappear', 'movement_speed', 'activity', 'damage'
+    'name', 'ability_level', 'stack_count', 'creation_time', 'caster',
+    'ability', 'armor', 'fade_time', 'channel_time', 'portal_loop_appear',
+    'portal_loop_disappear', 'hero_loop_appear', 'hero_loop_disappear',
+    'movement_speed', 'activity', 'damage'
   ]
 
   def __init__(self):
     self.reset()
+
+  def __iter__(self):
+    return iter(self.by_mhandle.items())
 
   def reset(self):
     self.by_mhandle = collections.OrderedDict()
@@ -36,13 +39,22 @@ class ActiveModifierObserver(object):
     if pbmsg.entry_type == pb_dm.DOTA_MODIFIER_ENTRY_TYPE_ACTIVE:
       attrs = {}
       for o in ActiveModifierObserver.optionals:
-        attrs[o] = getattr(pbmsg, o, None)
+        val = getattr(pbmsg, o, None)
+        if val:
+          attrs[o] = val
 
-      vec = pbmsg.v_start
-      attrs['v_start'] = (vec.x, vec.y, vec.z)
+      vs = pbmsg.v_start
+      vec = (vs.x, vs.y, vs.z)
+      if vec != (0, 0, 0):
+        attrs['v_start'] = vec
 
-      vec = pbmsg.v_end
-      attrs['v_end'] = (vec.x, vec.y, vec.z)
+      ve = pbmsg.v_end
+      vec = (ve.x, ve.y, ve.z)
+      if vec != (0, 0, 0):
+        attrs['v_end'] = vec
+
+      if pbmsg.duration == -1:
+        attrs['duration'] = None
 
       attrs['aura'] = pbmsg.aura or False
       attrs['subtle'] = pbmsg.aura or False

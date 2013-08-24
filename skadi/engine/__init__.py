@@ -108,7 +108,7 @@ def flatten(class_info, send_tables):
   return recv_tables
 
 
-def parse_all_csvc_create_string_table(pbmsgs):
+def parse_all_csvc_create_string_table(pbmsgs, observer):
   string_tables = collections.OrderedDict()
 
   for pbmsg in pbmsgs:
@@ -121,11 +121,11 @@ def parse_all_csvc_create_string_table(pbmsgs):
 
     name = pbmsg.name
     if name == 'ActiveModifiers':
-      observer = o_am.construct()
+      obs = observer
     else:
-      observer = None
+      obs = None
 
-    string_tables[name] = stab.construct(name, eb, sf, sb, entries, observer)
+    string_tables[name] = stab.construct(name, eb, sf, sb, entries, obs)
 
   return string_tables
 
