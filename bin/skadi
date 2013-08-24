@@ -23,7 +23,9 @@ print '> opening {0}'.format(os.path.basename(path))
 with io.open(path, 'r+b') as infile:
   demo = rd.construct(infile)
 
-  for tick, string_tables, world in demo.stream(tick=5000):
+  for snapshot in demo.stream(tick=5000):
+    tick, modifiers, world = snapshot
+
     lane_creep_dt = 'DT_DOTA_BaseNPC_Creep_Lane'
     lane_creeps = world.find_all_by_dt(lane_creep_dt)
 
