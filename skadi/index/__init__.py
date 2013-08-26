@@ -1,70 +1,34 @@
-import math
+from __future__ import print_function
+
+import collections
 import itertools as it
 
 
-VI_BIT_MAX = 35
-VI_SHIFT = 7
-VI_MAX_BYTES = int(math.ceil(float(VI_BIT_MAX) / VI_SHIFT))
-VI_MASK = (1 << 32) - 1
-
-
-class InvalidVarint(Exception):
-  pass
-
-
-# Algorithm "borrowed" from Google protobuf library.
-def peek_varint(stream):
-  peeked = stream.peek(VI_MAX_BYTES)
-  size, value, shift = 0, 0, 0
-
-  while True:
-    if size >= len(peeked):
-      raise EOFError()
-
-    byte = ord(peeked[size])
-    size += 1
-    value |= ((byte & 0x7f) << shift)
-    shift += VI_SHIFT
-
-    if not (byte & 0x80):
-      value &= VI_MASK
-      return value, size
-
-    if shift >= VI_BIT_MAX:
-      raise InvalidVarint
-
-
-def read_varint(stream):
-  value, size = peek_varint(stream)
-  stream.read(size)
-  return value
-
-
-class InvalidProtobufMessage(Exception):
-  pass
+def construct(*args):
+  return Index(*args)
 
 
 class Index(object):
   def __init__(self, iterable):
-    self.peeks = list(iterable)
+    self.entries = collections.OrderedDict(list(iterable))
 
   def __iter__(self):
-    return iter(self.peeks)
+    return self.entries.iteritems()
 
-  def find(self, cls):
-    return next(it.ifilter(lambda p: p.cls == cls, self.peeks), None)
+  def find(self, kind):
+    return next(it.ifilter(lambda (p, _): p.kind == kind, self))
 
-  def find_all(self, cls):
-    return filter(lambda p: p.cls == cls, self.peeks)
+  def find_all(self, kind):
+    return it.ifilter(lambda (p, _): p.kind == kind, self)
 
-  def find_behind(self, offset):
-    return filter(lambda p: p.offset < offset, self.peeks)
+  def find_behind(self, tell):
+    return it.ifilter(lambda (p, _): p.tell < tell, self)
 
-  def find_at(self, offset):
-    return filter(lambda p: p.offset == offset, self.peeks)
+  def find_at(self, tell):
+    return it.ifilter(lambda (p, _): p.tell == tell, self)
 
-  def find_ahead(self, offset):
-    return filter(lambda p: p.offset > offset, self.peeks)
+  def find_ahead(self, tell):
+    return it.ifilter(lambda (p, _): p.tell > tell, self)
 
   def find_between(self, start, stop):
-    return filter(lambda p: start < p.offset < stop, self.peeks)
+    return it.ifilter(lambda (p, _): start < p.tell < stop, self)

@@ -1,6 +1,6 @@
 from skadi import enum
-from skadi.engine import unpacker
-from skadi.engine.unpacker import prop as pu
+from skadi.io import unpacker
+from skadi.io.unpacker import prop as pu
 
 
 PVS = enum(Leaving=1, Entering=2, Deleting=4)
