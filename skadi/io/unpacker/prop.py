@@ -1,7 +1,7 @@
 import bitstring
 import math
 
-from skadi.engine import unpacker
+from skadi.io import unpacker
 from skadi.engine.dt.prop import Flag, Type
 
 

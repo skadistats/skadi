@@ -1,10 +1,6 @@
 import collections
 import copy
 
-from skadi.engine import bitstream as bs
-from skadi.engine.unpacker import entity as uent
-from skadi.engine.unpacker import string_table as ust
-
 
 def construct(*args):
   return StringTable(*args)

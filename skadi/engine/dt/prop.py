@@ -28,6 +28,10 @@ Type = enum(
 )
 
 
+def construct(*args):
+  return Prop(*args)
+
+
 class Prop(object):
   DELEGATED = (
     'var_name', 'type',    'flags',    'num_elements',

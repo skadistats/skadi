@@ -1,3 +1,4 @@
+from skadi.io import bitstream as b_io
 
 
 class UnpackComplete(RuntimeError):

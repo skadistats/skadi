@@ -1,6 +1,6 @@
 import collections
 
-from skadi.engine import unpacker
+from skadi.io import unpacker
 
 
 MAX_NAME_LENGTH = 0x400
