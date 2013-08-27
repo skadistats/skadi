@@ -21,18 +21,16 @@ from skadi.engine.dt import prop as dt_p
 from skadi.engine.dt import recv as dt_r
 from skadi.engine.dt import send as dt_s
 from skadi.engine.observer import active_modifier as o_am
-from skadi.index import prologue as i_pre
+from skadi.index import prologue as i_p
 from skadi.io import bitstream as b_io
 from skadi.io.protobuf import demo as d_io
 from skadi.io.protobuf import packet as p_io
-from skadi.io.unpacker import string_table as ust
+from skadi.io.unpacker import string_table as u_st
 from skadi.protoc import demo_pb2 as pb_d
 from skadi.protoc import netmessages_pb2 as pb_n
 
 
-Meta = c.namedtuple('Meta', [
-  'file_header', 'server_info', 'class_bits', 'voice_init'
-])
+Meta = c.namedtuple('Meta', ['file_header', 'server_info', 'voice_init'])
 
 FileHeader = c.namedtuple('FileHeader', [
   'demo_file_stamp', 'network_protocol', 'server_name', 'client_name',
@@ -49,7 +47,7 @@ ServerInfo = c.namedtuple('ServerInfo', [
 VoiceInit = c.namedtuple('VoiceInit', ['quality', 'codec'])
 
 Prologue = c.namedtuple('Prologue', [
-  'meta', 'recv_tables', 'string_tables', 'game_event_list'
+  'meta', 'recv_tables', 'string_tables', 'game_event_list', 'class_bits'
 ])
 
 test_needs_decoder = lambda st: st.needs_decoder
@@ -65,24 +63,18 @@ def load(io, tick=0):
 
   io.read(4) # game summary offset in file in bytes
 
-  entries = []
-  for entry in d_io.construct(io):
-    peek, message = entry
-    if peek.kind == pb_d.DEM_SyncTick:
-      break
-    entries.append(entry)
-
-  prologue_index = i_pre.construct(entries)
+  demo_io = d_io.construct(io)
+  prologue = i_p.construct(demo_io)
 
   # mash all packet svc messages together, then index them
-  signon_packets = list(prologue_index.signon_packets)
+  signon_packets = list(prologue.signon_packets)
   pbmsgs = [d_io.parse(p.kind, p.compressed, m) for p, m in signon_packets]
   data = ''.join([p.data for p in pbmsgs])
   packet_io = p_io.construct(data)
-  packet_index = i.construct(packet_io)
+  packet = i.construct(packet_io)
 
   # class info
-  peek, message = prologue_index.class_info
+  peek, message = prologue.class_info
   pbmsg = d_io.parse(peek.kind, peek.compressed, message)
   class_info = c.OrderedDict()
 
@@ -91,7 +83,7 @@ def load(io, tick=0):
     class_info[_id] = (dt, name)
 
   # send tables
-  peek, message = prologue_index.send_tables
+  peek, message = prologue.send_tables
   pbmsg = d_io.parse(peek.kind, peek.compressed, message)
   send_tables = c.OrderedDict()
 
@@ -113,7 +105,7 @@ def load(io, tick=0):
     recv_tables[cls] = dt_r.construct(st.dt, props)
 
   # game event list
-  peek, message = packet_index.find(pb_n.svc_GameEventList)
+  peek, message = packet.find(pb_n.svc_GameEventList)
   pbmsg = p_io.parse(peek.kind, message)
   game_event_list = c.OrderedDict()
 
@@ -123,17 +115,17 @@ def load(io, tick=0):
     game_event_list[_id] = (name, keys)
 
   # string tables
-  entries = packet_index.find_all(pb_n.svc_CreateStringTable)
+  entries = packet.find_all(pb_n.svc_CreateStringTable)
   pbmsgs = [p_io.parse(p.kind, m) for p, m in entries]
   string_tables = _parse_all_csvc_create_string_tables(pbmsgs)
 
   # meta: file header
-  peek, message = prologue_index.file_header
+  peek, message = prologue.file_header
   pbmsg = d_io.parse(peek.kind, peek.compressed, message)
   file_header = FileHeader(*[getattr(pbmsg, a) for a in FileHeader._fields])
 
   # meta: server_info
-  peek, message = packet_index.find(pb_n.svc_ServerInfo)
+  peek, message = packet.find(pb_n.svc_ServerInfo)
   pbmsg = p_io.parse(peek.kind, message)
   server_info = ServerInfo(*[getattr(pbmsg, a) for a in ServerInfo._fields])
 
@@ -141,13 +133,13 @@ def load(io, tick=0):
   class_bits = server_info.max_classes.bit_length()
 
   # meta: voice init
-  peek, message = packet_index.find(pb_n.svc_VoiceInit)
+  peek, message = packet.find(pb_n.svc_VoiceInit)
   pbmsg = p_io.parse(peek.kind, message)
   voice_init = VoiceInit(*[getattr(pbmsg, a) for a in VoiceInit._fields])
 
-  meta = Meta(file_header, server_info, class_bits, voice_init)
+  meta = Meta(file_header, server_info, voice_init)
 
-  return Prologue(meta, recv_tables, string_tables, game_event_list)
+  return Prologue(meta, recv_tables, string_tables, game_event_list, class_bits)
 
 
 def _parse_cdemo_send_table(pbmsg):
@@ -185,7 +177,7 @@ def _parse_all_csvc_create_string_tables(pbmsgs):
     sb = pbmsg.user_data_size_bits
     bs = b_io.construct(pbmsg.string_data)
 
-    entries = list(ust.unpack(bs, ne, eb, sf, sb))
+    entries = list(u_st.construct(bs, ne, eb, sf, sb))
 
     name = pbmsg.name
     if name == 'ActiveModifiers':
@@ -196,7 +188,7 @@ def _parse_all_csvc_create_string_tables(pbmsgs):
     string_tables[name] = stab.construct(name, eb, sf, sb, entries, obs)
 
   return string_tables
-  
+
 
 class Flattener(object):
   def __init__(self, send_tables):

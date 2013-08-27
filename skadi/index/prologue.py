@@ -1,14 +1,22 @@
-from skadi import index
+from skadi import index as i
 from skadi.protoc import demo_pb2 as pb_d
 
 
-def construct(*args):
-  return PrologueIndex(*args)
+def construct(io, tick=0):
+  iter_entries = iter(io)
+
+  def advance():
+    p, m = next(iter_entries)
+    if p.kind == pb_d.DEM_SyncTick:
+      raise StopIteration()
+    return (p, m)
+
+  return Index(((p, m) for p, m in iter(advance, None)))
 
 
-class PrologueIndex(index.Index):
+class Index(i.Index):
   def __init__(self, iterable):
-    super(PrologueIndex, self).__init__(iterable)
+    super(Index, self).__init__(iterable)
 
   @property
   def file_header(self):

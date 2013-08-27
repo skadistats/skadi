@@ -5,7 +5,7 @@ from skadi.io import unpacker
 from skadi.engine.dt.prop import Flag, Type
 
 
-def unpack(bitstream, props):
+def construct(bitstream, props):
   return Unpacker(bitstream, props)
 
 

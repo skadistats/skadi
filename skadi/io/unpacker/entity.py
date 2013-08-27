@@ -6,7 +6,7 @@ from skadi.io.unpacker import prop as pu
 PVS = enum(Leaving=1, Entering=2, Deleting=4)
 
 
-def unpack(*args):
+def construct(*args):
   return Unpacker(*args)
 
 

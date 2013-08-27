@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-import io
+import io as _io
 import optparse
 import os
 import sys
@@ -9,8 +9,9 @@ pwd = os.path.dirname(__file__)
 root = os.path.abspath(os.path.join(pwd, '..'))
 sys.path.append(root)
 
+from skadi import *
+from skadi import demo as d
 from skadi.engine import world as w
-from skadi.replay import demo as rd
 
 
 option_parser = optparse.OptionParser()
@@ -20,16 +21,14 @@ path = args[0]
 
 print '> opening {0}'.format(os.path.basename(path))
 
-with io.open(path, 'r+b') as infile:
-  demo = rd.construct(infile)
+with _io.open(path, 'r+b') as infile:
+  demo = d.construct(load(infile), infile)
 
-  for snapshot in demo.stream(tick=5000):
-    tick, modifiers, world = snapshot
+  for game in demo.stream(tick=5000):
+    tick, user_msgs, game_evts, world, modifiers = game
 
-    lane_creep_dt = 'DT_DOTA_BaseNPC_Creep_Lane'
-    lane_creeps = world.find_all_by_dt(lane_creep_dt)
+    lane_creeps = world.find_all_by_dt('DT_DOTA_BaseNPC_Creep_Lane')
 
-    # FASCINATING USAGE EXAMPLE:
     if lane_creeps:
       print 'lane creeps at {0}: {1}'.format(tick, len(lane_creeps))
       for ehandle, state in lane_creeps.items():

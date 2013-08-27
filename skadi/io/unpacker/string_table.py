@@ -7,7 +7,7 @@ MAX_NAME_LENGTH = 0x400
 KEY_HISTORY_SIZE = 32
 
 
-def unpack(*args):
+def construct(*args):
   return Unpacker(*args)
 
 
