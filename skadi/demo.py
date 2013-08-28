@@ -2,14 +2,15 @@ import collections as c
 import copy
 
 from skadi import index as i
+from skadi.engine import world as w
+from skadi.engine import user_message as e_um
+from skadi.engine.observer import active_modifier as o_am
 from skadi.io import bitstream as b_io
 from skadi.io.protobuf import demo as d_io
 from skadi.io.protobuf import packet as p_io
-from skadi.protoc import demo_pb2 as pb_d
 from skadi.io.unpacker import entity as u_ent
 from skadi.io.unpacker import string_table as u_st
-from skadi.engine import world as w
-from skadi.engine.observer import active_modifier as o_am
+from skadi.protoc import demo_pb2 as pb_d
 from skadi.protoc import netmessages_pb2 as pb_n
 
 
@@ -109,10 +110,10 @@ class Stream(object):
     return iter(advance, None)
 
   def advance(self, tick, pbmsg):
-    index = i.construct(p_io.construct(pbmsg.data))
-    upd_st = index.find_all(pb_n.svc_UpdateStringTable)
+    packet = i.construct(p_io.construct(pbmsg.data))
+    all_ust = packet.find_all(pb_n.svc_UpdateStringTable)
 
-    for _pbmsg in [p_io.parse(p.kind, m) for p, m in upd_st]:
+    for _pbmsg in [p_io.parse(p.kind, m) for p, m in all_ust]:
       key = self.string_tables.keys()[_pbmsg.table_id]
       _st = self.string_tables[key]
 
@@ -123,7 +124,7 @@ class Stream(object):
       for entry in u_st.construct(bs, ne, eb, sf, sb):
         _st.update(entry)
 
-    p, m = index.find(pb_n.svc_PacketEntities)
+    p, m = packet.find(pb_n.svc_PacketEntities)
     pe = p_io.parse(p.kind, m)
     ct = pe.updated_entries
     bs = b_io.construct(pe.entity_data)
@@ -153,7 +154,11 @@ class Stream(object):
 
         self.world.update(index, state)
 
-    user_messages, game_events= [], []
+    all_um = packet.find_all(pb_n.svc_UserMessage)
+    user_messages = [e_um.parse(p_io.parse(p.kind, m)) for p, m in all_um]
+
+    game_events = []
+
     modifiers = self.string_tables['ActiveModifiers'].observer
 
     return tick, user_messages, game_events, self.world, modifiers

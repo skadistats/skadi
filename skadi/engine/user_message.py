@@ -1,10 +1,12 @@
 import sys
+
 from skadi.protoc import usermessages_pb2 as pb_um
 from skadi.protoc import dota_usermessages_pb2 as pb_dota_um
 
+
 DOTA_UM_ID_BASE = 64
 
-BY_ID = {
+NAME_BY_TYPE = {
     1: 'AchievementEvent',          2: 'CloseCaption',
     3: 'CloseCaptionDirect',        4: 'CurrentTimescale',
     5: 'DesiredTimescale',          6: 'Fade',
@@ -46,82 +48,23 @@ BY_ID = {
   110: 'SendStatPopup',           111: 'TutorialFinish'
 }
 
-def parse(pbmsg):
-  _id = pbmsg.msg_type
 
-  if _id == 106: # wtf one-off?
+def parse(pbmsg):
+  _type = pbmsg.msg_type
+
+  if _type == 106: # wtf one-off?
     ns = pb_dota_um
     cls = 'CDOTA_UM_GamerulesStateChanged'
   else:
-    ns = pb_um if _id < DOTA_UM_ID_BASE else pb_dota_um
+    ns = pb_um if _type < DOTA_UM_ID_BASE else pb_dota_um
     infix = 'DOTA' if ns is pb_dota_um else ''
-    cls = 'C{0}UserMsg_{1}'.format(infix, BY_ID[_id])
+    cls = 'C{0}UserMsg_{1}'.format(infix, NAME_BY_TYPE[_type])
 
   try:
     _pbmsg = getattr(ns, cls)()
     _pbmsg.ParseFromString(pbmsg.msg_data)
-  except AttributeError:
+  except AttributeError, e:
     err = '! protobuf {0}: open an issue at github.com/onethirtyfive/skadi'
     print err.format(cls)
-  else:
-    try:
-      result = getattr(sys.modules[__name__], 'parse_{0}'.format(cls))(_pbmsg)
-    except AttributeError:
-      result = None
-      err = '! unparsed UM {0}: open an issue at github.com/onethirtyfive/skadi'
-      print err.format(cls)
 
-    return result
-
-def parse_CUserMsg_SayText2(pbmsg):
-  pass
-
-def parse_CUserMsg_TextMsg(pbmsg):
-  pass
-
-def parse_CUserMsg_SendAudio(pbmsg):
-  pass
-
-def parse_CDOTAUserMsg_ChatEvent(pbmsg):
-  pass
-
-def parse_CDOTAUserMsg_UnitEvent(pbmsg):
-  pass
-
-def parse_CDOTAUserMsg_ParticleManager(pbmsg):
-  pass
-
-def parse_CDOTAUserMsg_SpectatorPlayerClick(pbmsg):
-  pass
-
-def parse_CDOTAUserMsg_OverheadEvent(pbmsg):
-  pass
-
-def parse_CDOTAUserMsg_LocationPing(pbmsg):
-  pass
-
-def parse_CDOTAUserMsg_CreateLinearProjectile(pbmsg):
-  pass
-
-def parse_CDOTAUserMsg_DestroyLinearProjectile(pbmsg):
-  pass
-
-def parse_CDOTAUserMsg_HudError(pbmsg):
-  pass
-
-def parse_CDOTAUserMsg_MinimapEvent(pbmsg):
-  pass
-
-def parse_CDOTAUserMsg_DodgeTrackingProjectiles(pbmsg):
-  pass
-
-def parse_CDOTAUserMsg_MapLine(pbmsg):
-  pass
-
-def parse_CDOTAUserMsg_NevermoreRequiem(pbmsg):
-  pass
-
-# This is a one-off, with a weird message class name.
-# It may be legacy, appearing only in older replays.
-def parse_CDOTA_UM_GamerulesStateChanged(pbmsg):
-  pass
+  return _type, _pbmsg
