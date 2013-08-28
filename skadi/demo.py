@@ -3,6 +3,7 @@ import copy
 
 from skadi import index as i
 from skadi.engine import world as w
+from skadi.engine import game_event as e_ge
 from skadi.engine import user_message as e_um
 from skadi.engine.observer import active_modifier as o_am
 from skadi.io import bitstream as b_io
@@ -157,7 +158,9 @@ class Stream(object):
     all_um = packet.find_all(pb_n.svc_UserMessage)
     user_messages = [e_um.parse(p_io.parse(p.kind, m)) for p, m in all_um]
 
-    game_events = []
+    all_ge = packet.find_all(pb_n.svc_GameEvent)
+    gel = self.prologue.game_event_list
+    game_events = [e_ge.parse(p_io.parse(p.kind, m), gel) for p, m in all_ge]
 
     modifiers = self.string_tables['ActiveModifiers'].observer
 
