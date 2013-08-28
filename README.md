@@ -17,27 +17,7 @@ Be sure to check out the "Pages" section.
 In a Hurry?
 ===========
 
-To parse replay data, you'll need a `Demo`:
-
-```python
-from skadi.replay import demo as rd
-import io
-
-with io.open('123123123.dem', 'r+b') as infile:
-  demo = rd.construct(infile)
-
-  # And then you'll ask it for a `stream`:
-  stream = demo.stream(tick=12345) # tick arg optional, defaults to 0
-
-  # And iterate over each tick:
-  for tick, string_tables, world in stream:
-
-    # world contains information about all the entities:
-    for ehandle, state in world:
-      # an ehandle is a replay-wide unique identifier for an entity
-      # the state is just a plain old hash of keys and values
-      print ehandle, len(state)
-```
+Check out some simple usage in [bin/skadi](https://github.com/onethirtyfive/skadi/blob/master/bin/skadi).
 
 Each key in the state is a two-item tuple:
 
