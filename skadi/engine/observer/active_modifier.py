@@ -1,7 +1,11 @@
-import collections
+import collections as c
 
 from skadi.engine import world as w
 from skadi.protoc import dota_modifiers_pb2 as pb_dm
+
+
+def humanize(modifier, world):
+  pass
 
 
 def construct(*args):
@@ -10,22 +14,21 @@ def construct(*args):
 
 class ActiveModifierObserver(object):
   optionals = [
-    'name', 'ability_level', 'stack_count', 'creation_time', 'caster',
-    'ability', 'armor', 'fade_time', 'channel_time', 'portal_loop_appear',
+    'ability_level', 'stack_count', 'creation_time', 'caster', 'ability',
+    'armor', 'fade_time', 'channel_time', 'portal_loop_appear',
     'portal_loop_disappear', 'hero_loop_appear', 'hero_loop_disappear',
-    'movement_speed', 'activity', 'damage'
+    'movement_speed', 'activity', 'damage', 'duration'
   ]
 
   def __init__(self):
     self.reset()
 
   def __iter__(self):
-    return iter(self.by_mhandle.items())
+    return self.by_parent.iteritems()
 
   def reset(self):
-    self.by_mhandle = collections.OrderedDict()
-    self.by_parent = collections.defaultdict(list)
-    self.by_caster = collections.defaultdict(list)
+    self.by_parent = c.defaultdict(c.OrderedDict)
+    self.to_expire = []
 
   def note(self, entry):
     i, n, d = entry
@@ -43,6 +46,9 @@ class ActiveModifierObserver(object):
         if val:
           attrs[o] = val
 
+      name, _ = self.modifier_names.by_index[pbmsg.name]
+      attrs['name'] = name
+
       vs = pbmsg.v_start
       vec = (vs.x, vs.y, vs.z)
       if vec != (0, 0, 0):
@@ -53,33 +59,38 @@ class ActiveModifierObserver(object):
       if vec != (0, 0, 0):
         attrs['v_end'] = vec
 
-      if pbmsg.duration == -1:
-        attrs['duration'] = None
+      if 'duration' in attrs and attrs['duration'] <= 0:
+        del attrs['duration']
 
       attrs['aura'] = pbmsg.aura or False
       attrs['subtle'] = pbmsg.aura or False
 
-      self._add(mhandle, parent, attrs)
+      if 'creation_time' in attrs and 'duration' in attrs:
+        expiry = attrs['creation_time'] + attrs['duration']
+      else:
+        expiry = None
+
+      self._add(parent, mhandle, attrs, until=expiry)
     else:
-      self._remove(mhandle, parent)
+      self._remove(parent, mhandle)
 
-  def find(self, mhandle):
-    return self.by_mhandle[mhandle]
+  def expire(self, epoch):
+    gone = [(e, (p, m)) for e, (p, m) in self.to_expire if epoch >= e]
+    [self._remove(p, m) for _, (p, m) in gone]
+    [self.to_expire.remove(record) for record in gone]
 
-  def find_all_by_parent(self, parent):
-    coll = [(mhndl, self.find(mhndl)) for mhndl in self.by_parent[parent]]
-    return collections.OrderedDict(coll)
+  def _add(self, parent, mhandle, attrs, until):
+    self.by_parent[parent][mhandle] = attrs
+    if until:
+      record = (until, (parent, mhandle))
+      self.to_expire.append(record)
 
-  def _add(self, mhandle, parent, attrs):
-    self.by_parent[parent].append(mhandle)
-    self.by_mhandle[mhandle] = (parent, attrs)
-
-  def _remove(self, mhandle, parent):
+  def _remove(self, parent, mhandle):
     try:
-      assert mhandle in self.by_mhandle
-      assert mhandle in self.by_parent[parent]
-    except AssertionError:
-      return
-
-    del self.by_mhandle[mhandle]
-    self.by_parent[parent].remove(mhandle)
+      del self.by_parent[parent][mhandle]
+    except KeyError, e:
+      # TODO: log here.
+      pass
+    finally:
+      if not self.by_parent[parent]:
+        del self.by_parent[parent]

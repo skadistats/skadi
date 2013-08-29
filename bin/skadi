@@ -27,12 +27,17 @@ with _io.open(path, 'r+b') as infile:
   for game in demo.stream(tick=5000):
     tick, user_msgs, game_evts, world, modifiers = game
 
-    lane_creeps = world.find_all_by_dt('DT_DOTA_BaseNPC_Creep_Lane')
+    print tick
 
-    if lane_creeps:
-      print 'lane creeps at {0}: {1}'.format(tick, len(lane_creeps))
-      for ehandle, state in lane_creeps.items():
-        index, _ = w.from_ehandle(ehandle)
-        health = state[('DT_DOTA_BaseNPC_Creep_Lane', 'm_iHealthPercentage')]
-        health = int(float(health + 1) / 127.0 * 100)
-        print 'creep #{0}; {1}% health'.format(index, health)
+    # Print all active modifiers at every tick.
+    for ehandle, m_list in modifiers:
+      try:
+        pretty = map(lambda (_, a): a['name'], m_list.items())
+        dt = world.fetch_recv_table(ehandle).dt
+        print '  {dt} (#{eh}): {attrs}'.format(dt=dt, eh=ehandle, attrs=pretty)
+      except KeyError:
+        # Unfortunately, the modifiers data is kind of messy.
+        # Sometimes there are modifiers for entities that don't exist.
+        # This is probably something the game client ignores.
+        # Working on it!
+        pass

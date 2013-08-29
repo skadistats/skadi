@@ -178,14 +178,12 @@ def _parse_all_csvc_create_string_tables(pbmsgs):
     bs = b_io.construct(pbmsg.string_data)
 
     entries = list(u_st.construct(bs, ne, eb, sf, sb))
-
     name = pbmsg.name
-    if name == 'ActiveModifiers':
-      obs = o_am.construct()
-    else:
-      obs = None
+    string_tables[name] = stab.construct(name, eb, sf, sb, entries)
 
-    string_tables[name] = stab.construct(name, eb, sf, sb, entries, obs)
+  observer = o_am.construct()
+  observer.modifier_names = string_tables['ModifierNames']
+  string_tables['ActiveModifiers'].observer = observer
 
   return string_tables
 

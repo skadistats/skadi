@@ -7,12 +7,12 @@ def construct(*args):
 
 
 class StringTable(object):
-  def __init__(self, name, ent_bits, sz_fixed, sz_bits, ents, observer=None):
+  def __init__(self, name, ent_bits, sz_fixed, sz_bits, ents):
     self.name = name
     self.entry_bits = ent_bits
     self.size_fixed = sz_fixed
     self.size_bits = sz_bits
-    self.observer = observer
+    self.observer = None
     self.update_all(ents)
 
   def get(self, name):

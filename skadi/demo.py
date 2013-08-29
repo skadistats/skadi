@@ -13,6 +13,7 @@ from skadi.io.unpacker import entity as u_ent
 from skadi.io.unpacker import string_table as u_st
 from skadi.protoc import demo_pb2 as pb_d
 from skadi.protoc import netmessages_pb2 as pb_n
+from skadi.protoc import dota_modifiers_pb2 as pb_dm
 
 
 def fast_forward(prologue, demo_io, tick=None):
@@ -70,7 +71,8 @@ def fast_forward(prologue, demo_io, tick=None):
       try:
         world.create(cls, index, serial, state)
       except AssertionError, e:
-        print e
+        # TODO: log here.
+        pass
 
   return world, string_tables, remaining_packets
 
@@ -163,6 +165,9 @@ class Stream(object):
     game_events = [e_ge.parse(p_io.parse(p.kind, m), gel) for p, m in all_ge]
 
     modifiers = self.string_tables['ActiveModifiers'].observer
+
+    _, gamerules = self.world.find_by_dt('DT_DOTAGamerulesProxy')
+    modifiers.expire(gamerules[('DT_DOTAGamerules', 'm_fGameTime')])
 
     return tick, user_messages, game_events, self.world, modifiers
 
