@@ -19,14 +19,6 @@ In a Hurry?
 
 Check out some simple usage in [bin/skadi](https://github.com/onethirtyfive/skadi/blob/master/bin/skadi).
 
-Each key in the state is a two-item tuple:
-
-    (property origin, property name)
-
-To uniquely identify a piece of state, you need both of these bits of info. This is because entity classes are part of an elaborate hierarchy--they inherit properties from parent, all the way up to their `baseclass`. Investigate the state. The property names should make sense. Play with the values you get from the keys and you'll start discovering a wealth of game data.
-
-If you encounter a property name with the prefix 'm_h', or if the name indicates something relational, you might have found an `ehandle`. You can ask the `world` for an entity by ehandle with the method `find`. It will return that entity's state. With this, you can relate entities to one another--the data does that a lot!
-
 
 Dependencies
 ============
