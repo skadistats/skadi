@@ -10,7 +10,7 @@ from google.protobuf import descriptor_pb2
 
 
 import google.protobuf.descriptor_pb2
-import netmessages_pb2
+import networkbasetypes_pb2
 import ai_activity_pb2
 import dota_commonmessages_pb2
 
@@ -18,7 +18,7 @@ import dota_commonmessages_pb2
 DESCRIPTOR = _descriptor.FileDescriptor(
   name='dota_usermessages.proto',
   package='',
-  serialized_pb='\n\x17\x64ota_usermessages.proto\x1a google/protobuf/descriptor.proto\x1a\x11netmessages.proto\x1a\x11\x61i_activity.proto\x1a\x19\x64ota_commonmessages.proto\"+\n\x18\x43\x44OTAUserMsg_AIDebugLine\x12\x0f\n\x07message\x18\x01 \x01(\t\"$\n\x11\x43\x44OTAUserMsg_Ping\x12\x0f\n\x07message\x18\x01 \x01(\t\",\n\x17\x43\x44OTAUserMsg_SwapVerify\x12\x11\n\tplayer_id\x18\x01 \x01(\r\"\xef\x01\n\x16\x43\x44OTAUserMsg_ChatEvent\x12\x36\n\x04type\x18\x01 \x02(\x0e\x32\x12.DOTA_CHAT_MESSAGE:\x14\x43HAT_MESSAGE_INVALID\x12\r\n\x05value\x18\x02 \x01(\r\x12\x16\n\nplayerid_1\x18\x03 \x01(\x11:\x02-1\x12\x16\n\nplayerid_2\x18\x04 \x01(\x11:\x02-1\x12\x16\n\nplayerid_3\x18\x05 \x01(\x11:\x02-1\x12\x16\n\nplayerid_4\x18\x06 \x01(\x11:\x02-1\x12\x16\n\nplayerid_5\x18\x07 \x01(\x11:\x02-1\x12\x16\n\nplayerid_6\x18\x08 \x01(\x11:\x02-1\"\xfd\x01\n\x1a\x43\x44OTAUserMsg_CombatLogData\x12:\n\x04type\x18\x01 \x01(\x0e\x32\x15.DOTA_COMBATLOG_TYPES:\x15\x44OTA_COMBATLOG_DAMAGE\x12\x13\n\x0btarget_name\x18\x02 \x01(\r\x12\x15\n\rattacker_name\x18\x03 \x01(\r\x12\x19\n\x11\x61ttacker_illusion\x18\x04 \x01(\x08\x12\x17\n\x0ftarget_illusion\x18\x05 \x01(\x08\x12\x16\n\x0einflictor_name\x18\x06 \x01(\r\x12\r\n\x05value\x18\x07 \x01(\x05\x12\x0e\n\x06health\x18\x08 \x01(\x05\x12\x0c\n\x04time\x18\t \x01(\x02\"!\n\x1f\x43\x44OTAUserMsg_CombatLogShowDeath\"Z\n\x14\x43\x44OTAUserMsg_BotChat\x12\x11\n\tplayer_id\x18\x01 \x01(\r\x12\x0e\n\x06\x66ormat\x18\x02 \x01(\t\x12\x0f\n\x07message\x18\x03 \x01(\t\x12\x0e\n\x06target\x18\x04 \x01(\t\"q\n CDOTAUserMsg_CombatHeroPositions\x12\r\n\x05index\x18\x01 \x01(\r\x12\x0c\n\x04time\x18\x02 \x01(\x05\x12 \n\tworld_pos\x18\x03 \x01(\x0b\x32\r.CMsgVector2D\x12\x0e\n\x06health\x18\x04 \x01(\x05\"\xfd\x01\n\x1c\x43\x44OTAUserMsg_MiniKillCamInfo\x12\x39\n\tattackers\x18\x01 \x03(\x0b\x32&.CDOTAUserMsg_MiniKillCamInfo.Attacker\x1a\xa1\x01\n\x08\x41ttacker\x12\x10\n\x08\x61ttacker\x18\x01 \x01(\r\x12\x14\n\x0ctotal_damage\x18\x02 \x01(\x05\x12\x41\n\tabilities\x18\x03 \x03(\x0b\x32..CDOTAUserMsg_MiniKillCamInfo.Attacker.Ability\x1a*\n\x07\x41\x62ility\x12\x0f\n\x07\x61\x62ility\x18\x01 \x01(\r\x12\x0e\n\x06\x64\x61mage\x18\x02 \x01(\x05\"@\n\x1d\x43\x44OTAUserMsg_GlobalLightColor\x12\r\n\x05\x63olor\x18\x01 \x01(\r\x12\x10\n\x08\x64uration\x18\x02 \x01(\x02\"U\n!CDOTAUserMsg_GlobalLightDirection\x12\x1e\n\tdirection\x18\x01 \x01(\x0b\x32\x0b.CMsgVector\x12\x10\n\x08\x64uration\x18\x02 \x01(\x02\"]\n\x19\x43\x44OTAUserMsg_LocationPing\x12\x11\n\tplayer_id\x18\x01 \x01(\r\x12-\n\rlocation_ping\x18\x02 \x01(\x0b\x32\x16.CDOTAMsg_LocationPing\"T\n\x16\x43\x44OTAUserMsg_ItemAlert\x12\x11\n\tplayer_id\x18\x01 \x01(\r\x12\'\n\nitem_alert\x18\x02 \x01(\x0b\x32\x13.CDOTAMsg_ItemAlert\"n\n\x19\x43\x44OTAUserMsg_MinimapEvent\x12\x12\n\nevent_type\x18\x01 \x01(\x05\x12\x15\n\rentity_handle\x18\x02 \x01(\x05\x12\t\n\x01x\x18\x03 \x01(\x05\x12\t\n\x01y\x18\x04 \x01(\x05\x12\x10\n\x08\x64uration\x18\x05 \x01(\x05\"M\n\x14\x43\x44OTAUserMsg_MapLine\x12\x11\n\tplayer_id\x18\x01 \x01(\x05\x12\"\n\x07mapline\x18\x02 \x01(\x0b\x32\x11.CDOTAMsg_MapLine\"n\n\x1e\x43\x44OTAUserMsg_MinimapDebugPoint\x12\x1d\n\x08location\x18\x01 \x01(\x0b\x32\x0b.CMsgVector\x12\r\n\x05\x63olor\x18\x02 \x01(\r\x12\x0c\n\x04size\x18\x03 \x01(\x05\x12\x10\n\x08\x64uration\x18\x04 \x01(\x02\"\xae\x01\n#CDOTAUserMsg_CreateLinearProjectile\x12\x1b\n\x06origin\x18\x01 \x01(\x0b\x32\x0b.CMsgVector\x12\x1f\n\x08velocity\x18\x02 \x01(\x0b\x32\r.CMsgVector2D\x12\x0f\n\x07latency\x18\x03 \x01(\x05\x12\x10\n\x08\x65ntindex\x18\x04 \x01(\x05\x12\x16\n\x0eparticle_index\x18\x05 \x01(\x05\x12\x0e\n\x06handle\x18\x06 \x01(\x05\"6\n$CDOTAUserMsg_DestroyLinearProjectile\x12\x0e\n\x06handle\x18\x01 \x01(\x05\"9\n%CDOTAUserMsg_DodgeTrackingProjectiles\x12\x10\n\x08\x65ntindex\x18\x01 \x02(\x05\"_\n!CDOTAUserMsg_SpectatorPlayerClick\x12\x10\n\x08\x65ntindex\x18\x01 \x02(\x05\x12\x12\n\norder_type\x18\x02 \x01(\x05\x12\x14\n\x0ctarget_index\x18\x03 \x01(\x05\"b\n\x1d\x43\x44OTAUserMsg_NevermoreRequiem\x12\x15\n\rentity_handle\x18\x01 \x01(\x05\x12\r\n\x05lines\x18\x02 \x01(\x05\x12\x1b\n\x06origin\x18\x03 \x01(\x0b\x32\x0b.CMsgVector\".\n\x1b\x43\x44OTAUserMsg_InvalidCommand\x12\x0f\n\x07message\x18\x01 \x01(\t\")\n\x15\x43\x44OTAUserMsg_HudError\x12\x10\n\x08order_id\x18\x01 \x01(\x05\"c\n\x1b\x43\x44OTAUserMsg_SharedCooldown\x12\x10\n\x08\x65ntindex\x18\x01 \x01(\x05\x12\x0c\n\x04name\x18\x02 \x01(\t\x12\x10\n\x08\x63ooldown\x18\x03 \x01(\x02\x12\x12\n\nname_index\x18\x04 \x01(\x05\"/\n\x1f\x43\x44OTAUserMsg_SetNextAutobuyItem\x12\x0c\n\x04name\x18\x01 \x01(\t\"X\n\x1b\x43\x44OTAUserMsg_HalloweenDrops\x12\x11\n\titem_defs\x18\x01 \x03(\r\x12\x12\n\nplayer_ids\x18\x02 \x03(\r\x12\x12\n\nprize_list\x18\x03 \x01(\r\"\xfe\x01\n\x1c\x43\x44OTAResponseQuerySerialized\x12\x31\n\x05\x66\x61\x63ts\x18\x01 \x03(\x0b\x32\".CDOTAResponseQuerySerialized.Fact\x1a\xaa\x01\n\x04\x46\x61\x63t\x12\x0b\n\x03key\x18\x01 \x02(\x05\x12\x46\n\x07valtype\x18\x02 \x02(\x0e\x32,.CDOTAResponseQuerySerialized.Fact.ValueType:\x07NUMERIC\x12\x13\n\x0bval_numeric\x18\x03 \x01(\x02\x12\x12\n\nval_string\x18\x04 \x01(\t\"$\n\tValueType\x12\x0b\n\x07NUMERIC\x10\x01\x12\n\n\x06STRING\x10\x02\"\x90\x01\n\x18\x43\x44OTASpeechMatchOnClient\x12\x0f\n\x07\x63oncept\x18\x01 \x01(\x05\x12\x16\n\x0erecipient_type\x18\x02 \x01(\x05\x12\x34\n\rresponsequery\x18\x03 \x01(\x0b\x32\x1d.CDOTAResponseQuerySerialized\x12\x15\n\nrandomseed\x18\x04 \x01(\x0f:\x01\x30\"\xb0\x07\n\x16\x43\x44OTAUserMsg_UnitEvent\x12\x38\n\x08msg_type\x18\x01 \x02(\x0e\x32\x14.EDotaEntityMessages:\x10\x44OTA_UNIT_SPEECH\x12\x14\n\x0c\x65ntity_index\x18\x02 \x02(\x05\x12.\n\x06speech\x18\x03 \x01(\x0b\x32\x1e.CDOTAUserMsg_UnitEvent.Speech\x12\x37\n\x0bspeech_mute\x18\x04 \x01(\x0b\x32\".CDOTAUserMsg_UnitEvent.SpeechMute\x12\x37\n\x0b\x61\x64\x64_gesture\x18\x05 \x01(\x0b\x32\".CDOTAUserMsg_UnitEvent.AddGesture\x12=\n\x0eremove_gesture\x18\x06 \x01(\x0b\x32%.CDOTAUserMsg_UnitEvent.RemoveGesture\x12\x39\n\x0c\x62lood_impact\x18\x07 \x01(\x0b\x32#.CDOTAUserMsg_UnitEvent.BloodImpact\x12\x39\n\x0c\x66\x61\x64\x65_gesture\x18\x08 \x01(\x0b\x32#.CDOTAUserMsg_UnitEvent.FadeGesture\x12\x39\n\x16speech_match_on_client\x18\t \x01(\x0b\x32\x19.CDOTASpeechMatchOnClient\x1ak\n\x06Speech\x12\x0f\n\x07\x63oncept\x18\x01 \x01(\x05\x12\x10\n\x08response\x18\x02 \x01(\t\x12\x16\n\x0erecipient_type\x18\x03 \x01(\x05\x12\r\n\x05level\x18\x04 \x01(\x05\x12\x17\n\x08muteable\x18\x05 \x01(\x08:\x05\x66\x61lse\x1a \n\nSpeechMute\x12\x12\n\x05\x64\x65lay\x18\x01 \x01(\x02:\x03\x30.5\x1ao\n\nAddGesture\x12(\n\x08\x61\x63tivity\x18\x01 \x01(\x0e\x32\t.Activity:\x0b\x41\x43T_INVALID\x12\x0c\n\x04slot\x18\x02 \x01(\x05\x12\x12\n\x07\x66\x61\x64\x65_in\x18\x03 \x01(\x02:\x01\x30\x12\x15\n\x08\x66\x61\x64\x65_out\x18\x04 \x01(\x02:\x03\x30.1\x1a\x39\n\rRemoveGesture\x12(\n\x08\x61\x63tivity\x18\x01 \x01(\x0e\x32\t.Activity:\x0b\x41\x43T_INVALID\x1a@\n\x0b\x42loodImpact\x12\r\n\x05scale\x18\x01 \x01(\x05\x12\x10\n\x08x_normal\x18\x02 \x01(\x05\x12\x10\n\x08y_normal\x18\x03 \x01(\x05\x1a\x37\n\x0b\x46\x61\x64\x65Gesture\x12(\n\x08\x61\x63tivity\x18\x01 \x01(\x0e\x32\t.Activity:\x0b\x41\x43T_INVALID\"0\n\x1a\x43\x44OTAUserMsg_ItemPurchased\x12\x12\n\nitem_index\x18\x01 \x01(\x05\"j\n\x16\x43\x44OTAUserMsg_ItemFound\x12\x0e\n\x06player\x18\x01 \x01(\x05\x12\x0f\n\x07quality\x18\x02 \x01(\x05\x12\x0e\n\x06rarity\x18\x03 \x01(\x05\x12\x0e\n\x06method\x18\x04 \x01(\x05\x12\x0f\n\x07itemdef\x18\x05 \x01(\x05\"\xf2\x0f\n\x1c\x43\x44OTAUserMsg_ParticleManager\x12H\n\x04type\x18\x01 \x02(\x0e\x32\x16.DOTA_PARTICLE_MESSAGE:\"DOTA_PARTICLE_MANAGER_EVENT_CREATE\x12\r\n\x05index\x18\x02 \x02(\r\x12R\n\x16release_particle_index\x18\x03 \x01(\x0b\x32\x32.CDOTAUserMsg_ParticleManager.ReleaseParticleIndex\x12\x45\n\x0f\x63reate_particle\x18\x04 \x01(\x0b\x32,.CDOTAUserMsg_ParticleManager.CreateParticle\x12G\n\x10\x64\x65stroy_particle\x18\x05 \x01(\x0b\x32-.CDOTAUserMsg_ParticleManager.DestroyParticle\x12Z\n\x1a\x64\x65stroy_particle_involving\x18\x06 \x01(\x0b\x32\x36.CDOTAUserMsg_ParticleManager.DestroyParticleInvolving\x12\x45\n\x0fupdate_particle\x18\x07 \x01(\x0b\x32,.CDOTAUserMsg_ParticleManager.UpdateParticle\x12L\n\x13update_particle_fwd\x18\x08 \x01(\x0b\x32/.CDOTAUserMsg_ParticleManager.UpdateParticleFwd\x12R\n\x16update_particle_orient\x18\t \x01(\x0b\x32\x32.CDOTAUserMsg_ParticleManager.UpdateParticleOrient\x12V\n\x18update_particle_fallback\x18\n \x01(\x0b\x32\x34.CDOTAUserMsg_ParticleManager.UpdateParticleFallback\x12R\n\x16update_particle_offset\x18\x0b \x01(\x0b\x32\x32.CDOTAUserMsg_ParticleManager.UpdateParticleOffset\x12L\n\x13update_particle_ent\x18\x0c \x01(\x0b\x32/.CDOTAUserMsg_ParticleManager.UpdateParticleEnt\x12[\n\x1bupdate_particle_should_draw\x18\x0e \x01(\x0b\x32\x36.CDOTAUserMsg_ParticleManager.UpdateParticleShouldDraw\x12Y\n\x1aupdate_particle_set_frozen\x18\x0f \x01(\x0b\x32\x35.CDOTAUserMsg_ParticleManager.UpdateParticleSetFrozen\x1a\x16\n\x14ReleaseParticleIndex\x1aY\n\x0e\x43reateParticle\x12\x1b\n\x13particle_name_index\x18\x01 \x01(\x05\x12\x13\n\x0b\x61ttach_type\x18\x02 \x01(\x05\x12\x15\n\rentity_handle\x18\x03 \x01(\x05\x1a.\n\x0f\x44\x65stroyParticle\x12\x1b\n\x13\x64\x65stroy_immediately\x18\x01 \x01(\x08\x1aN\n\x18\x44\x65stroyParticleInvolving\x12\x1b\n\x13\x64\x65stroy_immediately\x18\x01 \x01(\x08\x12\x15\n\rentity_handle\x18\x03 \x01(\x05\x1a\x46\n\x0eUpdateParticle\x12\x15\n\rcontrol_point\x18\x01 \x01(\x05\x12\x1d\n\x08position\x18\x02 \x01(\x0b\x32\x0b.CMsgVector\x1aH\n\x11UpdateParticleFwd\x12\x15\n\rcontrol_point\x18\x01 \x01(\x05\x12\x1c\n\x07\x66orward\x18\x02 \x01(\x0b\x32\x0b.CMsgVector\x1a\x80\x01\n\x14UpdateParticleOrient\x12\x15\n\rcontrol_point\x18\x01 \x01(\x05\x12\x1c\n\x07\x66orward\x18\x02 \x01(\x0b\x32\x0b.CMsgVector\x12\x1a\n\x05right\x18\x03 \x01(\x0b\x32\x0b.CMsgVector\x12\x17\n\x02up\x18\x04 \x01(\x0b\x32\x0b.CMsgVector\x1aN\n\x16UpdateParticleFallback\x12\x15\n\rcontrol_point\x18\x01 \x01(\x05\x12\x1d\n\x08position\x18\x02 \x01(\x0b\x32\x0b.CMsgVector\x1aQ\n\x14UpdateParticleOffset\x12\x15\n\rcontrol_point\x18\x01 \x01(\x05\x12\"\n\rorigin_offset\x18\x02 \x01(\x0b\x32\x0b.CMsgVector\x1a\x92\x01\n\x11UpdateParticleEnt\x12\x15\n\rcontrol_point\x18\x01 \x01(\x05\x12\x15\n\rentity_handle\x18\x02 \x01(\x05\x12\x13\n\x0b\x61ttach_type\x18\x03 \x01(\x05\x12\x12\n\nattachment\x18\x04 \x01(\x05\x12&\n\x11\x66\x61llback_position\x18\x05 \x01(\x0b\x32\x0b.CMsgVector\x1a-\n\x17UpdateParticleSetFrozen\x12\x12\n\nset_frozen\x18\x01 \x01(\x08\x1a/\n\x18UpdateParticleShouldDraw\x12\x13\n\x0bshould_draw\x18\x01 \x01(\x08\"\xc5\x01\n\x1a\x43\x44OTAUserMsg_OverheadEvent\x12?\n\x0cmessage_type\x18\x01 \x02(\x0e\x32\x14.DOTA_OVERHEAD_ALERT:\x13OVERHEAD_ALERT_GOLD\x12\r\n\x05value\x18\x02 \x01(\x05\x12\x1e\n\x16target_player_entindex\x18\x03 \x01(\x05\x12\x17\n\x0ftarget_entindex\x18\x04 \x01(\x05\x12\x1e\n\x16source_player_entindex\x18\x05 \x01(\x05\">\n\x1c\x43\x44OTAUserMsg_TutorialTipInfo\x12\x0c\n\x04name\x18\x01 \x01(\t\x12\x10\n\x08progress\x18\x02 \x01(\x05\"L\n\x1b\x43\x44OTAUserMsg_TutorialFinish\x12\x0f\n\x07heading\x18\x01 \x01(\t\x12\x0e\n\x06\x65mblem\x18\x02 \x01(\t\x12\x0c\n\x04\x62ody\x18\x03 \x01(\t\"S\n\x16\x43\x44OTAUserMsg_WorldLine\x12\x11\n\tplayer_id\x18\x01 \x01(\x05\x12&\n\tworldline\x18\x02 \x01(\x0b\x32\x13.CDOTAMsg_WorldLine\"F\n\x1b\x43\x44OTAUserMsg_TournamentDrop\x12\x13\n\x0bwinner_name\x18\x01 \x01(\t\x12\x12\n\nevent_type\x18\x02 \x01(\x05\"|\n\x16\x43\x44OTAUserMsg_ChatWheel\x12;\n\x0c\x63hat_message\x18\x01 \x01(\x0e\x32\x16.EDOTAChatWheelMessage:\rk_EDOTA_CW_Ok\x12\x11\n\tplayer_id\x18\x02 \x01(\r\x12\x12\n\naccount_id\x18\x03 \x01(\r\"]\n\x1d\x43\x44OTAUserMsg_ReceivedXmasGift\x12\x11\n\tplayer_id\x18\x01 \x01(\x05\x12\x11\n\titem_name\x18\x02 \x01(\t\x12\x16\n\x0einventory_slot\x18\x03 \x01(\x05\",\n\x17\x43\x44OTAUserMsg_ShowSurvey\x12\x11\n\tsurvey_id\x18\x01 \x01(\x05\"5\n CDOTAUserMsg_UpdateSharedContent\x12\x11\n\tslot_type\x18\x01 \x01(\x05\"!\n\x1f\x43\x44OTAUserMsg_TutorialRequestExp\".\n\x19\x43\x44OTAUserMsg_TutorialFade\x12\x11\n\ttgt_alpha\x18\x01 \x01(\x05\"x\n CDOTAUserMsg_TutorialPingMinimap\x12\x11\n\tplayer_id\x18\x01 \x01(\r\x12\r\n\x05pos_x\x18\x02 \x01(\x02\x12\r\n\x05pos_y\x18\x03 \x01(\x02\x12\r\n\x05pos_z\x18\x04 \x01(\x02\x12\x14\n\x0c\x65ntity_index\x18\x05 \x01(\x05\"/\n\x1e\x43\x44OTA_UM_GamerulesStateChanged\x12\r\n\x05state\x18\x01 \x01(\r\"h\n\x1d\x43\x44OTAUserMsg_AddQuestLogEntry\x12\x10\n\x08npc_name\x18\x01 \x01(\t\x12\x12\n\nnpc_dialog\x18\x02 \x01(\t\x12\r\n\x05quest\x18\x03 \x01(\x08\x12\x12\n\nquest_type\x18\x04 \x01(\x05\"[\n\x1a\x43\x44OTAUserMsg_SendStatPopup\x12\x11\n\tplayer_id\x18\x01 \x01(\x05\x12*\n\tstatpopup\x18\x02 \x01(\x0b\x32\x17.CDOTAMsg_SendStatPopup*\xc8\n\n\x11\x45\x44otaUserMessages\x12\x1e\n\x1a\x44OTA_UM_AddUnitToSelection\x10@\x12\x17\n\x13\x44OTA_UM_AIDebugLine\x10\x41\x12\x15\n\x11\x44OTA_UM_ChatEvent\x10\x42\x12\x1f\n\x1b\x44OTA_UM_CombatHeroPositions\x10\x43\x12\x19\n\x15\x44OTA_UM_CombatLogData\x10\x44\x12\x1e\n\x1a\x44OTA_UM_CombatLogShowDeath\x10\x46\x12\"\n\x1e\x44OTA_UM_CreateLinearProjectile\x10G\x12#\n\x1f\x44OTA_UM_DestroyLinearProjectile\x10H\x12$\n DOTA_UM_DodgeTrackingProjectiles\x10I\x12\x1c\n\x18\x44OTA_UM_GlobalLightColor\x10J\x12 \n\x1c\x44OTA_UM_GlobalLightDirection\x10K\x12\x1a\n\x16\x44OTA_UM_InvalidCommand\x10L\x12\x18\n\x14\x44OTA_UM_LocationPing\x10M\x12\x13\n\x0f\x44OTA_UM_MapLine\x10N\x12\x1b\n\x17\x44OTA_UM_MiniKillCamInfo\x10O\x12\x1d\n\x19\x44OTA_UM_MinimapDebugPoint\x10P\x12\x18\n\x14\x44OTA_UM_MinimapEvent\x10Q\x12\x1c\n\x18\x44OTA_UM_NevermoreRequiem\x10R\x12\x19\n\x15\x44OTA_UM_OverheadEvent\x10S\x12\x1e\n\x1a\x44OTA_UM_SetNextAutobuyItem\x10T\x12\x1a\n\x16\x44OTA_UM_SharedCooldown\x10U\x12 \n\x1c\x44OTA_UM_SpectatorPlayerClick\x10V\x12\x1b\n\x17\x44OTA_UM_TutorialTipInfo\x10W\x12\x15\n\x11\x44OTA_UM_UnitEvent\x10X\x12\x1b\n\x17\x44OTA_UM_ParticleManager\x10Y\x12\x13\n\x0f\x44OTA_UM_BotChat\x10Z\x12\x14\n\x10\x44OTA_UM_HudError\x10[\x12\x19\n\x15\x44OTA_UM_ItemPurchased\x10\\\x12\x10\n\x0c\x44OTA_UM_Ping\x10]\x12\x15\n\x11\x44OTA_UM_ItemFound\x10^\x12!\n\x1d\x44OTA_UM_CharacterSpeakConcept\x10_\x12\x16\n\x12\x44OTA_UM_SwapVerify\x10`\x12\x15\n\x11\x44OTA_UM_WorldLine\x10\x61\x12\x1a\n\x16\x44OTA_UM_TournamentDrop\x10\x62\x12\x15\n\x11\x44OTA_UM_ItemAlert\x10\x63\x12\x1a\n\x16\x44OTA_UM_HalloweenDrops\x10\x64\x12\x15\n\x11\x44OTA_UM_ChatWheel\x10\x65\x12\x1c\n\x18\x44OTA_UM_ReceivedXmasGift\x10\x66\x12\x1f\n\x1b\x44OTA_UM_UpdateSharedContent\x10g\x12\x1e\n\x1a\x44OTA_UM_TutorialRequestExp\x10h\x12\x1f\n\x1b\x44OTA_UM_TutorialPingMinimap\x10i\x12!\n\x1d\x44OTA_UM_GamerulesStateChanged\x10j\x12\x16\n\x12\x44OTA_UM_ShowSurvey\x10k\x12\x18\n\x14\x44OTA_UM_TutorialFade\x10l\x12\x1c\n\x18\x44OTA_UM_AddQuestLogEntry\x10m\x12\x19\n\x15\x44OTA_UM_SendStatPopup\x10n\x12\x1a\n\x16\x44OTA_UM_TutorialFinish\x10o*\xe3\x0e\n\x11\x44OTA_CHAT_MESSAGE\x12!\n\x14\x43HAT_MESSAGE_INVALID\x10\xff\xff\xff\xff\xff\xff\xff\xff\xff\x01\x12\x1a\n\x16\x43HAT_MESSAGE_HERO_KILL\x10\x00\x12\x1a\n\x16\x43HAT_MESSAGE_HERO_DENY\x10\x01\x12\x1e\n\x1a\x43HAT_MESSAGE_BARRACKS_KILL\x10\x02\x12\x1b\n\x17\x43HAT_MESSAGE_TOWER_KILL\x10\x03\x12\x1b\n\x17\x43HAT_MESSAGE_TOWER_DENY\x10\x04\x12\x1b\n\x17\x43HAT_MESSAGE_FIRSTBLOOD\x10\x05\x12\x1c\n\x18\x43HAT_MESSAGE_STREAK_KILL\x10\x06\x12\x18\n\x14\x43HAT_MESSAGE_BUYBACK\x10\x07\x12\x16\n\x12\x43HAT_MESSAGE_AEGIS\x10\x08\x12\x1c\n\x18\x43HAT_MESSAGE_ROSHAN_KILL\x10\t\x12\x1d\n\x19\x43HAT_MESSAGE_COURIER_LOST\x10\n\x12\"\n\x1e\x43HAT_MESSAGE_COURIER_RESPAWNED\x10\x0b\x12\x1b\n\x17\x43HAT_MESSAGE_GLYPH_USED\x10\x0c\x12\x1e\n\x1a\x43HAT_MESSAGE_ITEM_PURCHASE\x10\r\x12\x18\n\x14\x43HAT_MESSAGE_CONNECT\x10\x0e\x12\x1b\n\x17\x43HAT_MESSAGE_DISCONNECT\x10\x0f\x12.\n*CHAT_MESSAGE_DISCONNECT_WAIT_FOR_RECONNECT\x10\x10\x12*\n&CHAT_MESSAGE_DISCONNECT_TIME_REMAINING\x10\x11\x12\x31\n-CHAT_MESSAGE_DISCONNECT_TIME_REMAINING_PLURAL\x10\x12\x12\x1a\n\x16\x43HAT_MESSAGE_RECONNECT\x10\x13\x12\x18\n\x14\x43HAT_MESSAGE_ABANDON\x10\x14\x12\x1e\n\x1a\x43HAT_MESSAGE_SAFE_TO_LEAVE\x10\x15\x12\x1c\n\x18\x43HAT_MESSAGE_RUNE_PICKUP\x10\x16\x12\x1c\n\x18\x43HAT_MESSAGE_RUNE_BOTTLE\x10\x17\x12\x19\n\x15\x43HAT_MESSAGE_INTHEBAG\x10\x18\x12\x1b\n\x17\x43HAT_MESSAGE_SECRETSHOP\x10\x19\x12#\n\x1f\x43HAT_MESSAGE_ITEM_AUTOPURCHASED\x10\x1a\x12\x1f\n\x1b\x43HAT_MESSAGE_ITEMS_COMBINED\x10\x1b\x12\x1d\n\x19\x43HAT_MESSAGE_SUPER_CREEPS\x10\x1c\x12%\n!CHAT_MESSAGE_CANT_USE_ACTION_ITEM\x10\x1d\x12\"\n\x1e\x43HAT_MESSAGE_CHARGES_EXHAUSTED\x10\x1e\x12\x1a\n\x16\x43HAT_MESSAGE_CANTPAUSE\x10\x1f\x12\x1d\n\x19\x43HAT_MESSAGE_NOPAUSESLEFT\x10 \x12\x1d\n\x19\x43HAT_MESSAGE_CANTPAUSEYET\x10!\x12\x17\n\x13\x43HAT_MESSAGE_PAUSED\x10\"\x12\"\n\x1e\x43HAT_MESSAGE_UNPAUSE_COUNTDOWN\x10#\x12\x19\n\x15\x43HAT_MESSAGE_UNPAUSED\x10$\x12\x1e\n\x1a\x43HAT_MESSAGE_AUTO_UNPAUSED\x10%\x12\x1a\n\x16\x43HAT_MESSAGE_YOUPAUSED\x10&\x12 \n\x1c\x43HAT_MESSAGE_CANTUNPAUSETEAM\x10\'\x12(\n$CHAT_MESSAGE_SAFE_TO_LEAVE_ABANDONER\x10(\x12\"\n\x1e\x43HAT_MESSAGE_VOICE_TEXT_BANNED\x10)\x12.\n*CHAT_MESSAGE_SPECTATORS_WATCHING_THIS_GAME\x10*\x12 \n\x1c\x43HAT_MESSAGE_REPORT_REMINDER\x10+\x12\x1a\n\x16\x43HAT_MESSAGE_ECON_ITEM\x10,\x12\x16\n\x12\x43HAT_MESSAGE_TAUNT\x10-\x12\x17\n\x13\x43HAT_MESSAGE_RANDOM\x10.\x12\x18\n\x14\x43HAT_MESSAGE_RD_TURN\x10/\x12.\n*CHAT_MESSAGE_SAFE_TO_LEAVE_ABANDONER_EARLY\x10\x30\x12 \n\x1c\x43HAT_MESSAGE_DROP_RATE_BONUS\x10\x31\x12!\n\x1d\x43HAT_MESSAGE_NO_BATTLE_POINTS\x10\x32\x12\x1d\n\x19\x43HAT_MESSAGE_DENIED_AEGIS\x10\x33\x12\x1e\n\x1a\x43HAT_MESSAGE_INFORMATIONAL\x10\x34\x12\x1d\n\x19\x43HAT_MESSAGE_AEGIS_STOLEN\x10\x35\x12\x1d\n\x19\x43HAT_MESSAGE_ROSHAN_CANDY\x10\x36\x12\x1c\n\x18\x43HAT_MESSAGE_ITEM_GIFTED\x10\x37\x12\'\n#CHAT_MESSAGE_HERO_KILL_WITH_GREEVIL\x10\x38*\xb2\x01\n\x1d\x44OTA_NO_BATTLE_POINTS_REASONS\x12%\n!NO_BATTLE_POINTS_WRONG_LOBBY_TYPE\x10\x01\x12\"\n\x1eNO_BATTLE_POINTS_PRACTICE_BOTS\x10\x02\x12#\n\x1fNO_BATTLE_POINTS_CHEATS_ENABLED\x10\x03\x12!\n\x1dNO_BATTLE_POINTS_LOW_PRIORITY\x10\x04*7\n\x17\x44OTA_CHAT_INFORMATIONAL\x12\x1c\n\x18\x43OOP_BATTLE_POINTS_RULES\x10\x01*\xa9\x01\n\x14\x44OTA_COMBATLOG_TYPES\x12\x19\n\x15\x44OTA_COMBATLOG_DAMAGE\x10\x00\x12\x17\n\x13\x44OTA_COMBATLOG_HEAL\x10\x01\x12\x1f\n\x1b\x44OTA_COMBATLOG_MODIFIER_ADD\x10\x02\x12\"\n\x1e\x44OTA_COMBATLOG_MODIFIER_REMOVE\x10\x03\x12\x18\n\x14\x44OTA_COMBATLOG_DEATH\x10\x04*\xe5\x01\n\x13\x45\x44otaEntityMessages\x12\x14\n\x10\x44OTA_UNIT_SPEECH\x10\x00\x12\x19\n\x15\x44OTA_UNIT_SPEECH_MUTE\x10\x01\x12\x19\n\x15\x44OTA_UNIT_ADD_GESTURE\x10\x02\x12\x1c\n\x18\x44OTA_UNIT_REMOVE_GESTURE\x10\x03\x12!\n\x1d\x44OTA_UNIT_REMOVE_ALL_GESTURES\x10\x04\x12\x1a\n\x16\x44OTA_UNIT_FADE_GESTURE\x10\x06\x12%\n!DOTA_UNIT_SPEECH_CLIENTSIDE_RULES\x10\x07*\xb1\x04\n\x15\x44OTA_PARTICLE_MESSAGE\x12&\n\"DOTA_PARTICLE_MANAGER_EVENT_CREATE\x10\x00\x12&\n\"DOTA_PARTICLE_MANAGER_EVENT_UPDATE\x10\x01\x12.\n*DOTA_PARTICLE_MANAGER_EVENT_UPDATE_FORWARD\x10\x02\x12\x32\n.DOTA_PARTICLE_MANAGER_EVENT_UPDATE_ORIENTATION\x10\x03\x12/\n+DOTA_PARTICLE_MANAGER_EVENT_UPDATE_FALLBACK\x10\x04\x12*\n&DOTA_PARTICLE_MANAGER_EVENT_UPDATE_ENT\x10\x05\x12-\n)DOTA_PARTICLE_MANAGER_EVENT_UPDATE_OFFSET\x10\x06\x12\'\n#DOTA_PARTICLE_MANAGER_EVENT_DESTROY\x10\x07\x12\x31\n-DOTA_PARTICLE_MANAGER_EVENT_DESTROY_INVOLVING\x10\x08\x12\'\n#DOTA_PARTICLE_MANAGER_EVENT_RELEASE\x10\t\x12+\n\'DOTA_PARTICLE_MANAGER_EVENT_SHOULD_DRAW\x10\x0b\x12&\n\"DOTA_PARTICLE_MANAGER_EVENT_FROZEN\x10\x0c*\x86\x03\n\x13\x44OTA_OVERHEAD_ALERT\x12\x17\n\x13OVERHEAD_ALERT_GOLD\x10\x00\x12\x17\n\x13OVERHEAD_ALERT_DENY\x10\x01\x12\x1b\n\x17OVERHEAD_ALERT_CRITICAL\x10\x02\x12\x15\n\x11OVERHEAD_ALERT_XP\x10\x03\x12%\n!OVERHEAD_ALERT_BONUS_SPELL_DAMAGE\x10\x04\x12\x17\n\x13OVERHEAD_ALERT_MISS\x10\x05\x12\x19\n\x15OVERHEAD_ALERT_DAMAGE\x10\x06\x12\x18\n\x14OVERHEAD_ALERT_EVADE\x10\x07\x12\x18\n\x14OVERHEAD_ALERT_BLOCK\x10\x08\x12&\n\"OVERHEAD_ALERT_BONUS_POISON_DAMAGE\x10\t\x12\x17\n\x13OVERHEAD_ALERT_HEAL\x10\n\x12\x1b\n\x17OVERHEAD_ALERT_MANA_ADD\x10\x0b\x12\x1c\n\x18OVERHEAD_ALERT_MANA_LOSS\x10\x0c')
+  serialized_pb='\n\x17\x64ota_usermessages.proto\x1a google/protobuf/descriptor.proto\x1a\x16networkbasetypes.proto\x1a\x11\x61i_activity.proto\x1a\x19\x64ota_commonmessages.proto\"+\n\x18\x43\x44OTAUserMsg_AIDebugLine\x12\x0f\n\x07message\x18\x01 \x01(\t\"$\n\x11\x43\x44OTAUserMsg_Ping\x12\x0f\n\x07message\x18\x01 \x01(\t\",\n\x17\x43\x44OTAUserMsg_SwapVerify\x12\x11\n\tplayer_id\x18\x01 \x01(\r\"\xef\x01\n\x16\x43\x44OTAUserMsg_ChatEvent\x12\x36\n\x04type\x18\x01 \x02(\x0e\x32\x12.DOTA_CHAT_MESSAGE:\x14\x43HAT_MESSAGE_INVALID\x12\r\n\x05value\x18\x02 \x01(\r\x12\x16\n\nplayerid_1\x18\x03 \x01(\x11:\x02-1\x12\x16\n\nplayerid_2\x18\x04 \x01(\x11:\x02-1\x12\x16\n\nplayerid_3\x18\x05 \x01(\x11:\x02-1\x12\x16\n\nplayerid_4\x18\x06 \x01(\x11:\x02-1\x12\x16\n\nplayerid_5\x18\x07 \x01(\x11:\x02-1\x12\x16\n\nplayerid_6\x18\x08 \x01(\x11:\x02-1\"\xfd\x01\n\x1a\x43\x44OTAUserMsg_CombatLogData\x12:\n\x04type\x18\x01 \x01(\x0e\x32\x15.DOTA_COMBATLOG_TYPES:\x15\x44OTA_COMBATLOG_DAMAGE\x12\x13\n\x0btarget_name\x18\x02 \x01(\r\x12\x15\n\rattacker_name\x18\x03 \x01(\r\x12\x19\n\x11\x61ttacker_illusion\x18\x04 \x01(\x08\x12\x17\n\x0ftarget_illusion\x18\x05 \x01(\x08\x12\x16\n\x0einflictor_name\x18\x06 \x01(\r\x12\r\n\x05value\x18\x07 \x01(\x05\x12\x0e\n\x06health\x18\x08 \x01(\x05\x12\x0c\n\x04time\x18\t \x01(\x02\"!\n\x1f\x43\x44OTAUserMsg_CombatLogShowDeath\"Z\n\x14\x43\x44OTAUserMsg_BotChat\x12\x11\n\tplayer_id\x18\x01 \x01(\r\x12\x0e\n\x06\x66ormat\x18\x02 \x01(\t\x12\x0f\n\x07message\x18\x03 \x01(\t\x12\x0e\n\x06target\x18\x04 \x01(\t\"q\n CDOTAUserMsg_CombatHeroPositions\x12\r\n\x05index\x18\x01 \x01(\r\x12\x0c\n\x04time\x18\x02 \x01(\x05\x12 \n\tworld_pos\x18\x03 \x01(\x0b\x32\r.CMsgVector2D\x12\x0e\n\x06health\x18\x04 \x01(\x05\"\xfd\x01\n\x1c\x43\x44OTAUserMsg_MiniKillCamInfo\x12\x39\n\tattackers\x18\x01 \x03(\x0b\x32&.CDOTAUserMsg_MiniKillCamInfo.Attacker\x1a\xa1\x01\n\x08\x41ttacker\x12\x10\n\x08\x61ttacker\x18\x01 \x01(\r\x12\x14\n\x0ctotal_damage\x18\x02 \x01(\x05\x12\x41\n\tabilities\x18\x03 \x03(\x0b\x32..CDOTAUserMsg_MiniKillCamInfo.Attacker.Ability\x1a*\n\x07\x41\x62ility\x12\x0f\n\x07\x61\x62ility\x18\x01 \x01(\r\x12\x0e\n\x06\x64\x61mage\x18\x02 \x01(\x05\"@\n\x1d\x43\x44OTAUserMsg_GlobalLightColor\x12\r\n\x05\x63olor\x18\x01 \x01(\r\x12\x10\n\x08\x64uration\x18\x02 \x01(\x02\"U\n!CDOTAUserMsg_GlobalLightDirection\x12\x1e\n\tdirection\x18\x01 \x01(\x0b\x32\x0b.CMsgVector\x12\x10\n\x08\x64uration\x18\x02 \x01(\x02\"]\n\x19\x43\x44OTAUserMsg_LocationPing\x12\x11\n\tplayer_id\x18\x01 \x01(\r\x12-\n\rlocation_ping\x18\x02 \x01(\x0b\x32\x16.CDOTAMsg_LocationPing\"T\n\x16\x43\x44OTAUserMsg_ItemAlert\x12\x11\n\tplayer_id\x18\x01 \x01(\r\x12\'\n\nitem_alert\x18\x02 \x01(\x0b\x32\x13.CDOTAMsg_ItemAlert\"n\n\x19\x43\x44OTAUserMsg_MinimapEvent\x12\x12\n\nevent_type\x18\x01 \x01(\x05\x12\x15\n\rentity_handle\x18\x02 \x01(\x05\x12\t\n\x01x\x18\x03 \x01(\x05\x12\t\n\x01y\x18\x04 \x01(\x05\x12\x10\n\x08\x64uration\x18\x05 \x01(\x05\"M\n\x14\x43\x44OTAUserMsg_MapLine\x12\x11\n\tplayer_id\x18\x01 \x01(\x05\x12\"\n\x07mapline\x18\x02 \x01(\x0b\x32\x11.CDOTAMsg_MapLine\"n\n\x1e\x43\x44OTAUserMsg_MinimapDebugPoint\x12\x1d\n\x08location\x18\x01 \x01(\x0b\x32\x0b.CMsgVector\x12\r\n\x05\x63olor\x18\x02 \x01(\r\x12\x0c\n\x04size\x18\x03 \x01(\x05\x12\x10\n\x08\x64uration\x18\x04 \x01(\x02\"\xae\x01\n#CDOTAUserMsg_CreateLinearProjectile\x12\x1b\n\x06origin\x18\x01 \x01(\x0b\x32\x0b.CMsgVector\x12\x1f\n\x08velocity\x18\x02 \x01(\x0b\x32\r.CMsgVector2D\x12\x0f\n\x07latency\x18\x03 \x01(\x05\x12\x10\n\x08\x65ntindex\x18\x04 \x01(\x05\x12\x16\n\x0eparticle_index\x18\x05 \x01(\x05\x12\x0e\n\x06handle\x18\x06 \x01(\x05\"6\n$CDOTAUserMsg_DestroyLinearProjectile\x12\x0e\n\x06handle\x18\x01 \x01(\x05\"9\n%CDOTAUserMsg_DodgeTrackingProjectiles\x12\x10\n\x08\x65ntindex\x18\x01 \x02(\x05\"_\n!CDOTAUserMsg_SpectatorPlayerClick\x12\x10\n\x08\x65ntindex\x18\x01 \x02(\x05\x12\x12\n\norder_type\x18\x02 \x01(\x05\x12\x14\n\x0ctarget_index\x18\x03 \x01(\x05\"b\n\x1d\x43\x44OTAUserMsg_NevermoreRequiem\x12\x15\n\rentity_handle\x18\x01 \x01(\x05\x12\r\n\x05lines\x18\x02 \x01(\x05\x12\x1b\n\x06origin\x18\x03 \x01(\x0b\x32\x0b.CMsgVector\".\n\x1b\x43\x44OTAUserMsg_InvalidCommand\x12\x0f\n\x07message\x18\x01 \x01(\t\")\n\x15\x43\x44OTAUserMsg_HudError\x12\x10\n\x08order_id\x18\x01 \x01(\x05\"c\n\x1b\x43\x44OTAUserMsg_SharedCooldown\x12\x10\n\x08\x65ntindex\x18\x01 \x01(\x05\x12\x0c\n\x04name\x18\x02 \x01(\t\x12\x10\n\x08\x63ooldown\x18\x03 \x01(\x02\x12\x12\n\nname_index\x18\x04 \x01(\x05\"/\n\x1f\x43\x44OTAUserMsg_SetNextAutobuyItem\x12\x0c\n\x04name\x18\x01 \x01(\t\"X\n\x1b\x43\x44OTAUserMsg_HalloweenDrops\x12\x11\n\titem_defs\x18\x01 \x03(\r\x12\x12\n\nplayer_ids\x18\x02 \x03(\r\x12\x12\n\nprize_list\x18\x03 \x01(\r\"\xfe\x01\n\x1c\x43\x44OTAResponseQuerySerialized\x12\x31\n\x05\x66\x61\x63ts\x18\x01 \x03(\x0b\x32\".CDOTAResponseQuerySerialized.Fact\x1a\xaa\x01\n\x04\x46\x61\x63t\x12\x0b\n\x03key\x18\x01 \x02(\x05\x12\x46\n\x07valtype\x18\x02 \x02(\x0e\x32,.CDOTAResponseQuerySerialized.Fact.ValueType:\x07NUMERIC\x12\x13\n\x0bval_numeric\x18\x03 \x01(\x02\x12\x12\n\nval_string\x18\x04 \x01(\t\"$\n\tValueType\x12\x0b\n\x07NUMERIC\x10\x01\x12\n\n\x06STRING\x10\x02\"\x90\x01\n\x18\x43\x44OTASpeechMatchOnClient\x12\x0f\n\x07\x63oncept\x18\x01 \x01(\x05\x12\x16\n\x0erecipient_type\x18\x02 \x01(\x05\x12\x34\n\rresponsequery\x18\x03 \x01(\x0b\x32\x1d.CDOTAResponseQuerySerialized\x12\x15\n\nrandomseed\x18\x04 \x01(\x0f:\x01\x30\"\xb0\x07\n\x16\x43\x44OTAUserMsg_UnitEvent\x12\x38\n\x08msg_type\x18\x01 \x02(\x0e\x32\x14.EDotaEntityMessages:\x10\x44OTA_UNIT_SPEECH\x12\x14\n\x0c\x65ntity_index\x18\x02 \x02(\x05\x12.\n\x06speech\x18\x03 \x01(\x0b\x32\x1e.CDOTAUserMsg_UnitEvent.Speech\x12\x37\n\x0bspeech_mute\x18\x04 \x01(\x0b\x32\".CDOTAUserMsg_UnitEvent.SpeechMute\x12\x37\n\x0b\x61\x64\x64_gesture\x18\x05 \x01(\x0b\x32\".CDOTAUserMsg_UnitEvent.AddGesture\x12=\n\x0eremove_gesture\x18\x06 \x01(\x0b\x32%.CDOTAUserMsg_UnitEvent.RemoveGesture\x12\x39\n\x0c\x62lood_impact\x18\x07 \x01(\x0b\x32#.CDOTAUserMsg_UnitEvent.BloodImpact\x12\x39\n\x0c\x66\x61\x64\x65_gesture\x18\x08 \x01(\x0b\x32#.CDOTAUserMsg_UnitEvent.FadeGesture\x12\x39\n\x16speech_match_on_client\x18\t \x01(\x0b\x32\x19.CDOTASpeechMatchOnClient\x1ak\n\x06Speech\x12\x0f\n\x07\x63oncept\x18\x01 \x01(\x05\x12\x10\n\x08response\x18\x02 \x01(\t\x12\x16\n\x0erecipient_type\x18\x03 \x01(\x05\x12\r\n\x05level\x18\x04 \x01(\x05\x12\x17\n\x08muteable\x18\x05 \x01(\x08:\x05\x66\x61lse\x1a \n\nSpeechMute\x12\x12\n\x05\x64\x65lay\x18\x01 \x01(\x02:\x03\x30.5\x1ao\n\nAddGesture\x12(\n\x08\x61\x63tivity\x18\x01 \x01(\x0e\x32\t.Activity:\x0b\x41\x43T_INVALID\x12\x0c\n\x04slot\x18\x02 \x01(\x05\x12\x12\n\x07\x66\x61\x64\x65_in\x18\x03 \x01(\x02:\x01\x30\x12\x15\n\x08\x66\x61\x64\x65_out\x18\x04 \x01(\x02:\x03\x30.1\x1a\x39\n\rRemoveGesture\x12(\n\x08\x61\x63tivity\x18\x01 \x01(\x0e\x32\t.Activity:\x0b\x41\x43T_INVALID\x1a@\n\x0b\x42loodImpact\x12\r\n\x05scale\x18\x01 \x01(\x05\x12\x10\n\x08x_normal\x18\x02 \x01(\x05\x12\x10\n\x08y_normal\x18\x03 \x01(\x05\x1a\x37\n\x0b\x46\x61\x64\x65Gesture\x12(\n\x08\x61\x63tivity\x18\x01 \x01(\x0e\x32\t.Activity:\x0b\x41\x43T_INVALID\"0\n\x1a\x43\x44OTAUserMsg_ItemPurchased\x12\x12\n\nitem_index\x18\x01 \x01(\x05\"j\n\x16\x43\x44OTAUserMsg_ItemFound\x12\x0e\n\x06player\x18\x01 \x01(\x05\x12\x0f\n\x07quality\x18\x02 \x01(\x05\x12\x0e\n\x06rarity\x18\x03 \x01(\x05\x12\x0e\n\x06method\x18\x04 \x01(\x05\x12\x0f\n\x07itemdef\x18\x05 \x01(\x05\"\xf2\x0f\n\x1c\x43\x44OTAUserMsg_ParticleManager\x12H\n\x04type\x18\x01 \x02(\x0e\x32\x16.DOTA_PARTICLE_MESSAGE:\"DOTA_PARTICLE_MANAGER_EVENT_CREATE\x12\r\n\x05index\x18\x02 \x02(\r\x12R\n\x16release_particle_index\x18\x03 \x01(\x0b\x32\x32.CDOTAUserMsg_ParticleManager.ReleaseParticleIndex\x12\x45\n\x0f\x63reate_particle\x18\x04 \x01(\x0b\x32,.CDOTAUserMsg_ParticleManager.CreateParticle\x12G\n\x10\x64\x65stroy_particle\x18\x05 \x01(\x0b\x32-.CDOTAUserMsg_ParticleManager.DestroyParticle\x12Z\n\x1a\x64\x65stroy_particle_involving\x18\x06 \x01(\x0b\x32\x36.CDOTAUserMsg_ParticleManager.DestroyParticleInvolving\x12\x45\n\x0fupdate_particle\x18\x07 \x01(\x0b\x32,.CDOTAUserMsg_ParticleManager.UpdateParticle\x12L\n\x13update_particle_fwd\x18\x08 \x01(\x0b\x32/.CDOTAUserMsg_ParticleManager.UpdateParticleFwd\x12R\n\x16update_particle_orient\x18\t \x01(\x0b\x32\x32.CDOTAUserMsg_ParticleManager.UpdateParticleOrient\x12V\n\x18update_particle_fallback\x18\n \x01(\x0b\x32\x34.CDOTAUserMsg_ParticleManager.UpdateParticleFallback\x12R\n\x16update_particle_offset\x18\x0b \x01(\x0b\x32\x32.CDOTAUserMsg_ParticleManager.UpdateParticleOffset\x12L\n\x13update_particle_ent\x18\x0c \x01(\x0b\x32/.CDOTAUserMsg_ParticleManager.UpdateParticleEnt\x12[\n\x1bupdate_particle_should_draw\x18\x0e \x01(\x0b\x32\x36.CDOTAUserMsg_ParticleManager.UpdateParticleShouldDraw\x12Y\n\x1aupdate_particle_set_frozen\x18\x0f \x01(\x0b\x32\x35.CDOTAUserMsg_ParticleManager.UpdateParticleSetFrozen\x1a\x16\n\x14ReleaseParticleIndex\x1aY\n\x0e\x43reateParticle\x12\x1b\n\x13particle_name_index\x18\x01 \x01(\x05\x12\x13\n\x0b\x61ttach_type\x18\x02 \x01(\x05\x12\x15\n\rentity_handle\x18\x03 \x01(\x05\x1a.\n\x0f\x44\x65stroyParticle\x12\x1b\n\x13\x64\x65stroy_immediately\x18\x01 \x01(\x08\x1aN\n\x18\x44\x65stroyParticleInvolving\x12\x1b\n\x13\x64\x65stroy_immediately\x18\x01 \x01(\x08\x12\x15\n\rentity_handle\x18\x03 \x01(\x05\x1a\x46\n\x0eUpdateParticle\x12\x15\n\rcontrol_point\x18\x01 \x01(\x05\x12\x1d\n\x08position\x18\x02 \x01(\x0b\x32\x0b.CMsgVector\x1aH\n\x11UpdateParticleFwd\x12\x15\n\rcontrol_point\x18\x01 \x01(\x05\x12\x1c\n\x07\x66orward\x18\x02 \x01(\x0b\x32\x0b.CMsgVector\x1a\x80\x01\n\x14UpdateParticleOrient\x12\x15\n\rcontrol_point\x18\x01 \x01(\x05\x12\x1c\n\x07\x66orward\x18\x02 \x01(\x0b\x32\x0b.CMsgVector\x12\x1a\n\x05right\x18\x03 \x01(\x0b\x32\x0b.CMsgVector\x12\x17\n\x02up\x18\x04 \x01(\x0b\x32\x0b.CMsgVector\x1aN\n\x16UpdateParticleFallback\x12\x15\n\rcontrol_point\x18\x01 \x01(\x05\x12\x1d\n\x08position\x18\x02 \x01(\x0b\x32\x0b.CMsgVector\x1aQ\n\x14UpdateParticleOffset\x12\x15\n\rcontrol_point\x18\x01 \x01(\x05\x12\"\n\rorigin_offset\x18\x02 \x01(\x0b\x32\x0b.CMsgVector\x1a\x92\x01\n\x11UpdateParticleEnt\x12\x15\n\rcontrol_point\x18\x01 \x01(\x05\x12\x15\n\rentity_handle\x18\x02 \x01(\x05\x12\x13\n\x0b\x61ttach_type\x18\x03 \x01(\x05\x12\x12\n\nattachment\x18\x04 \x01(\x05\x12&\n\x11\x66\x61llback_position\x18\x05 \x01(\x0b\x32\x0b.CMsgVector\x1a-\n\x17UpdateParticleSetFrozen\x12\x12\n\nset_frozen\x18\x01 \x01(\x08\x1a/\n\x18UpdateParticleShouldDraw\x12\x13\n\x0bshould_draw\x18\x01 \x01(\x08\"\xc5\x01\n\x1a\x43\x44OTAUserMsg_OverheadEvent\x12?\n\x0cmessage_type\x18\x01 \x02(\x0e\x32\x14.DOTA_OVERHEAD_ALERT:\x13OVERHEAD_ALERT_GOLD\x12\r\n\x05value\x18\x02 \x01(\x05\x12\x1e\n\x16target_player_entindex\x18\x03 \x01(\x05\x12\x17\n\x0ftarget_entindex\x18\x04 \x01(\x05\x12\x1e\n\x16source_player_entindex\x18\x05 \x01(\x05\">\n\x1c\x43\x44OTAUserMsg_TutorialTipInfo\x12\x0c\n\x04name\x18\x01 \x01(\t\x12\x10\n\x08progress\x18\x02 \x01(\x05\"]\n\x1b\x43\x44OTAUserMsg_TutorialFinish\x12\x0f\n\x07heading\x18\x01 \x01(\t\x12\x0e\n\x06\x65mblem\x18\x02 \x01(\t\x12\x0c\n\x04\x62ody\x18\x03 \x01(\t\x12\x0f\n\x07success\x18\x04 \x01(\x08\"_\n\x1f\x43\x44OTAUserMsg_SendGenericToolTip\x12\r\n\x05title\x18\x01 \x01(\t\x12\x0c\n\x04text\x18\x02 \x01(\t\x12\x10\n\x08\x65ntindex\x18\x03 \x01(\x05\x12\r\n\x05\x63lose\x18\x04 \x01(\x08\"S\n\x16\x43\x44OTAUserMsg_WorldLine\x12\x11\n\tplayer_id\x18\x01 \x01(\x05\x12&\n\tworldline\x18\x02 \x01(\x0b\x32\x13.CDOTAMsg_WorldLine\"F\n\x1b\x43\x44OTAUserMsg_TournamentDrop\x12\x13\n\x0bwinner_name\x18\x01 \x01(\t\x12\x12\n\nevent_type\x18\x02 \x01(\x05\"|\n\x16\x43\x44OTAUserMsg_ChatWheel\x12;\n\x0c\x63hat_message\x18\x01 \x01(\x0e\x32\x16.EDOTAChatWheelMessage:\rk_EDOTA_CW_Ok\x12\x11\n\tplayer_id\x18\x02 \x01(\r\x12\x12\n\naccount_id\x18\x03 \x01(\r\"]\n\x1d\x43\x44OTAUserMsg_ReceivedXmasGift\x12\x11\n\tplayer_id\x18\x01 \x01(\x05\x12\x11\n\titem_name\x18\x02 \x01(\t\x12\x16\n\x0einventory_slot\x18\x03 \x01(\x05\",\n\x17\x43\x44OTAUserMsg_ShowSurvey\x12\x11\n\tsurvey_id\x18\x01 \x01(\x05\"5\n CDOTAUserMsg_UpdateSharedContent\x12\x11\n\tslot_type\x18\x01 \x01(\x05\"!\n\x1f\x43\x44OTAUserMsg_TutorialRequestExp\".\n\x19\x43\x44OTAUserMsg_TutorialFade\x12\x11\n\ttgt_alpha\x18\x01 \x01(\x05\"x\n CDOTAUserMsg_TutorialPingMinimap\x12\x11\n\tplayer_id\x18\x01 \x01(\r\x12\r\n\x05pos_x\x18\x02 \x01(\x02\x12\r\n\x05pos_y\x18\x03 \x01(\x02\x12\r\n\x05pos_z\x18\x04 \x01(\x02\x12\x14\n\x0c\x65ntity_index\x18\x05 \x01(\x05\"/\n\x1e\x43\x44OTA_UM_GamerulesStateChanged\x12\r\n\x05state\x18\x01 \x01(\r\"h\n\x1d\x43\x44OTAUserMsg_AddQuestLogEntry\x12\x10\n\x08npc_name\x18\x01 \x01(\t\x12\x12\n\nnpc_dialog\x18\x02 \x01(\t\x12\r\n\x05quest\x18\x03 \x01(\x08\x12\x12\n\nquest_type\x18\x04 \x01(\x05\"[\n\x1a\x43\x44OTAUserMsg_SendStatPopup\x12\x11\n\tplayer_id\x18\x01 \x01(\x05\x12*\n\tstatpopup\x18\x02 \x01(\x0b\x32\x17.CDOTAMsg_SendStatPopup\"C\n\x1c\x43\x44OTAUserMsg_SendRoshanPopup\x12\x11\n\treclaimed\x18\x01 \x01(\x08\x12\x10\n\x08gametime\x18\x02 \x01(\x05*\x85\x0b\n\x11\x45\x44otaUserMessages\x12\x1e\n\x1a\x44OTA_UM_AddUnitToSelection\x10@\x12\x17\n\x13\x44OTA_UM_AIDebugLine\x10\x41\x12\x15\n\x11\x44OTA_UM_ChatEvent\x10\x42\x12\x1f\n\x1b\x44OTA_UM_CombatHeroPositions\x10\x43\x12\x19\n\x15\x44OTA_UM_CombatLogData\x10\x44\x12\x1e\n\x1a\x44OTA_UM_CombatLogShowDeath\x10\x46\x12\"\n\x1e\x44OTA_UM_CreateLinearProjectile\x10G\x12#\n\x1f\x44OTA_UM_DestroyLinearProjectile\x10H\x12$\n DOTA_UM_DodgeTrackingProjectiles\x10I\x12\x1c\n\x18\x44OTA_UM_GlobalLightColor\x10J\x12 \n\x1c\x44OTA_UM_GlobalLightDirection\x10K\x12\x1a\n\x16\x44OTA_UM_InvalidCommand\x10L\x12\x18\n\x14\x44OTA_UM_LocationPing\x10M\x12\x13\n\x0f\x44OTA_UM_MapLine\x10N\x12\x1b\n\x17\x44OTA_UM_MiniKillCamInfo\x10O\x12\x1d\n\x19\x44OTA_UM_MinimapDebugPoint\x10P\x12\x18\n\x14\x44OTA_UM_MinimapEvent\x10Q\x12\x1c\n\x18\x44OTA_UM_NevermoreRequiem\x10R\x12\x19\n\x15\x44OTA_UM_OverheadEvent\x10S\x12\x1e\n\x1a\x44OTA_UM_SetNextAutobuyItem\x10T\x12\x1a\n\x16\x44OTA_UM_SharedCooldown\x10U\x12 \n\x1c\x44OTA_UM_SpectatorPlayerClick\x10V\x12\x1b\n\x17\x44OTA_UM_TutorialTipInfo\x10W\x12\x15\n\x11\x44OTA_UM_UnitEvent\x10X\x12\x1b\n\x17\x44OTA_UM_ParticleManager\x10Y\x12\x13\n\x0f\x44OTA_UM_BotChat\x10Z\x12\x14\n\x10\x44OTA_UM_HudError\x10[\x12\x19\n\x15\x44OTA_UM_ItemPurchased\x10\\\x12\x10\n\x0c\x44OTA_UM_Ping\x10]\x12\x15\n\x11\x44OTA_UM_ItemFound\x10^\x12!\n\x1d\x44OTA_UM_CharacterSpeakConcept\x10_\x12\x16\n\x12\x44OTA_UM_SwapVerify\x10`\x12\x15\n\x11\x44OTA_UM_WorldLine\x10\x61\x12\x1a\n\x16\x44OTA_UM_TournamentDrop\x10\x62\x12\x15\n\x11\x44OTA_UM_ItemAlert\x10\x63\x12\x1a\n\x16\x44OTA_UM_HalloweenDrops\x10\x64\x12\x15\n\x11\x44OTA_UM_ChatWheel\x10\x65\x12\x1c\n\x18\x44OTA_UM_ReceivedXmasGift\x10\x66\x12\x1f\n\x1b\x44OTA_UM_UpdateSharedContent\x10g\x12\x1e\n\x1a\x44OTA_UM_TutorialRequestExp\x10h\x12\x1f\n\x1b\x44OTA_UM_TutorialPingMinimap\x10i\x12!\n\x1d\x44OTA_UM_GamerulesStateChanged\x10j\x12\x16\n\x12\x44OTA_UM_ShowSurvey\x10k\x12\x18\n\x14\x44OTA_UM_TutorialFade\x10l\x12\x1c\n\x18\x44OTA_UM_AddQuestLogEntry\x10m\x12\x19\n\x15\x44OTA_UM_SendStatPopup\x10n\x12\x1a\n\x16\x44OTA_UM_TutorialFinish\x10o\x12\x1b\n\x17\x44OTA_UM_SendRoshanPopup\x10p\x12\x1e\n\x1a\x44OTA_UM_SendGenericToolTip\x10q*\xe3\x0e\n\x11\x44OTA_CHAT_MESSAGE\x12!\n\x14\x43HAT_MESSAGE_INVALID\x10\xff\xff\xff\xff\xff\xff\xff\xff\xff\x01\x12\x1a\n\x16\x43HAT_MESSAGE_HERO_KILL\x10\x00\x12\x1a\n\x16\x43HAT_MESSAGE_HERO_DENY\x10\x01\x12\x1e\n\x1a\x43HAT_MESSAGE_BARRACKS_KILL\x10\x02\x12\x1b\n\x17\x43HAT_MESSAGE_TOWER_KILL\x10\x03\x12\x1b\n\x17\x43HAT_MESSAGE_TOWER_DENY\x10\x04\x12\x1b\n\x17\x43HAT_MESSAGE_FIRSTBLOOD\x10\x05\x12\x1c\n\x18\x43HAT_MESSAGE_STREAK_KILL\x10\x06\x12\x18\n\x14\x43HAT_MESSAGE_BUYBACK\x10\x07\x12\x16\n\x12\x43HAT_MESSAGE_AEGIS\x10\x08\x12\x1c\n\x18\x43HAT_MESSAGE_ROSHAN_KILL\x10\t\x12\x1d\n\x19\x43HAT_MESSAGE_COURIER_LOST\x10\n\x12\"\n\x1e\x43HAT_MESSAGE_COURIER_RESPAWNED\x10\x0b\x12\x1b\n\x17\x43HAT_MESSAGE_GLYPH_USED\x10\x0c\x12\x1e\n\x1a\x43HAT_MESSAGE_ITEM_PURCHASE\x10\r\x12\x18\n\x14\x43HAT_MESSAGE_CONNECT\x10\x0e\x12\x1b\n\x17\x43HAT_MESSAGE_DISCONNECT\x10\x0f\x12.\n*CHAT_MESSAGE_DISCONNECT_WAIT_FOR_RECONNECT\x10\x10\x12*\n&CHAT_MESSAGE_DISCONNECT_TIME_REMAINING\x10\x11\x12\x31\n-CHAT_MESSAGE_DISCONNECT_TIME_REMAINING_PLURAL\x10\x12\x12\x1a\n\x16\x43HAT_MESSAGE_RECONNECT\x10\x13\x12\x18\n\x14\x43HAT_MESSAGE_ABANDON\x10\x14\x12\x1e\n\x1a\x43HAT_MESSAGE_SAFE_TO_LEAVE\x10\x15\x12\x1c\n\x18\x43HAT_MESSAGE_RUNE_PICKUP\x10\x16\x12\x1c\n\x18\x43HAT_MESSAGE_RUNE_BOTTLE\x10\x17\x12\x19\n\x15\x43HAT_MESSAGE_INTHEBAG\x10\x18\x12\x1b\n\x17\x43HAT_MESSAGE_SECRETSHOP\x10\x19\x12#\n\x1f\x43HAT_MESSAGE_ITEM_AUTOPURCHASED\x10\x1a\x12\x1f\n\x1b\x43HAT_MESSAGE_ITEMS_COMBINED\x10\x1b\x12\x1d\n\x19\x43HAT_MESSAGE_SUPER_CREEPS\x10\x1c\x12%\n!CHAT_MESSAGE_CANT_USE_ACTION_ITEM\x10\x1d\x12\"\n\x1e\x43HAT_MESSAGE_CHARGES_EXHAUSTED\x10\x1e\x12\x1a\n\x16\x43HAT_MESSAGE_CANTPAUSE\x10\x1f\x12\x1d\n\x19\x43HAT_MESSAGE_NOPAUSESLEFT\x10 \x12\x1d\n\x19\x43HAT_MESSAGE_CANTPAUSEYET\x10!\x12\x17\n\x13\x43HAT_MESSAGE_PAUSED\x10\"\x12\"\n\x1e\x43HAT_MESSAGE_UNPAUSE_COUNTDOWN\x10#\x12\x19\n\x15\x43HAT_MESSAGE_UNPAUSED\x10$\x12\x1e\n\x1a\x43HAT_MESSAGE_AUTO_UNPAUSED\x10%\x12\x1a\n\x16\x43HAT_MESSAGE_YOUPAUSED\x10&\x12 \n\x1c\x43HAT_MESSAGE_CANTUNPAUSETEAM\x10\'\x12(\n$CHAT_MESSAGE_SAFE_TO_LEAVE_ABANDONER\x10(\x12\"\n\x1e\x43HAT_MESSAGE_VOICE_TEXT_BANNED\x10)\x12.\n*CHAT_MESSAGE_SPECTATORS_WATCHING_THIS_GAME\x10*\x12 \n\x1c\x43HAT_MESSAGE_REPORT_REMINDER\x10+\x12\x1a\n\x16\x43HAT_MESSAGE_ECON_ITEM\x10,\x12\x16\n\x12\x43HAT_MESSAGE_TAUNT\x10-\x12\x17\n\x13\x43HAT_MESSAGE_RANDOM\x10.\x12\x18\n\x14\x43HAT_MESSAGE_RD_TURN\x10/\x12.\n*CHAT_MESSAGE_SAFE_TO_LEAVE_ABANDONER_EARLY\x10\x30\x12 \n\x1c\x43HAT_MESSAGE_DROP_RATE_BONUS\x10\x31\x12!\n\x1d\x43HAT_MESSAGE_NO_BATTLE_POINTS\x10\x32\x12\x1d\n\x19\x43HAT_MESSAGE_DENIED_AEGIS\x10\x33\x12\x1e\n\x1a\x43HAT_MESSAGE_INFORMATIONAL\x10\x34\x12\x1d\n\x19\x43HAT_MESSAGE_AEGIS_STOLEN\x10\x35\x12\x1d\n\x19\x43HAT_MESSAGE_ROSHAN_CANDY\x10\x36\x12\x1c\n\x18\x43HAT_MESSAGE_ITEM_GIFTED\x10\x37\x12\'\n#CHAT_MESSAGE_HERO_KILL_WITH_GREEVIL\x10\x38*\xb2\x01\n\x1d\x44OTA_NO_BATTLE_POINTS_REASONS\x12%\n!NO_BATTLE_POINTS_WRONG_LOBBY_TYPE\x10\x01\x12\"\n\x1eNO_BATTLE_POINTS_PRACTICE_BOTS\x10\x02\x12#\n\x1fNO_BATTLE_POINTS_CHEATS_ENABLED\x10\x03\x12!\n\x1dNO_BATTLE_POINTS_LOW_PRIORITY\x10\x04*7\n\x17\x44OTA_CHAT_INFORMATIONAL\x12\x1c\n\x18\x43OOP_BATTLE_POINTS_RULES\x10\x01*\xa9\x01\n\x14\x44OTA_COMBATLOG_TYPES\x12\x19\n\x15\x44OTA_COMBATLOG_DAMAGE\x10\x00\x12\x17\n\x13\x44OTA_COMBATLOG_HEAL\x10\x01\x12\x1f\n\x1b\x44OTA_COMBATLOG_MODIFIER_ADD\x10\x02\x12\"\n\x1e\x44OTA_COMBATLOG_MODIFIER_REMOVE\x10\x03\x12\x18\n\x14\x44OTA_COMBATLOG_DEATH\x10\x04*\xe5\x01\n\x13\x45\x44otaEntityMessages\x12\x14\n\x10\x44OTA_UNIT_SPEECH\x10\x00\x12\x19\n\x15\x44OTA_UNIT_SPEECH_MUTE\x10\x01\x12\x19\n\x15\x44OTA_UNIT_ADD_GESTURE\x10\x02\x12\x1c\n\x18\x44OTA_UNIT_REMOVE_GESTURE\x10\x03\x12!\n\x1d\x44OTA_UNIT_REMOVE_ALL_GESTURES\x10\x04\x12\x1a\n\x16\x44OTA_UNIT_FADE_GESTURE\x10\x06\x12%\n!DOTA_UNIT_SPEECH_CLIENTSIDE_RULES\x10\x07*\xda\x04\n\x15\x44OTA_PARTICLE_MESSAGE\x12&\n\"DOTA_PARTICLE_MANAGER_EVENT_CREATE\x10\x00\x12&\n\"DOTA_PARTICLE_MANAGER_EVENT_UPDATE\x10\x01\x12.\n*DOTA_PARTICLE_MANAGER_EVENT_UPDATE_FORWARD\x10\x02\x12\x32\n.DOTA_PARTICLE_MANAGER_EVENT_UPDATE_ORIENTATION\x10\x03\x12/\n+DOTA_PARTICLE_MANAGER_EVENT_UPDATE_FALLBACK\x10\x04\x12*\n&DOTA_PARTICLE_MANAGER_EVENT_UPDATE_ENT\x10\x05\x12-\n)DOTA_PARTICLE_MANAGER_EVENT_UPDATE_OFFSET\x10\x06\x12\'\n#DOTA_PARTICLE_MANAGER_EVENT_DESTROY\x10\x07\x12\x31\n-DOTA_PARTICLE_MANAGER_EVENT_DESTROY_INVOLVING\x10\x08\x12\'\n#DOTA_PARTICLE_MANAGER_EVENT_RELEASE\x10\t\x12\'\n#DOTA_PARTICLE_MANAGER_EVENT_LATENCY\x10\n\x12+\n\'DOTA_PARTICLE_MANAGER_EVENT_SHOULD_DRAW\x10\x0b\x12&\n\"DOTA_PARTICLE_MANAGER_EVENT_FROZEN\x10\x0c*\x86\x03\n\x13\x44OTA_OVERHEAD_ALERT\x12\x17\n\x13OVERHEAD_ALERT_GOLD\x10\x00\x12\x17\n\x13OVERHEAD_ALERT_DENY\x10\x01\x12\x1b\n\x17OVERHEAD_ALERT_CRITICAL\x10\x02\x12\x15\n\x11OVERHEAD_ALERT_XP\x10\x03\x12%\n!OVERHEAD_ALERT_BONUS_SPELL_DAMAGE\x10\x04\x12\x17\n\x13OVERHEAD_ALERT_MISS\x10\x05\x12\x19\n\x15OVERHEAD_ALERT_DAMAGE\x10\x06\x12\x18\n\x14OVERHEAD_ALERT_EVADE\x10\x07\x12\x18\n\x14OVERHEAD_ALERT_BLOCK\x10\x08\x12&\n\"OVERHEAD_ALERT_BONUS_POISON_DAMAGE\x10\t\x12\x17\n\x13OVERHEAD_ALERT_HEAL\x10\n\x12\x1b\n\x17OVERHEAD_ALERT_MANA_ADD\x10\x0b\x12\x1c\n\x18OVERHEAD_ALERT_MANA_LOSS\x10\x0c')
 
 _EDOTAUSERMESSAGES = _descriptor.EnumDescriptor(
   name='EDotaUserMessages',
@@ -214,11 +214,19 @@ _EDOTAUSERMESSAGES = _descriptor.EnumDescriptor(
       name='DOTA_UM_TutorialFinish', index=46, number=111,
       options=None,
       type=None),
+    _descriptor.EnumValueDescriptor(
+      name='DOTA_UM_SendRoshanPopup', index=47, number=112,
+      options=None,
+      type=None),
+    _descriptor.EnumValueDescriptor(
+      name='DOTA_UM_SendGenericToolTip', index=48, number=113,
+      options=None,
+      type=None),
   ],
   containing_type=None,
   options=None,
-  serialized_start=7529,
-  serialized_end=8881,
+  serialized_start=7717,
+  serialized_end=9130,
 )
 
 EDotaUserMessages = enum_type_wrapper.EnumTypeWrapper(_EDOTAUSERMESSAGES)
@@ -463,8 +471,8 @@ _DOTA_CHAT_MESSAGE = _descriptor.EnumDescriptor(
   ],
   containing_type=None,
   options=None,
-  serialized_start=8884,
-  serialized_end=10775,
+  serialized_start=9133,
+  serialized_end=11024,
 )
 
 DOTA_CHAT_MESSAGE = enum_type_wrapper.EnumTypeWrapper(_DOTA_CHAT_MESSAGE)
@@ -493,8 +501,8 @@ _DOTA_NO_BATTLE_POINTS_REASONS = _descriptor.EnumDescriptor(
   ],
   containing_type=None,
   options=None,
-  serialized_start=10778,
-  serialized_end=10956,
+  serialized_start=11027,
+  serialized_end=11205,
 )
 
 DOTA_NO_BATTLE_POINTS_REASONS = enum_type_wrapper.EnumTypeWrapper(_DOTA_NO_BATTLE_POINTS_REASONS)
@@ -511,8 +519,8 @@ _DOTA_CHAT_INFORMATIONAL = _descriptor.EnumDescriptor(
   ],
   containing_type=None,
   options=None,
-  serialized_start=10958,
-  serialized_end=11013,
+  serialized_start=11207,
+  serialized_end=11262,
 )
 
 DOTA_CHAT_INFORMATIONAL = enum_type_wrapper.EnumTypeWrapper(_DOTA_CHAT_INFORMATIONAL)
@@ -545,8 +553,8 @@ _DOTA_COMBATLOG_TYPES = _descriptor.EnumDescriptor(
   ],
   containing_type=None,
   options=None,
-  serialized_start=11016,
-  serialized_end=11185,
+  serialized_start=11265,
+  serialized_end=11434,
 )
 
 DOTA_COMBATLOG_TYPES = enum_type_wrapper.EnumTypeWrapper(_DOTA_COMBATLOG_TYPES)
@@ -587,8 +595,8 @@ _EDOTAENTITYMESSAGES = _descriptor.EnumDescriptor(
   ],
   containing_type=None,
   options=None,
-  serialized_start=11188,
-  serialized_end=11417,
+  serialized_start=11437,
+  serialized_end=11666,
 )
 
 EDotaEntityMessages = enum_type_wrapper.EnumTypeWrapper(_EDOTAENTITYMESSAGES)
@@ -639,18 +647,22 @@ _DOTA_PARTICLE_MESSAGE = _descriptor.EnumDescriptor(
       options=None,
       type=None),
     _descriptor.EnumValueDescriptor(
-      name='DOTA_PARTICLE_MANAGER_EVENT_SHOULD_DRAW', index=10, number=11,
+      name='DOTA_PARTICLE_MANAGER_EVENT_LATENCY', index=10, number=10,
       options=None,
       type=None),
     _descriptor.EnumValueDescriptor(
-      name='DOTA_PARTICLE_MANAGER_EVENT_FROZEN', index=11, number=12,
+      name='DOTA_PARTICLE_MANAGER_EVENT_SHOULD_DRAW', index=11, number=11,
+      options=None,
+      type=None),
+    _descriptor.EnumValueDescriptor(
+      name='DOTA_PARTICLE_MANAGER_EVENT_FROZEN', index=12, number=12,
       options=None,
       type=None),
   ],
   containing_type=None,
   options=None,
-  serialized_start=11420,
-  serialized_end=11981,
+  serialized_start=11669,
+  serialized_end=12271,
 )
 
 DOTA_PARTICLE_MESSAGE = enum_type_wrapper.EnumTypeWrapper(_DOTA_PARTICLE_MESSAGE)
@@ -715,8 +727,8 @@ _DOTA_OVERHEAD_ALERT = _descriptor.EnumDescriptor(
   ],
   containing_type=None,
   options=None,
-  serialized_start=11984,
-  serialized_end=12374,
+  serialized_start=12274,
+  serialized_end=12664,
 )
 
 DOTA_OVERHEAD_ALERT = enum_type_wrapper.EnumTypeWrapper(_DOTA_OVERHEAD_ALERT)
@@ -767,6 +779,8 @@ DOTA_UM_TutorialFade = 108
 DOTA_UM_AddQuestLogEntry = 109
 DOTA_UM_SendStatPopup = 110
 DOTA_UM_TutorialFinish = 111
+DOTA_UM_SendRoshanPopup = 112
+DOTA_UM_SendGenericToolTip = 113
 CHAT_MESSAGE_INVALID = -1
 CHAT_MESSAGE_HERO_KILL = 0
 CHAT_MESSAGE_HERO_DENY = 1
@@ -852,6 +866,7 @@ DOTA_PARTICLE_MANAGER_EVENT_UPDATE_OFFSET = 6
 DOTA_PARTICLE_MANAGER_EVENT_DESTROY = 7
 DOTA_PARTICLE_MANAGER_EVENT_DESTROY_INVOLVING = 8
 DOTA_PARTICLE_MANAGER_EVENT_RELEASE = 9
+DOTA_PARTICLE_MANAGER_EVENT_LATENCY = 10
 DOTA_PARTICLE_MANAGER_EVENT_SHOULD_DRAW = 11
 DOTA_PARTICLE_MANAGER_EVENT_FROZEN = 12
 OVERHEAD_ALERT_GOLD = 0
@@ -886,8 +901,8 @@ _CDOTARESPONSEQUERYSERIALIZED_FACT_VALUETYPE = _descriptor.EnumDescriptor(
   ],
   containing_type=None,
   options=None,
-  serialized_start=2927,
-  serialized_end=2963,
+  serialized_start=2932,
+  serialized_end=2968,
 )
 
 
@@ -914,8 +929,8 @@ _CDOTAUSERMSG_AIDEBUGLINE = _descriptor.Descriptor(
   options=None,
   is_extendable=False,
   extension_ranges=[],
-  serialized_start=126,
-  serialized_end=169,
+  serialized_start=131,
+  serialized_end=174,
 )
 
 
@@ -942,8 +957,8 @@ _CDOTAUSERMSG_PING = _descriptor.Descriptor(
   options=None,
   is_extendable=False,
   extension_ranges=[],
-  serialized_start=171,
-  serialized_end=207,
+  serialized_start=176,
+  serialized_end=212,
 )
 
 
@@ -970,8 +985,8 @@ _CDOTAUSERMSG_SWAPVERIFY = _descriptor.Descriptor(
   options=None,
   is_extendable=False,
   extension_ranges=[],
-  serialized_start=209,
-  serialized_end=253,
+  serialized_start=214,
+  serialized_end=258,
 )
 
 
@@ -1047,8 +1062,8 @@ _CDOTAUSERMSG_CHATEVENT = _descriptor.Descriptor(
   options=None,
   is_extendable=False,
   extension_ranges=[],
-  serialized_start=256,
-  serialized_end=495,
+  serialized_start=261,
+  serialized_end=500,
 )
 
 
@@ -1131,8 +1146,8 @@ _CDOTAUSERMSG_COMBATLOGDATA = _descriptor.Descriptor(
   options=None,
   is_extendable=False,
   extension_ranges=[],
-  serialized_start=498,
-  serialized_end=751,
+  serialized_start=503,
+  serialized_end=756,
 )
 
 
@@ -1152,8 +1167,8 @@ _CDOTAUSERMSG_COMBATLOGSHOWDEATH = _descriptor.Descriptor(
   options=None,
   is_extendable=False,
   extension_ranges=[],
-  serialized_start=753,
-  serialized_end=786,
+  serialized_start=758,
+  serialized_end=791,
 )
 
 
@@ -1201,8 +1216,8 @@ _CDOTAUSERMSG_BOTCHAT = _descriptor.Descriptor(
   options=None,
   is_extendable=False,
   extension_ranges=[],
-  serialized_start=788,
-  serialized_end=878,
+  serialized_start=793,
+  serialized_end=883,
 )
 
 
@@ -1250,8 +1265,8 @@ _CDOTAUSERMSG_COMBATHEROPOSITIONS = _descriptor.Descriptor(
   options=None,
   is_extendable=False,
   extension_ranges=[],
-  serialized_start=880,
-  serialized_end=993,
+  serialized_start=885,
+  serialized_end=998,
 )
 
 
@@ -1285,8 +1300,8 @@ _CDOTAUSERMSG_MINIKILLCAMINFO_ATTACKER_ABILITY = _descriptor.Descriptor(
   options=None,
   is_extendable=False,
   extension_ranges=[],
-  serialized_start=1207,
-  serialized_end=1249,
+  serialized_start=1212,
+  serialized_end=1254,
 )
 
 _CDOTAUSERMSG_MINIKILLCAMINFO_ATTACKER = _descriptor.Descriptor(
@@ -1326,8 +1341,8 @@ _CDOTAUSERMSG_MINIKILLCAMINFO_ATTACKER = _descriptor.Descriptor(
   options=None,
   is_extendable=False,
   extension_ranges=[],
-  serialized_start=1088,
-  serialized_end=1249,
+  serialized_start=1093,
+  serialized_end=1254,
 )
 
 _CDOTAUSERMSG_MINIKILLCAMINFO = _descriptor.Descriptor(
@@ -1353,8 +1368,8 @@ _CDOTAUSERMSG_MINIKILLCAMINFO = _descriptor.Descriptor(
   options=None,
   is_extendable=False,
   extension_ranges=[],
-  serialized_start=996,
-  serialized_end=1249,
+  serialized_start=1001,
+  serialized_end=1254,
 )
 
 
@@ -1388,8 +1403,8 @@ _CDOTAUSERMSG_GLOBALLIGHTCOLOR = _descriptor.Descriptor(
   options=None,
   is_extendable=False,
   extension_ranges=[],
-  serialized_start=1251,
-  serialized_end=1315,
+  serialized_start=1256,
+  serialized_end=1320,
 )
 
 
@@ -1423,8 +1438,8 @@ _CDOTAUSERMSG_GLOBALLIGHTDIRECTION = _descriptor.Descriptor(
   options=None,
   is_extendable=False,
   extension_ranges=[],
-  serialized_start=1317,
-  serialized_end=1402,
+  serialized_start=1322,
+  serialized_end=1407,
 )
 
 
@@ -1458,8 +1473,8 @@ _CDOTAUSERMSG_LOCATIONPING = _descriptor.Descriptor(
   options=None,
   is_extendable=False,
   extension_ranges=[],
-  serialized_start=1404,
-  serialized_end=1497,
+  serialized_start=1409,
+  serialized_end=1502,
 )
 
 
@@ -1493,8 +1508,8 @@ _CDOTAUSERMSG_ITEMALERT = _descriptor.Descriptor(
   options=None,
   is_extendable=False,
   extension_ranges=[],
-  serialized_start=1499,
-  serialized_end=1583,
+  serialized_start=1504,
+  serialized_end=1588,
 )
 
 
@@ -1549,8 +1564,8 @@ _CDOTAUSERMSG_MINIMAPEVENT = _descriptor.Descriptor(
   options=None,
   is_extendable=False,
   extension_ranges=[],
-  serialized_start=1585,
-  serialized_end=1695,
+  serialized_start=1590,
+  serialized_end=1700,
 )
 
 
@@ -1584,8 +1599,8 @@ _CDOTAUSERMSG_MAPLINE = _descriptor.Descriptor(
   options=None,
   is_extendable=False,
   extension_ranges=[],
-  serialized_start=1697,
-  serialized_end=1774,
+  serialized_start=1702,
+  serialized_end=1779,
 )
 
 
@@ -1633,8 +1648,8 @@ _CDOTAUSERMSG_MINIMAPDEBUGPOINT = _descriptor.Descriptor(
   options=None,
   is_extendable=False,
   extension_ranges=[],
-  serialized_start=1776,
-  serialized_end=1886,
+  serialized_start=1781,
+  serialized_end=1891,
 )
 
 
@@ -1696,8 +1711,8 @@ _CDOTAUSERMSG_CREATELINEARPROJECTILE = _descriptor.Descriptor(
   options=None,
   is_extendable=False,
   extension_ranges=[],
-  serialized_start=1889,
-  serialized_end=2063,
+  serialized_start=1894,
+  serialized_end=2068,
 )
 
 
@@ -1724,8 +1739,8 @@ _CDOTAUSERMSG_DESTROYLINEARPROJECTILE = _descriptor.Descriptor(
   options=None,
   is_extendable=False,
   extension_ranges=[],
-  serialized_start=2065,
-  serialized_end=2119,
+  serialized_start=2070,
+  serialized_end=2124,
 )
 
 
@@ -1752,8 +1767,8 @@ _CDOTAUSERMSG_DODGETRACKINGPROJECTILES = _descriptor.Descriptor(
   options=None,
   is_extendable=False,
   extension_ranges=[],
-  serialized_start=2121,
-  serialized_end=2178,
+  serialized_start=2126,
+  serialized_end=2183,
 )
 
 
@@ -1794,8 +1809,8 @@ _CDOTAUSERMSG_SPECTATORPLAYERCLICK = _descriptor.Descriptor(
   options=None,
   is_extendable=False,
   extension_ranges=[],
-  serialized_start=2180,
-  serialized_end=2275,
+  serialized_start=2185,
+  serialized_end=2280,
 )
 
 
@@ -1836,8 +1851,8 @@ _CDOTAUSERMSG_NEVERMOREREQUIEM = _descriptor.Descriptor(
   options=None,
   is_extendable=False,
   extension_ranges=[],
-  serialized_start=2277,
-  serialized_end=2375,
+  serialized_start=2282,
+  serialized_end=2380,
 )
 
 
@@ -1864,8 +1879,8 @@ _CDOTAUSERMSG_INVALIDCOMMAND = _descriptor.Descriptor(
   options=None,
   is_extendable=False,
   extension_ranges=[],
-  serialized_start=2377,
-  serialized_end=2423,
+  serialized_start=2382,
+  serialized_end=2428,
 )
 
 
@@ -1892,8 +1907,8 @@ _CDOTAUSERMSG_HUDERROR = _descriptor.Descriptor(
   options=None,
   is_extendable=False,
   extension_ranges=[],
-  serialized_start=2425,
-  serialized_end=2466,
+  serialized_start=2430,
+  serialized_end=2471,
 )
 
 
@@ -1941,8 +1956,8 @@ _CDOTAUSERMSG_SHAREDCOOLDOWN = _descriptor.Descriptor(
   options=None,
   is_extendable=False,
   extension_ranges=[],
-  serialized_start=2468,
-  serialized_end=2567,
+  serialized_start=2473,
+  serialized_end=2572,
 )
 
 
@@ -1969,8 +1984,8 @@ _CDOTAUSERMSG_SETNEXTAUTOBUYITEM = _descriptor.Descriptor(
   options=None,
   is_extendable=False,
   extension_ranges=[],
-  serialized_start=2569,
-  serialized_end=2616,
+  serialized_start=2574,
+  serialized_end=2621,
 )
 
 
@@ -2011,8 +2026,8 @@ _CDOTAUSERMSG_HALLOWEENDROPS = _descriptor.Descriptor(
   options=None,
   is_extendable=False,
   extension_ranges=[],
-  serialized_start=2618,
-  serialized_end=2706,
+  serialized_start=2623,
+  serialized_end=2711,
 )
 
 
@@ -2061,8 +2076,8 @@ _CDOTARESPONSEQUERYSERIALIZED_FACT = _descriptor.Descriptor(
   options=None,
   is_extendable=False,
   extension_ranges=[],
-  serialized_start=2793,
-  serialized_end=2963,
+  serialized_start=2798,
+  serialized_end=2968,
 )
 
 _CDOTARESPONSEQUERYSERIALIZED = _descriptor.Descriptor(
@@ -2088,8 +2103,8 @@ _CDOTARESPONSEQUERYSERIALIZED = _descriptor.Descriptor(
   options=None,
   is_extendable=False,
   extension_ranges=[],
-  serialized_start=2709,
-  serialized_end=2963,
+  serialized_start=2714,
+  serialized_end=2968,
 )
 
 
@@ -2137,8 +2152,8 @@ _CDOTASPEECHMATCHONCLIENT = _descriptor.Descriptor(
   options=None,
   is_extendable=False,
   extension_ranges=[],
-  serialized_start=2966,
-  serialized_end=3110,
+  serialized_start=2971,
+  serialized_end=3115,
 )
 
 
@@ -2193,8 +2208,8 @@ _CDOTAUSERMSG_UNITEVENT_SPEECH = _descriptor.Descriptor(
   options=None,
   is_extendable=False,
   extension_ranges=[],
-  serialized_start=3621,
-  serialized_end=3728,
+  serialized_start=3626,
+  serialized_end=3733,
 )
 
 _CDOTAUSERMSG_UNITEVENT_SPEECHMUTE = _descriptor.Descriptor(
@@ -2220,8 +2235,8 @@ _CDOTAUSERMSG_UNITEVENT_SPEECHMUTE = _descriptor.Descriptor(
   options=None,
   is_extendable=False,
   extension_ranges=[],
-  serialized_start=3730,
-  serialized_end=3762,
+  serialized_start=3735,
+  serialized_end=3767,
 )
 
 _CDOTAUSERMSG_UNITEVENT_ADDGESTURE = _descriptor.Descriptor(
@@ -2268,8 +2283,8 @@ _CDOTAUSERMSG_UNITEVENT_ADDGESTURE = _descriptor.Descriptor(
   options=None,
   is_extendable=False,
   extension_ranges=[],
-  serialized_start=3764,
-  serialized_end=3875,
+  serialized_start=3769,
+  serialized_end=3880,
 )
 
 _CDOTAUSERMSG_UNITEVENT_REMOVEGESTURE = _descriptor.Descriptor(
@@ -2295,8 +2310,8 @@ _CDOTAUSERMSG_UNITEVENT_REMOVEGESTURE = _descriptor.Descriptor(
   options=None,
   is_extendable=False,
   extension_ranges=[],
-  serialized_start=3877,
-  serialized_end=3934,
+  serialized_start=3882,
+  serialized_end=3939,
 )
 
 _CDOTAUSERMSG_UNITEVENT_BLOODIMPACT = _descriptor.Descriptor(
@@ -2336,8 +2351,8 @@ _CDOTAUSERMSG_UNITEVENT_BLOODIMPACT = _descriptor.Descriptor(
   options=None,
   is_extendable=False,
   extension_ranges=[],
-  serialized_start=3936,
-  serialized_end=4000,
+  serialized_start=3941,
+  serialized_end=4005,
 )
 
 _CDOTAUSERMSG_UNITEVENT_FADEGESTURE = _descriptor.Descriptor(
@@ -2363,8 +2378,8 @@ _CDOTAUSERMSG_UNITEVENT_FADEGESTURE = _descriptor.Descriptor(
   options=None,
   is_extendable=False,
   extension_ranges=[],
-  serialized_start=4002,
-  serialized_end=4057,
+  serialized_start=4007,
+  serialized_end=4062,
 )
 
 _CDOTAUSERMSG_UNITEVENT = _descriptor.Descriptor(
@@ -2446,8 +2461,8 @@ _CDOTAUSERMSG_UNITEVENT = _descriptor.Descriptor(
   options=None,
   is_extendable=False,
   extension_ranges=[],
-  serialized_start=3113,
-  serialized_end=4057,
+  serialized_start=3118,
+  serialized_end=4062,
 )
 
 
@@ -2474,8 +2489,8 @@ _CDOTAUSERMSG_ITEMPURCHASED = _descriptor.Descriptor(
   options=None,
   is_extendable=False,
   extension_ranges=[],
-  serialized_start=4059,
-  serialized_end=4107,
+  serialized_start=4064,
+  serialized_end=4112,
 )
 
 
@@ -2530,8 +2545,8 @@ _CDOTAUSERMSG_ITEMFOUND = _descriptor.Descriptor(
   options=None,
   is_extendable=False,
   extension_ranges=[],
-  serialized_start=4109,
-  serialized_end=4215,
+  serialized_start=4114,
+  serialized_end=4220,
 )
 
 
@@ -2551,8 +2566,8 @@ _CDOTAUSERMSG_PARTICLEMANAGER_RELEASEPARTICLEINDEX = _descriptor.Descriptor(
   options=None,
   is_extendable=False,
   extension_ranges=[],
-  serialized_start=5326,
-  serialized_end=5348,
+  serialized_start=5331,
+  serialized_end=5353,
 )
 
 _CDOTAUSERMSG_PARTICLEMANAGER_CREATEPARTICLE = _descriptor.Descriptor(
@@ -2592,8 +2607,8 @@ _CDOTAUSERMSG_PARTICLEMANAGER_CREATEPARTICLE = _descriptor.Descriptor(
   options=None,
   is_extendable=False,
   extension_ranges=[],
-  serialized_start=5350,
-  serialized_end=5439,
+  serialized_start=5355,
+  serialized_end=5444,
 )
 
 _CDOTAUSERMSG_PARTICLEMANAGER_DESTROYPARTICLE = _descriptor.Descriptor(
@@ -2619,8 +2634,8 @@ _CDOTAUSERMSG_PARTICLEMANAGER_DESTROYPARTICLE = _descriptor.Descriptor(
   options=None,
   is_extendable=False,
   extension_ranges=[],
-  serialized_start=5441,
-  serialized_end=5487,
+  serialized_start=5446,
+  serialized_end=5492,
 )
 
 _CDOTAUSERMSG_PARTICLEMANAGER_DESTROYPARTICLEINVOLVING = _descriptor.Descriptor(
@@ -2653,8 +2668,8 @@ _CDOTAUSERMSG_PARTICLEMANAGER_DESTROYPARTICLEINVOLVING = _descriptor.Descriptor(
   options=None,
   is_extendable=False,
   extension_ranges=[],
-  serialized_start=5489,
-  serialized_end=5567,
+  serialized_start=5494,
+  serialized_end=5572,
 )
 
 _CDOTAUSERMSG_PARTICLEMANAGER_UPDATEPARTICLE = _descriptor.Descriptor(
@@ -2687,8 +2702,8 @@ _CDOTAUSERMSG_PARTICLEMANAGER_UPDATEPARTICLE = _descriptor.Descriptor(
   options=None,
   is_extendable=False,
   extension_ranges=[],
-  serialized_start=5569,
-  serialized_end=5639,
+  serialized_start=5574,
+  serialized_end=5644,
 )
 
 _CDOTAUSERMSG_PARTICLEMANAGER_UPDATEPARTICLEFWD = _descriptor.Descriptor(
@@ -2721,8 +2736,8 @@ _CDOTAUSERMSG_PARTICLEMANAGER_UPDATEPARTICLEFWD = _descriptor.Descriptor(
   options=None,
   is_extendable=False,
   extension_ranges=[],
-  serialized_start=5641,
-  serialized_end=5713,
+  serialized_start=5646,
+  serialized_end=5718,
 )
 
 _CDOTAUSERMSG_PARTICLEMANAGER_UPDATEPARTICLEORIENT = _descriptor.Descriptor(
@@ -2769,8 +2784,8 @@ _CDOTAUSERMSG_PARTICLEMANAGER_UPDATEPARTICLEORIENT = _descriptor.Descriptor(
   options=None,
   is_extendable=False,
   extension_ranges=[],
-  serialized_start=5716,
-  serialized_end=5844,
+  serialized_start=5721,
+  serialized_end=5849,
 )
 
 _CDOTAUSERMSG_PARTICLEMANAGER_UPDATEPARTICLEFALLBACK = _descriptor.Descriptor(
@@ -2803,8 +2818,8 @@ _CDOTAUSERMSG_PARTICLEMANAGER_UPDATEPARTICLEFALLBACK = _descriptor.Descriptor(
   options=None,
   is_extendable=False,
   extension_ranges=[],
-  serialized_start=5846,
-  serialized_end=5924,
+  serialized_start=5851,
+  serialized_end=5929,
 )
 
 _CDOTAUSERMSG_PARTICLEMANAGER_UPDATEPARTICLEOFFSET = _descriptor.Descriptor(
@@ -2837,8 +2852,8 @@ _CDOTAUSERMSG_PARTICLEMANAGER_UPDATEPARTICLEOFFSET = _descriptor.Descriptor(
   options=None,
   is_extendable=False,
   extension_ranges=[],
-  serialized_start=5926,
-  serialized_end=6007,
+  serialized_start=5931,
+  serialized_end=6012,
 )
 
 _CDOTAUSERMSG_PARTICLEMANAGER_UPDATEPARTICLEENT = _descriptor.Descriptor(
@@ -2892,8 +2907,8 @@ _CDOTAUSERMSG_PARTICLEMANAGER_UPDATEPARTICLEENT = _descriptor.Descriptor(
   options=None,
   is_extendable=False,
   extension_ranges=[],
-  serialized_start=6010,
-  serialized_end=6156,
+  serialized_start=6015,
+  serialized_end=6161,
 )
 
 _CDOTAUSERMSG_PARTICLEMANAGER_UPDATEPARTICLESETFROZEN = _descriptor.Descriptor(
@@ -2919,8 +2934,8 @@ _CDOTAUSERMSG_PARTICLEMANAGER_UPDATEPARTICLESETFROZEN = _descriptor.Descriptor(
   options=None,
   is_extendable=False,
   extension_ranges=[],
-  serialized_start=6158,
-  serialized_end=6203,
+  serialized_start=6163,
+  serialized_end=6208,
 )
 
 _CDOTAUSERMSG_PARTICLEMANAGER_UPDATEPARTICLESHOULDDRAW = _descriptor.Descriptor(
@@ -2946,8 +2961,8 @@ _CDOTAUSERMSG_PARTICLEMANAGER_UPDATEPARTICLESHOULDDRAW = _descriptor.Descriptor(
   options=None,
   is_extendable=False,
   extension_ranges=[],
-  serialized_start=6205,
-  serialized_end=6252,
+  serialized_start=6210,
+  serialized_end=6257,
 )
 
 _CDOTAUSERMSG_PARTICLEMANAGER = _descriptor.Descriptor(
@@ -3064,8 +3079,8 @@ _CDOTAUSERMSG_PARTICLEMANAGER = _descriptor.Descriptor(
   options=None,
   is_extendable=False,
   extension_ranges=[],
-  serialized_start=4218,
-  serialized_end=6252,
+  serialized_start=4223,
+  serialized_end=6257,
 )
 
 
@@ -3120,8 +3135,8 @@ _CDOTAUSERMSG_OVERHEADEVENT = _descriptor.Descriptor(
   options=None,
   is_extendable=False,
   extension_ranges=[],
-  serialized_start=6255,
-  serialized_end=6452,
+  serialized_start=6260,
+  serialized_end=6457,
 )
 
 
@@ -3155,8 +3170,8 @@ _CDOTAUSERMSG_TUTORIALTIPINFO = _descriptor.Descriptor(
   options=None,
   is_extendable=False,
   extension_ranges=[],
-  serialized_start=6454,
-  serialized_end=6516,
+  serialized_start=6459,
+  serialized_end=6521,
 )
 
 
@@ -3188,6 +3203,13 @@ _CDOTAUSERMSG_TUTORIALFINISH = _descriptor.Descriptor(
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None),
+    _descriptor.FieldDescriptor(
+      name='success', full_name='CDOTAUserMsg_TutorialFinish.success', index=3,
+      number=4, type=8, cpp_type=7, label=1,
+      has_default_value=False, default_value=False,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None),
   ],
   extensions=[
   ],
@@ -3197,8 +3219,57 @@ _CDOTAUSERMSG_TUTORIALFINISH = _descriptor.Descriptor(
   options=None,
   is_extendable=False,
   extension_ranges=[],
-  serialized_start=6518,
-  serialized_end=6594,
+  serialized_start=6523,
+  serialized_end=6616,
+)
+
+
+_CDOTAUSERMSG_SENDGENERICTOOLTIP = _descriptor.Descriptor(
+  name='CDOTAUserMsg_SendGenericToolTip',
+  full_name='CDOTAUserMsg_SendGenericToolTip',
+  filename=None,
+  file=DESCRIPTOR,
+  containing_type=None,
+  fields=[
+    _descriptor.FieldDescriptor(
+      name='title', full_name='CDOTAUserMsg_SendGenericToolTip.title', index=0,
+      number=1, type=9, cpp_type=9, label=1,
+      has_default_value=False, default_value=unicode("", "utf-8"),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None),
+    _descriptor.FieldDescriptor(
+      name='text', full_name='CDOTAUserMsg_SendGenericToolTip.text', index=1,
+      number=2, type=9, cpp_type=9, label=1,
+      has_default_value=False, default_value=unicode("", "utf-8"),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None),
+    _descriptor.FieldDescriptor(
+      name='entindex', full_name='CDOTAUserMsg_SendGenericToolTip.entindex', index=2,
+      number=3, type=5, cpp_type=1, label=1,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None),
+    _descriptor.FieldDescriptor(
+      name='close', full_name='CDOTAUserMsg_SendGenericToolTip.close', index=3,
+      number=4, type=8, cpp_type=7, label=1,
+      has_default_value=False, default_value=False,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None),
+  ],
+  extensions=[
+  ],
+  nested_types=[],
+  enum_types=[
+  ],
+  options=None,
+  is_extendable=False,
+  extension_ranges=[],
+  serialized_start=6618,
+  serialized_end=6713,
 )
 
 
@@ -3232,8 +3303,8 @@ _CDOTAUSERMSG_WORLDLINE = _descriptor.Descriptor(
   options=None,
   is_extendable=False,
   extension_ranges=[],
-  serialized_start=6596,
-  serialized_end=6679,
+  serialized_start=6715,
+  serialized_end=6798,
 )
 
 
@@ -3267,8 +3338,8 @@ _CDOTAUSERMSG_TOURNAMENTDROP = _descriptor.Descriptor(
   options=None,
   is_extendable=False,
   extension_ranges=[],
-  serialized_start=6681,
-  serialized_end=6751,
+  serialized_start=6800,
+  serialized_end=6870,
 )
 
 
@@ -3309,8 +3380,8 @@ _CDOTAUSERMSG_CHATWHEEL = _descriptor.Descriptor(
   options=None,
   is_extendable=False,
   extension_ranges=[],
-  serialized_start=6753,
-  serialized_end=6877,
+  serialized_start=6872,
+  serialized_end=6996,
 )
 
 
@@ -3351,8 +3422,8 @@ _CDOTAUSERMSG_RECEIVEDXMASGIFT = _descriptor.Descriptor(
   options=None,
   is_extendable=False,
   extension_ranges=[],
-  serialized_start=6879,
-  serialized_end=6972,
+  serialized_start=6998,
+  serialized_end=7091,
 )
 
 
@@ -3379,8 +3450,8 @@ _CDOTAUSERMSG_SHOWSURVEY = _descriptor.Descriptor(
   options=None,
   is_extendable=False,
   extension_ranges=[],
-  serialized_start=6974,
-  serialized_end=7018,
+  serialized_start=7093,
+  serialized_end=7137,
 )
 
 
@@ -3407,8 +3478,8 @@ _CDOTAUSERMSG_UPDATESHAREDCONTENT = _descriptor.Descriptor(
   options=None,
   is_extendable=False,
   extension_ranges=[],
-  serialized_start=7020,
-  serialized_end=7073,
+  serialized_start=7139,
+  serialized_end=7192,
 )
 
 
@@ -3428,8 +3499,8 @@ _CDOTAUSERMSG_TUTORIALREQUESTEXP = _descriptor.Descriptor(
   options=None,
   is_extendable=False,
   extension_ranges=[],
-  serialized_start=7075,
-  serialized_end=7108,
+  serialized_start=7194,
+  serialized_end=7227,
 )
 
 
@@ -3456,8 +3527,8 @@ _CDOTAUSERMSG_TUTORIALFADE = _descriptor.Descriptor(
   options=None,
   is_extendable=False,
   extension_ranges=[],
-  serialized_start=7110,
-  serialized_end=7156,
+  serialized_start=7229,
+  serialized_end=7275,
 )
 
 
@@ -3512,8 +3583,8 @@ _CDOTAUSERMSG_TUTORIALPINGMINIMAP = _descriptor.Descriptor(
   options=None,
   is_extendable=False,
   extension_ranges=[],
-  serialized_start=7158,
-  serialized_end=7278,
+  serialized_start=7277,
+  serialized_end=7397,
 )
 
 
@@ -3540,8 +3611,8 @@ _CDOTA_UM_GAMERULESSTATECHANGED = _descriptor.Descriptor(
   options=None,
   is_extendable=False,
   extension_ranges=[],
-  serialized_start=7280,
-  serialized_end=7327,
+  serialized_start=7399,
+  serialized_end=7446,
 )
 
 
@@ -3589,8 +3660,8 @@ _CDOTAUSERMSG_ADDQUESTLOGENTRY = _descriptor.Descriptor(
   options=None,
   is_extendable=False,
   extension_ranges=[],
-  serialized_start=7329,
-  serialized_end=7433,
+  serialized_start=7448,
+  serialized_end=7552,
 )
 
 
@@ -3624,25 +3695,60 @@ _CDOTAUSERMSG_SENDSTATPOPUP = _descriptor.Descriptor(
   options=None,
   is_extendable=False,
   extension_ranges=[],
-  serialized_start=7435,
-  serialized_end=7526,
+  serialized_start=7554,
+  serialized_end=7645,
+)
+
+
+_CDOTAUSERMSG_SENDROSHANPOPUP = _descriptor.Descriptor(
+  name='CDOTAUserMsg_SendRoshanPopup',
+  full_name='CDOTAUserMsg_SendRoshanPopup',
+  filename=None,
+  file=DESCRIPTOR,
+  containing_type=None,
+  fields=[
+    _descriptor.FieldDescriptor(
+      name='reclaimed', full_name='CDOTAUserMsg_SendRoshanPopup.reclaimed', index=0,
+      number=1, type=8, cpp_type=7, label=1,
+      has_default_value=False, default_value=False,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None),
+    _descriptor.FieldDescriptor(
+      name='gametime', full_name='CDOTAUserMsg_SendRoshanPopup.gametime', index=1,
+      number=2, type=5, cpp_type=1, label=1,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None),
+  ],
+  extensions=[
+  ],
+  nested_types=[],
+  enum_types=[
+  ],
+  options=None,
+  is_extendable=False,
+  extension_ranges=[],
+  serialized_start=7647,
+  serialized_end=7714,
 )
 
 _CDOTAUSERMSG_CHATEVENT.fields_by_name['type'].enum_type = _DOTA_CHAT_MESSAGE
 _CDOTAUSERMSG_COMBATLOGDATA.fields_by_name['type'].enum_type = _DOTA_COMBATLOG_TYPES
-_CDOTAUSERMSG_COMBATHEROPOSITIONS.fields_by_name['world_pos'].message_type = netmessages_pb2._CMSGVECTOR2D
+_CDOTAUSERMSG_COMBATHEROPOSITIONS.fields_by_name['world_pos'].message_type = networkbasetypes_pb2._CMSGVECTOR2D
 _CDOTAUSERMSG_MINIKILLCAMINFO_ATTACKER_ABILITY.containing_type = _CDOTAUSERMSG_MINIKILLCAMINFO_ATTACKER;
 _CDOTAUSERMSG_MINIKILLCAMINFO_ATTACKER.fields_by_name['abilities'].message_type = _CDOTAUSERMSG_MINIKILLCAMINFO_ATTACKER_ABILITY
 _CDOTAUSERMSG_MINIKILLCAMINFO_ATTACKER.containing_type = _CDOTAUSERMSG_MINIKILLCAMINFO;
 _CDOTAUSERMSG_MINIKILLCAMINFO.fields_by_name['attackers'].message_type = _CDOTAUSERMSG_MINIKILLCAMINFO_ATTACKER
-_CDOTAUSERMSG_GLOBALLIGHTDIRECTION.fields_by_name['direction'].message_type = netmessages_pb2._CMSGVECTOR
+_CDOTAUSERMSG_GLOBALLIGHTDIRECTION.fields_by_name['direction'].message_type = networkbasetypes_pb2._CMSGVECTOR
 _CDOTAUSERMSG_LOCATIONPING.fields_by_name['location_ping'].message_type = dota_commonmessages_pb2._CDOTAMSG_LOCATIONPING
 _CDOTAUSERMSG_ITEMALERT.fields_by_name['item_alert'].message_type = dota_commonmessages_pb2._CDOTAMSG_ITEMALERT
 _CDOTAUSERMSG_MAPLINE.fields_by_name['mapline'].message_type = dota_commonmessages_pb2._CDOTAMSG_MAPLINE
-_CDOTAUSERMSG_MINIMAPDEBUGPOINT.fields_by_name['location'].message_type = netmessages_pb2._CMSGVECTOR
-_CDOTAUSERMSG_CREATELINEARPROJECTILE.fields_by_name['origin'].message_type = netmessages_pb2._CMSGVECTOR
-_CDOTAUSERMSG_CREATELINEARPROJECTILE.fields_by_name['velocity'].message_type = netmessages_pb2._CMSGVECTOR2D
-_CDOTAUSERMSG_NEVERMOREREQUIEM.fields_by_name['origin'].message_type = netmessages_pb2._CMSGVECTOR
+_CDOTAUSERMSG_MINIMAPDEBUGPOINT.fields_by_name['location'].message_type = networkbasetypes_pb2._CMSGVECTOR
+_CDOTAUSERMSG_CREATELINEARPROJECTILE.fields_by_name['origin'].message_type = networkbasetypes_pb2._CMSGVECTOR
+_CDOTAUSERMSG_CREATELINEARPROJECTILE.fields_by_name['velocity'].message_type = networkbasetypes_pb2._CMSGVECTOR2D
+_CDOTAUSERMSG_NEVERMOREREQUIEM.fields_by_name['origin'].message_type = networkbasetypes_pb2._CMSGVECTOR
 _CDOTARESPONSEQUERYSERIALIZED_FACT.fields_by_name['valtype'].enum_type = _CDOTARESPONSEQUERYSERIALIZED_FACT_VALUETYPE
 _CDOTARESPONSEQUERYSERIALIZED_FACT.containing_type = _CDOTARESPONSEQUERYSERIALIZED;
 _CDOTARESPONSEQUERYSERIALIZED_FACT_VALUETYPE.containing_type = _CDOTARESPONSEQUERYSERIALIZED_FACT;
@@ -3669,19 +3775,19 @@ _CDOTAUSERMSG_PARTICLEMANAGER_RELEASEPARTICLEINDEX.containing_type = _CDOTAUSERM
 _CDOTAUSERMSG_PARTICLEMANAGER_CREATEPARTICLE.containing_type = _CDOTAUSERMSG_PARTICLEMANAGER;
 _CDOTAUSERMSG_PARTICLEMANAGER_DESTROYPARTICLE.containing_type = _CDOTAUSERMSG_PARTICLEMANAGER;
 _CDOTAUSERMSG_PARTICLEMANAGER_DESTROYPARTICLEINVOLVING.containing_type = _CDOTAUSERMSG_PARTICLEMANAGER;
-_CDOTAUSERMSG_PARTICLEMANAGER_UPDATEPARTICLE.fields_by_name['position'].message_type = netmessages_pb2._CMSGVECTOR
+_CDOTAUSERMSG_PARTICLEMANAGER_UPDATEPARTICLE.fields_by_name['position'].message_type = networkbasetypes_pb2._CMSGVECTOR
 _CDOTAUSERMSG_PARTICLEMANAGER_UPDATEPARTICLE.containing_type = _CDOTAUSERMSG_PARTICLEMANAGER;
-_CDOTAUSERMSG_PARTICLEMANAGER_UPDATEPARTICLEFWD.fields_by_name['forward'].message_type = netmessages_pb2._CMSGVECTOR
+_CDOTAUSERMSG_PARTICLEMANAGER_UPDATEPARTICLEFWD.fields_by_name['forward'].message_type = networkbasetypes_pb2._CMSGVECTOR
 _CDOTAUSERMSG_PARTICLEMANAGER_UPDATEPARTICLEFWD.containing_type = _CDOTAUSERMSG_PARTICLEMANAGER;
-_CDOTAUSERMSG_PARTICLEMANAGER_UPDATEPARTICLEORIENT.fields_by_name['forward'].message_type = netmessages_pb2._CMSGVECTOR
-_CDOTAUSERMSG_PARTICLEMANAGER_UPDATEPARTICLEORIENT.fields_by_name['right'].message_type = netmessages_pb2._CMSGVECTOR
-_CDOTAUSERMSG_PARTICLEMANAGER_UPDATEPARTICLEORIENT.fields_by_name['up'].message_type = netmessages_pb2._CMSGVECTOR
+_CDOTAUSERMSG_PARTICLEMANAGER_UPDATEPARTICLEORIENT.fields_by_name['forward'].message_type = networkbasetypes_pb2._CMSGVECTOR
+_CDOTAUSERMSG_PARTICLEMANAGER_UPDATEPARTICLEORIENT.fields_by_name['right'].message_type = networkbasetypes_pb2._CMSGVECTOR
+_CDOTAUSERMSG_PARTICLEMANAGER_UPDATEPARTICLEORIENT.fields_by_name['up'].message_type = networkbasetypes_pb2._CMSGVECTOR
 _CDOTAUSERMSG_PARTICLEMANAGER_UPDATEPARTICLEORIENT.containing_type = _CDOTAUSERMSG_PARTICLEMANAGER;
-_CDOTAUSERMSG_PARTICLEMANAGER_UPDATEPARTICLEFALLBACK.fields_by_name['position'].message_type = netmessages_pb2._CMSGVECTOR
+_CDOTAUSERMSG_PARTICLEMANAGER_UPDATEPARTICLEFALLBACK.fields_by_name['position'].message_type = networkbasetypes_pb2._CMSGVECTOR
 _CDOTAUSERMSG_PARTICLEMANAGER_UPDATEPARTICLEFALLBACK.containing_type = _CDOTAUSERMSG_PARTICLEMANAGER;
-_CDOTAUSERMSG_PARTICLEMANAGER_UPDATEPARTICLEOFFSET.fields_by_name['origin_offset'].message_type = netmessages_pb2._CMSGVECTOR
+_CDOTAUSERMSG_PARTICLEMANAGER_UPDATEPARTICLEOFFSET.fields_by_name['origin_offset'].message_type = networkbasetypes_pb2._CMSGVECTOR
 _CDOTAUSERMSG_PARTICLEMANAGER_UPDATEPARTICLEOFFSET.containing_type = _CDOTAUSERMSG_PARTICLEMANAGER;
-_CDOTAUSERMSG_PARTICLEMANAGER_UPDATEPARTICLEENT.fields_by_name['fallback_position'].message_type = netmessages_pb2._CMSGVECTOR
+_CDOTAUSERMSG_PARTICLEMANAGER_UPDATEPARTICLEENT.fields_by_name['fallback_position'].message_type = networkbasetypes_pb2._CMSGVECTOR
 _CDOTAUSERMSG_PARTICLEMANAGER_UPDATEPARTICLEENT.containing_type = _CDOTAUSERMSG_PARTICLEMANAGER;
 _CDOTAUSERMSG_PARTICLEMANAGER_UPDATEPARTICLESETFROZEN.containing_type = _CDOTAUSERMSG_PARTICLEMANAGER;
 _CDOTAUSERMSG_PARTICLEMANAGER_UPDATEPARTICLESHOULDDRAW.containing_type = _CDOTAUSERMSG_PARTICLEMANAGER;
@@ -3737,6 +3843,7 @@ DESCRIPTOR.message_types_by_name['CDOTAUserMsg_ParticleManager'] = _CDOTAUSERMSG
 DESCRIPTOR.message_types_by_name['CDOTAUserMsg_OverheadEvent'] = _CDOTAUSERMSG_OVERHEADEVENT
 DESCRIPTOR.message_types_by_name['CDOTAUserMsg_TutorialTipInfo'] = _CDOTAUSERMSG_TUTORIALTIPINFO
 DESCRIPTOR.message_types_by_name['CDOTAUserMsg_TutorialFinish'] = _CDOTAUSERMSG_TUTORIALFINISH
+DESCRIPTOR.message_types_by_name['CDOTAUserMsg_SendGenericToolTip'] = _CDOTAUSERMSG_SENDGENERICTOOLTIP
 DESCRIPTOR.message_types_by_name['CDOTAUserMsg_WorldLine'] = _CDOTAUSERMSG_WORLDLINE
 DESCRIPTOR.message_types_by_name['CDOTAUserMsg_TournamentDrop'] = _CDOTAUSERMSG_TOURNAMENTDROP
 DESCRIPTOR.message_types_by_name['CDOTAUserMsg_ChatWheel'] = _CDOTAUSERMSG_CHATWHEEL
@@ -3749,6 +3856,7 @@ DESCRIPTOR.message_types_by_name['CDOTAUserMsg_TutorialPingMinimap'] = _CDOTAUSE
 DESCRIPTOR.message_types_by_name['CDOTA_UM_GamerulesStateChanged'] = _CDOTA_UM_GAMERULESSTATECHANGED
 DESCRIPTOR.message_types_by_name['CDOTAUserMsg_AddQuestLogEntry'] = _CDOTAUSERMSG_ADDQUESTLOGENTRY
 DESCRIPTOR.message_types_by_name['CDOTAUserMsg_SendStatPopup'] = _CDOTAUSERMSG_SENDSTATPOPUP
+DESCRIPTOR.message_types_by_name['CDOTAUserMsg_SendRoshanPopup'] = _CDOTAUSERMSG_SENDROSHANPOPUP
 
 class CDOTAUserMsg_AIDebugLine(_message.Message):
   __metaclass__ = _reflection.GeneratedProtocolMessageType
@@ -4086,6 +4194,12 @@ class CDOTAUserMsg_TutorialFinish(_message.Message):
 
   # @@protoc_insertion_point(class_scope:CDOTAUserMsg_TutorialFinish)
 
+class CDOTAUserMsg_SendGenericToolTip(_message.Message):
+  __metaclass__ = _reflection.GeneratedProtocolMessageType
+  DESCRIPTOR = _CDOTAUSERMSG_SENDGENERICTOOLTIP
+
+  # @@protoc_insertion_point(class_scope:CDOTAUserMsg_SendGenericToolTip)
+
 class CDOTAUserMsg_WorldLine(_message.Message):
   __metaclass__ = _reflection.GeneratedProtocolMessageType
   DESCRIPTOR = _CDOTAUSERMSG_WORLDLINE
@@ -4157,6 +4271,12 @@ class CDOTAUserMsg_SendStatPopup(_message.Message):
   DESCRIPTOR = _CDOTAUSERMSG_SENDSTATPOPUP
 
   # @@protoc_insertion_point(class_scope:CDOTAUserMsg_SendStatPopup)
+
+class CDOTAUserMsg_SendRoshanPopup(_message.Message):
+  __metaclass__ = _reflection.GeneratedProtocolMessageType
+  DESCRIPTOR = _CDOTAUSERMSG_SENDROSHANPOPUP
+
+  # @@protoc_insertion_point(class_scope:CDOTAUserMsg_SendRoshanPopup)
 
 
 # @@protoc_insertion_point(module_scope)

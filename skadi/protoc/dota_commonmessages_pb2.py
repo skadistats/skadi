@@ -10,13 +10,13 @@ from google.protobuf import descriptor_pb2
 
 
 import google.protobuf.descriptor_pb2
-import netmessages_pb2
+import networkbasetypes_pb2
 
 
 DESCRIPTOR = _descriptor.FileDescriptor(
   name='dota_commonmessages.proto',
   package='',
-  serialized_pb='\n\x19\x64ota_commonmessages.proto\x1a google/protobuf/descriptor.proto\x1a\x11netmessages.proto\"R\n\x15\x43\x44OTAMsg_LocationPing\x12\t\n\x01x\x18\x01 \x01(\x05\x12\t\n\x01y\x18\x02 \x01(\x05\x12\x0e\n\x06target\x18\x03 \x01(\x05\x12\x13\n\x0b\x64irect_ping\x18\x04 \x01(\x08\":\n\x12\x43\x44OTAMsg_ItemAlert\x12\t\n\x01x\x18\x01 \x01(\x05\x12\t\n\x01y\x18\x02 \x01(\x05\x12\x0e\n\x06itemid\x18\x03 \x01(\x05\"9\n\x10\x43\x44OTAMsg_MapLine\x12\t\n\x01x\x18\x01 \x01(\x05\x12\t\n\x01y\x18\x02 \x01(\x05\x12\x0f\n\x07initial\x18\x03 \x01(\x08\"S\n\x12\x43\x44OTAMsg_WorldLine\x12\t\n\x01x\x18\x01 \x01(\x05\x12\t\n\x01y\x18\x02 \x01(\x05\x12\t\n\x01z\x18\x03 \x01(\x05\x12\x0f\n\x07initial\x18\x04 \x01(\x08\x12\x0b\n\x03\x65nd\x18\x05 \x01(\x08\"~\n\x16\x43\x44OTAMsg_SendStatPopup\x12\x39\n\x05style\x18\x01 \x01(\x0e\x32\x14.EDOTAStatPopupTypes:\x14k_EDOTA_SPT_Textline\x12\x14\n\x0cstat_strings\x18\x02 \x03(\t\x12\x13\n\x0bstat_images\x18\x03 \x03(\x05*\xb7\x02\n\x15\x45\x44OTAChatWheelMessage\x12\x11\n\rk_EDOTA_CW_Ok\x10\x00\x12\x13\n\x0fk_EDOTA_CW_Care\x10\x01\x12\x16\n\x12k_EDOTA_CW_GetBack\x10\x02\x12\x18\n\x14k_EDOTA_CW_NeedWards\x10\x03\x12\x13\n\x0fk_EDOTA_CW_Stun\x10\x04\x12\x13\n\x0fk_EDOTA_CW_Help\x10\x05\x12\x13\n\x0fk_EDOTA_CW_Push\x10\x06\x12\x16\n\x12k_EDOTA_CW_GoodJob\x10\x07\x12\x16\n\x12k_EDOTA_CW_Missing\x10\x08\x12\x1a\n\x16k_EDOTA_CW_Missing_Top\x10\t\x12\x1a\n\x16k_EDOTA_CW_Missing_Mid\x10\n\x12\x1d\n\x19k_EDOTA_CW_Missing_Bottom\x10\x0b*\\\n\x13\x45\x44OTAStatPopupTypes\x12\x18\n\x14k_EDOTA_SPT_Textline\x10\x00\x12\x15\n\x11k_EDOTA_SPT_Basic\x10\x01\x12\x14\n\x10k_EDOTA_SPT_Poll\x10\x02')
+  serialized_pb='\n\x19\x64ota_commonmessages.proto\x1a google/protobuf/descriptor.proto\x1a\x16networkbasetypes.proto\"`\n\x15\x43\x44OTAMsg_LocationPing\x12\t\n\x01x\x18\x01 \x01(\x05\x12\t\n\x01y\x18\x02 \x01(\x05\x12\x0e\n\x06target\x18\x03 \x01(\x05\x12\x13\n\x0b\x64irect_ping\x18\x04 \x01(\x08\x12\x0c\n\x04type\x18\x05 \x01(\x05\":\n\x12\x43\x44OTAMsg_ItemAlert\x12\t\n\x01x\x18\x01 \x01(\x05\x12\t\n\x01y\x18\x02 \x01(\x05\x12\x0e\n\x06itemid\x18\x03 \x01(\x05\"9\n\x10\x43\x44OTAMsg_MapLine\x12\t\n\x01x\x18\x01 \x01(\x05\x12\t\n\x01y\x18\x02 \x01(\x05\x12\x0f\n\x07initial\x18\x03 \x01(\x08\"S\n\x12\x43\x44OTAMsg_WorldLine\x12\t\n\x01x\x18\x01 \x01(\x05\x12\t\n\x01y\x18\x02 \x01(\x05\x12\t\n\x01z\x18\x03 \x01(\x05\x12\x0f\n\x07initial\x18\x04 \x01(\x08\x12\x0b\n\x03\x65nd\x18\x05 \x01(\x08\"~\n\x16\x43\x44OTAMsg_SendStatPopup\x12\x39\n\x05style\x18\x01 \x01(\x0e\x32\x14.EDOTAStatPopupTypes:\x14k_EDOTA_SPT_Textline\x12\x14\n\x0cstat_strings\x18\x02 \x03(\t\x12\x13\n\x0bstat_images\x18\x03 \x03(\x05*\xb7\x02\n\x15\x45\x44OTAChatWheelMessage\x12\x11\n\rk_EDOTA_CW_Ok\x10\x00\x12\x13\n\x0fk_EDOTA_CW_Care\x10\x01\x12\x16\n\x12k_EDOTA_CW_GetBack\x10\x02\x12\x18\n\x14k_EDOTA_CW_NeedWards\x10\x03\x12\x13\n\x0fk_EDOTA_CW_Stun\x10\x04\x12\x13\n\x0fk_EDOTA_CW_Help\x10\x05\x12\x13\n\x0fk_EDOTA_CW_Push\x10\x06\x12\x16\n\x12k_EDOTA_CW_GoodJob\x10\x07\x12\x16\n\x12k_EDOTA_CW_Missing\x10\x08\x12\x1a\n\x16k_EDOTA_CW_Missing_Top\x10\t\x12\x1a\n\x16k_EDOTA_CW_Missing_Mid\x10\n\x12\x1d\n\x19k_EDOTA_CW_Missing_Bottom\x10\x0b*\\\n\x13\x45\x44OTAStatPopupTypes\x12\x18\n\x14k_EDOTA_SPT_Textline\x10\x00\x12\x15\n\x11k_EDOTA_SPT_Basic\x10\x01\x12\x14\n\x10k_EDOTA_SPT_Poll\x10\x02')
 
 _EDOTACHATWHEELMESSAGE = _descriptor.EnumDescriptor(
   name='EDOTAChatWheelMessage',
@@ -75,8 +75,8 @@ _EDOTACHATWHEELMESSAGE = _descriptor.EnumDescriptor(
   ],
   containing_type=None,
   options=None,
-  serialized_start=499,
-  serialized_end=810,
+  serialized_start=518,
+  serialized_end=829,
 )
 
 EDOTAChatWheelMessage = enum_type_wrapper.EnumTypeWrapper(_EDOTACHATWHEELMESSAGE)
@@ -101,8 +101,8 @@ _EDOTASTATPOPUPTYPES = _descriptor.EnumDescriptor(
   ],
   containing_type=None,
   options=None,
-  serialized_start=812,
-  serialized_end=904,
+  serialized_start=831,
+  serialized_end=923,
 )
 
 EDOTAStatPopupTypes = enum_type_wrapper.EnumTypeWrapper(_EDOTASTATPOPUPTYPES)
@@ -159,6 +159,13 @@ _CDOTAMSG_LOCATIONPING = _descriptor.Descriptor(
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None),
+    _descriptor.FieldDescriptor(
+      name='type', full_name='CDOTAMsg_LocationPing.type', index=4,
+      number=5, type=5, cpp_type=1, label=1,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None),
   ],
   extensions=[
   ],
@@ -168,8 +175,8 @@ _CDOTAMSG_LOCATIONPING = _descriptor.Descriptor(
   options=None,
   is_extendable=False,
   extension_ranges=[],
-  serialized_start=82,
-  serialized_end=164,
+  serialized_start=87,
+  serialized_end=183,
 )
 
 
@@ -210,8 +217,8 @@ _CDOTAMSG_ITEMALERT = _descriptor.Descriptor(
   options=None,
   is_extendable=False,
   extension_ranges=[],
-  serialized_start=166,
-  serialized_end=224,
+  serialized_start=185,
+  serialized_end=243,
 )
 
 
@@ -252,8 +259,8 @@ _CDOTAMSG_MAPLINE = _descriptor.Descriptor(
   options=None,
   is_extendable=False,
   extension_ranges=[],
-  serialized_start=226,
-  serialized_end=283,
+  serialized_start=245,
+  serialized_end=302,
 )
 
 
@@ -308,8 +315,8 @@ _CDOTAMSG_WORLDLINE = _descriptor.Descriptor(
   options=None,
   is_extendable=False,
   extension_ranges=[],
-  serialized_start=285,
-  serialized_end=368,
+  serialized_start=304,
+  serialized_end=387,
 )
 
 
@@ -350,8 +357,8 @@ _CDOTAMSG_SENDSTATPOPUP = _descriptor.Descriptor(
   options=None,
   is_extendable=False,
   extension_ranges=[],
-  serialized_start=370,
-  serialized_end=496,
+  serialized_start=389,
+  serialized_end=515,
 )
 
 _CDOTAMSG_SENDSTATPOPUP.fields_by_name['style'].enum_type = _EDOTASTATPOPUPTYPES

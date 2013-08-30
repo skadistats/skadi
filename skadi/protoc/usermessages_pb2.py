@@ -10,13 +10,13 @@ from google.protobuf import descriptor_pb2
 
 
 import google.protobuf.descriptor_pb2
-import netmessages_pb2
+import networkbasetypes_pb2
 
 
 DESCRIPTOR = _descriptor.FileDescriptor(
   name='usermessages.proto',
   package='',
-  serialized_pb='\n\x12usermessages.proto\x1a google/protobuf/descriptor.proto\x1a\x11netmessages.proto\"0\n\x19\x43UserMsg_AchievementEvent\x12\x13\n\x0b\x61\x63hievement\x18\x01 \x01(\r\"L\n\x15\x43UserMsg_CloseCaption\x12\x0c\n\x04hash\x18\x01 \x01(\x07\x12\x10\n\x08\x64uration\x18\x02 \x01(\x02\x12\x13\n\x0b\x66rom_player\x18\x03 \x01(\x08\",\n\x19\x43UserMsg_CurrentTimescale\x12\x0f\n\x07\x63urrent\x18\x01 \x01(\x02\"n\n\x19\x43UserMsg_DesiredTimescale\x12\x0f\n\x07\x64\x65sired\x18\x01 \x01(\x02\x12\x10\n\x08\x64uration\x18\x02 \x01(\x02\x12\x14\n\x0cinterpolator\x18\x03 \x01(\r\x12\x18\n\x10start_blend_time\x18\x04 \x01(\x02\"R\n\rCUserMsg_Fade\x12\x10\n\x08\x64uration\x18\x01 \x01(\r\x12\x11\n\thold_time\x18\x02 \x01(\r\x12\r\n\x05\x66lags\x18\x03 \x01(\r\x12\r\n\x05\x63olor\x18\x04 \x01(\x07\"Y\n\x0e\x43UserMsg_Shake\x12\x0f\n\x07\x63ommand\x18\x01 \x01(\r\x12\x11\n\tamplitude\x18\x02 \x01(\x02\x12\x11\n\tfrequency\x18\x03 \x01(\x02\x12\x10\n\x08\x64uration\x18\x04 \x01(\x02\"S\n\x11\x43UserMsg_ShakeDir\x12\x1e\n\x05shake\x18\x01 \x01(\x0b\x32\x0f.CUserMsg_Shake\x12\x1e\n\tdirection\x18\x02 \x01(\x0b\x32\x0b.CMsgVector\"q\n\rCUserMsg_Tilt\x12\x0f\n\x07\x63ommand\x18\x01 \x01(\r\x12\x13\n\x0b\x65\x61se_in_out\x18\x02 \x01(\x08\x12\x1a\n\x05\x61ngle\x18\x03 \x01(\x0b\x32\x0b.CMsgVector\x12\x10\n\x08\x64uration\x18\x04 \x01(\x02\x12\x0c\n\x04time\x18\x05 \x01(\x02\">\n\x10\x43UserMsg_SayText\x12\x0e\n\x06\x63lient\x18\x01 \x01(\r\x12\x0c\n\x04text\x18\x02 \x01(\t\x12\x0c\n\x04\x63hat\x18\x03 \x01(\x08\"q\n\x11\x43UserMsg_SayText2\x12\x0e\n\x06\x63lient\x18\x01 \x01(\r\x12\x0c\n\x04\x63hat\x18\x02 \x01(\x08\x12\x0e\n\x06\x66ormat\x18\x03 \x01(\t\x12\x0e\n\x06prefix\x18\x04 \x01(\t\x12\x0c\n\x04text\x18\x05 \x01(\t\x12\x10\n\x08location\x18\x06 \x01(\t\"\xca\x01\n\x0f\x43UserMsg_HudMsg\x12\x0f\n\x07\x63hannel\x18\x01 \x01(\r\x12\t\n\x01x\x18\x02 \x01(\x02\x12\t\n\x01y\x18\x03 \x01(\x02\x12\x0e\n\x06\x63olor1\x18\x04 \x01(\r\x12\x0e\n\x06\x63olor2\x18\x05 \x01(\r\x12\x0e\n\x06\x65\x66\x66\x65\x63t\x18\x06 \x01(\r\x12\x14\n\x0c\x66\x61\x64\x65_in_time\x18\x07 \x01(\x02\x12\x15\n\rfade_out_time\x18\x08 \x01(\x02\x12\x11\n\thold_time\x18\t \x01(\x02\x12\x0f\n\x07\x66x_time\x18\n \x01(\x02\x12\x0f\n\x07message\x18\x0b \x01(\t\"#\n\x10\x43UserMsg_HudText\x12\x0f\n\x07message\x18\x01 \x01(\t\"/\n\x10\x43UserMsg_TextMsg\x12\x0c\n\x04\x64\x65st\x18\x01 \x01(\r\x12\r\n\x05param\x18\x02 \x03(\t\"\x14\n\x12\x43UserMsg_GameTitle\"\x13\n\x11\x43UserMsg_ResetHUD\"0\n\x12\x43UserMsg_SendAudio\x12\x0c\n\x04stop\x18\x02 \x01(\x08\x12\x0c\n\x04name\x18\x03 \x01(\t\"N\n\x12\x43UserMsg_VoiceMask\x12\x1c\n\x14\x61udible_players_mask\x18\x01 \x03(\x05\x12\x1a\n\x12player_mod_enabled\x18\x02 \x01(\x08\"\x17\n\x15\x43UserMsg_RequestState\"$\n\x11\x43UserMsg_HintText\x12\x0f\n\x07message\x18\x01 \x01(\t\"(\n\x14\x43UserMsg_KeyHintText\x12\x10\n\x08messages\x18\x01 \x03(\t\"\x18\n\x16\x43UserMsg_StatsCrawlMsg\"A\n\x17\x43UserMsg_StatsSkipState\x12\x11\n\tnum_skips\x18\x01 \x01(\x05\x12\x13\n\x0bnum_players\x18\x02 \x01(\x05\"G\n\x16\x43UserMsg_VoiceSubtitle\x12\x11\n\tent_index\x18\x01 \x01(\x05\x12\x0c\n\x04menu\x18\x02 \x01(\x05\x12\x0c\n\x04item\x18\x03 \x01(\x05\"{\n\x11\x43UserMsg_VGUIMenu\x12\x0c\n\x04name\x18\x01 \x01(\t\x12\x0c\n\x04show\x18\x02 \x01(\x08\x12%\n\x04keys\x18\x03 \x03(\x0b\x32\x17.CUserMsg_VGUIMenu.Keys\x1a#\n\x04Keys\x12\x0c\n\x04name\x18\x01 \x01(\t\x12\r\n\x05value\x18\x02 \x01(\t\" \n\x0f\x43UserMsg_Geiger\x12\r\n\x05range\x18\x01 \x01(\x05\"=\n\x0f\x43UserMsg_Rumble\x12\r\n\x05index\x18\x01 \x01(\x05\x12\x0c\n\x04\x64\x61ta\x18\x02 \x01(\x05\x12\r\n\x05\x66lags\x18\x03 \x01(\x05\"\x1f\n\x0e\x43UserMsg_Train\x12\r\n\x05train\x18\x01 \x01(\x05\"H\n\x17\x43UserMsg_SayTextChannel\x12\x0e\n\x06player\x18\x01 \x01(\x05\x12\x0f\n\x07\x63hannel\x18\x02 \x01(\x05\x12\x0c\n\x04text\x18\x03 \x01(\t\"3\n\x14\x43UserMsg_MessageText\x12\r\n\x05\x63olor\x18\x01 \x01(\r\x12\x0c\n\x04text\x18\x02 \x01(\t*\xd4\x04\n\x11\x45\x42\x61seUserMessages\x12\x17\n\x13UM_AchievementEvent\x10\x01\x12\x13\n\x0fUM_CloseCaption\x10\x02\x12\x19\n\x15UM_CloseCaptionDirect\x10\x03\x12\x17\n\x13UM_CurrentTimescale\x10\x04\x12\x17\n\x13UM_DesiredTimescale\x10\x05\x12\x0b\n\x07UM_Fade\x10\x06\x12\x10\n\x0cUM_GameTitle\x10\x07\x12\r\n\tUM_Geiger\x10\x08\x12\x0f\n\x0bUM_HintText\x10\t\x12\r\n\tUM_HudMsg\x10\n\x12\x0e\n\nUM_HudText\x10\x0b\x12\x12\n\x0eUM_KeyHintText\x10\x0c\x12\x12\n\x0eUM_MessageText\x10\r\x12\x13\n\x0fUM_RequestState\x10\x0e\x12\x0f\n\x0bUM_ResetHUD\x10\x0f\x12\r\n\tUM_Rumble\x10\x10\x12\x0e\n\nUM_SayText\x10\x11\x12\x0f\n\x0bUM_SayText2\x10\x12\x12\x15\n\x11UM_SayTextChannel\x10\x13\x12\x0c\n\x08UM_Shake\x10\x14\x12\x0f\n\x0bUM_ShakeDir\x10\x15\x12\x14\n\x10UM_StatsCrawlMsg\x10\x16\x12\x15\n\x11UM_StatsSkipState\x10\x17\x12\x0e\n\nUM_TextMsg\x10\x18\x12\x0b\n\x07UM_Tilt\x10\x19\x12\x0c\n\x08UM_Train\x10\x1a\x12\x0f\n\x0bUM_VGUIMenu\x10\x1b\x12\x10\n\x0cUM_VoiceMask\x10\x1c\x12\x14\n\x10UM_VoiceSubtitle\x10\x1d\x12\x10\n\x0cUM_SendAudio\x10\x1e\x12\x0f\n\x0bUM_MAX_BASE\x10?')
+  serialized_pb='\n\x12usermessages.proto\x1a google/protobuf/descriptor.proto\x1a\x16networkbasetypes.proto\"0\n\x19\x43UserMsg_AchievementEvent\x12\x13\n\x0b\x61\x63hievement\x18\x01 \x01(\r\"L\n\x15\x43UserMsg_CloseCaption\x12\x0c\n\x04hash\x18\x01 \x01(\x07\x12\x10\n\x08\x64uration\x18\x02 \x01(\x02\x12\x13\n\x0b\x66rom_player\x18\x03 \x01(\x08\",\n\x19\x43UserMsg_CurrentTimescale\x12\x0f\n\x07\x63urrent\x18\x01 \x01(\x02\"n\n\x19\x43UserMsg_DesiredTimescale\x12\x0f\n\x07\x64\x65sired\x18\x01 \x01(\x02\x12\x10\n\x08\x64uration\x18\x02 \x01(\x02\x12\x14\n\x0cinterpolator\x18\x03 \x01(\r\x12\x18\n\x10start_blend_time\x18\x04 \x01(\x02\"R\n\rCUserMsg_Fade\x12\x10\n\x08\x64uration\x18\x01 \x01(\r\x12\x11\n\thold_time\x18\x02 \x01(\r\x12\r\n\x05\x66lags\x18\x03 \x01(\r\x12\r\n\x05\x63olor\x18\x04 \x01(\x07\"Y\n\x0e\x43UserMsg_Shake\x12\x0f\n\x07\x63ommand\x18\x01 \x01(\r\x12\x11\n\tamplitude\x18\x02 \x01(\x02\x12\x11\n\tfrequency\x18\x03 \x01(\x02\x12\x10\n\x08\x64uration\x18\x04 \x01(\x02\"S\n\x11\x43UserMsg_ShakeDir\x12\x1e\n\x05shake\x18\x01 \x01(\x0b\x32\x0f.CUserMsg_Shake\x12\x1e\n\tdirection\x18\x02 \x01(\x0b\x32\x0b.CMsgVector\"q\n\rCUserMsg_Tilt\x12\x0f\n\x07\x63ommand\x18\x01 \x01(\r\x12\x13\n\x0b\x65\x61se_in_out\x18\x02 \x01(\x08\x12\x1a\n\x05\x61ngle\x18\x03 \x01(\x0b\x32\x0b.CMsgVector\x12\x10\n\x08\x64uration\x18\x04 \x01(\x02\x12\x0c\n\x04time\x18\x05 \x01(\x02\">\n\x10\x43UserMsg_SayText\x12\x0e\n\x06\x63lient\x18\x01 \x01(\r\x12\x0c\n\x04text\x18\x02 \x01(\t\x12\x0c\n\x04\x63hat\x18\x03 \x01(\x08\"q\n\x11\x43UserMsg_SayText2\x12\x0e\n\x06\x63lient\x18\x01 \x01(\r\x12\x0c\n\x04\x63hat\x18\x02 \x01(\x08\x12\x0e\n\x06\x66ormat\x18\x03 \x01(\t\x12\x0e\n\x06prefix\x18\x04 \x01(\t\x12\x0c\n\x04text\x18\x05 \x01(\t\x12\x10\n\x08location\x18\x06 \x01(\t\"\xca\x01\n\x0f\x43UserMsg_HudMsg\x12\x0f\n\x07\x63hannel\x18\x01 \x01(\r\x12\t\n\x01x\x18\x02 \x01(\x02\x12\t\n\x01y\x18\x03 \x01(\x02\x12\x0e\n\x06\x63olor1\x18\x04 \x01(\r\x12\x0e\n\x06\x63olor2\x18\x05 \x01(\r\x12\x0e\n\x06\x65\x66\x66\x65\x63t\x18\x06 \x01(\r\x12\x14\n\x0c\x66\x61\x64\x65_in_time\x18\x07 \x01(\x02\x12\x15\n\rfade_out_time\x18\x08 \x01(\x02\x12\x11\n\thold_time\x18\t \x01(\x02\x12\x0f\n\x07\x66x_time\x18\n \x01(\x02\x12\x0f\n\x07message\x18\x0b \x01(\t\"#\n\x10\x43UserMsg_HudText\x12\x0f\n\x07message\x18\x01 \x01(\t\"/\n\x10\x43UserMsg_TextMsg\x12\x0c\n\x04\x64\x65st\x18\x01 \x01(\r\x12\r\n\x05param\x18\x02 \x03(\t\"\x14\n\x12\x43UserMsg_GameTitle\"\x13\n\x11\x43UserMsg_ResetHUD\"0\n\x12\x43UserMsg_SendAudio\x12\x0c\n\x04stop\x18\x02 \x01(\x08\x12\x0c\n\x04name\x18\x03 \x01(\t\"N\n\x12\x43UserMsg_VoiceMask\x12\x1c\n\x14\x61udible_players_mask\x18\x01 \x03(\x05\x12\x1a\n\x12player_mod_enabled\x18\x02 \x01(\x08\"\x17\n\x15\x43UserMsg_RequestState\"$\n\x11\x43UserMsg_HintText\x12\x0f\n\x07message\x18\x01 \x01(\t\"(\n\x14\x43UserMsg_KeyHintText\x12\x10\n\x08messages\x18\x01 \x03(\t\"\x18\n\x16\x43UserMsg_StatsCrawlMsg\"A\n\x17\x43UserMsg_StatsSkipState\x12\x11\n\tnum_skips\x18\x01 \x01(\x05\x12\x13\n\x0bnum_players\x18\x02 \x01(\x05\"G\n\x16\x43UserMsg_VoiceSubtitle\x12\x11\n\tent_index\x18\x01 \x01(\x05\x12\x0c\n\x04menu\x18\x02 \x01(\x05\x12\x0c\n\x04item\x18\x03 \x01(\x05\"{\n\x11\x43UserMsg_VGUIMenu\x12\x0c\n\x04name\x18\x01 \x01(\t\x12\x0c\n\x04show\x18\x02 \x01(\x08\x12%\n\x04keys\x18\x03 \x03(\x0b\x32\x17.CUserMsg_VGUIMenu.Keys\x1a#\n\x04Keys\x12\x0c\n\x04name\x18\x01 \x01(\t\x12\r\n\x05value\x18\x02 \x01(\t\" \n\x0f\x43UserMsg_Geiger\x12\r\n\x05range\x18\x01 \x01(\x05\"=\n\x0f\x43UserMsg_Rumble\x12\r\n\x05index\x18\x01 \x01(\x05\x12\x0c\n\x04\x64\x61ta\x18\x02 \x01(\x05\x12\r\n\x05\x66lags\x18\x03 \x01(\x05\"\x1f\n\x0e\x43UserMsg_Train\x12\r\n\x05train\x18\x01 \x01(\x05\"H\n\x17\x43UserMsg_SayTextChannel\x12\x0e\n\x06player\x18\x01 \x01(\x05\x12\x0f\n\x07\x63hannel\x18\x02 \x01(\x05\x12\x0c\n\x04text\x18\x03 \x01(\t\"3\n\x14\x43UserMsg_MessageText\x12\r\n\x05\x63olor\x18\x01 \x01(\r\x12\x0c\n\x04text\x18\x02 \x01(\t*\xd4\x04\n\x11\x45\x42\x61seUserMessages\x12\x17\n\x13UM_AchievementEvent\x10\x01\x12\x13\n\x0fUM_CloseCaption\x10\x02\x12\x19\n\x15UM_CloseCaptionDirect\x10\x03\x12\x17\n\x13UM_CurrentTimescale\x10\x04\x12\x17\n\x13UM_DesiredTimescale\x10\x05\x12\x0b\n\x07UM_Fade\x10\x06\x12\x10\n\x0cUM_GameTitle\x10\x07\x12\r\n\tUM_Geiger\x10\x08\x12\x0f\n\x0bUM_HintText\x10\t\x12\r\n\tUM_HudMsg\x10\n\x12\x0e\n\nUM_HudText\x10\x0b\x12\x12\n\x0eUM_KeyHintText\x10\x0c\x12\x12\n\x0eUM_MessageText\x10\r\x12\x13\n\x0fUM_RequestState\x10\x0e\x12\x0f\n\x0bUM_ResetHUD\x10\x0f\x12\r\n\tUM_Rumble\x10\x10\x12\x0e\n\nUM_SayText\x10\x11\x12\x0f\n\x0bUM_SayText2\x10\x12\x12\x15\n\x11UM_SayTextChannel\x10\x13\x12\x0c\n\x08UM_Shake\x10\x14\x12\x0f\n\x0bUM_ShakeDir\x10\x15\x12\x14\n\x10UM_StatsCrawlMsg\x10\x16\x12\x15\n\x11UM_StatsSkipState\x10\x17\x12\x0e\n\nUM_TextMsg\x10\x18\x12\x0b\n\x07UM_Tilt\x10\x19\x12\x0c\n\x08UM_Train\x10\x1a\x12\x0f\n\x0bUM_VGUIMenu\x10\x1b\x12\x10\n\x0cUM_VoiceMask\x10\x1c\x12\x14\n\x10UM_VoiceSubtitle\x10\x1d\x12\x10\n\x0cUM_SendAudio\x10\x1e\x12\x0f\n\x0bUM_MAX_BASE\x10?')
 
 _EBASEUSERMESSAGES = _descriptor.EnumDescriptor(
   name='EBaseUserMessages',
@@ -151,8 +151,8 @@ _EBASEUSERMESSAGES = _descriptor.EnumDescriptor(
   ],
   containing_type=None,
   options=None,
-  serialized_start=2033,
-  serialized_end=2629,
+  serialized_start=2038,
+  serialized_end=2634,
 )
 
 EBaseUserMessages = enum_type_wrapper.EnumTypeWrapper(_EBASEUSERMESSAGES)
@@ -213,8 +213,8 @@ _CUSERMSG_ACHIEVEMENTEVENT = _descriptor.Descriptor(
   options=None,
   is_extendable=False,
   extension_ranges=[],
-  serialized_start=75,
-  serialized_end=123,
+  serialized_start=80,
+  serialized_end=128,
 )
 
 
@@ -255,8 +255,8 @@ _CUSERMSG_CLOSECAPTION = _descriptor.Descriptor(
   options=None,
   is_extendable=False,
   extension_ranges=[],
-  serialized_start=125,
-  serialized_end=201,
+  serialized_start=130,
+  serialized_end=206,
 )
 
 
@@ -283,8 +283,8 @@ _CUSERMSG_CURRENTTIMESCALE = _descriptor.Descriptor(
   options=None,
   is_extendable=False,
   extension_ranges=[],
-  serialized_start=203,
-  serialized_end=247,
+  serialized_start=208,
+  serialized_end=252,
 )
 
 
@@ -332,8 +332,8 @@ _CUSERMSG_DESIREDTIMESCALE = _descriptor.Descriptor(
   options=None,
   is_extendable=False,
   extension_ranges=[],
-  serialized_start=249,
-  serialized_end=359,
+  serialized_start=254,
+  serialized_end=364,
 )
 
 
@@ -381,8 +381,8 @@ _CUSERMSG_FADE = _descriptor.Descriptor(
   options=None,
   is_extendable=False,
   extension_ranges=[],
-  serialized_start=361,
-  serialized_end=443,
+  serialized_start=366,
+  serialized_end=448,
 )
 
 
@@ -430,8 +430,8 @@ _CUSERMSG_SHAKE = _descriptor.Descriptor(
   options=None,
   is_extendable=False,
   extension_ranges=[],
-  serialized_start=445,
-  serialized_end=534,
+  serialized_start=450,
+  serialized_end=539,
 )
 
 
@@ -465,8 +465,8 @@ _CUSERMSG_SHAKEDIR = _descriptor.Descriptor(
   options=None,
   is_extendable=False,
   extension_ranges=[],
-  serialized_start=536,
-  serialized_end=619,
+  serialized_start=541,
+  serialized_end=624,
 )
 
 
@@ -521,8 +521,8 @@ _CUSERMSG_TILT = _descriptor.Descriptor(
   options=None,
   is_extendable=False,
   extension_ranges=[],
-  serialized_start=621,
-  serialized_end=734,
+  serialized_start=626,
+  serialized_end=739,
 )
 
 
@@ -563,8 +563,8 @@ _CUSERMSG_SAYTEXT = _descriptor.Descriptor(
   options=None,
   is_extendable=False,
   extension_ranges=[],
-  serialized_start=736,
-  serialized_end=798,
+  serialized_start=741,
+  serialized_end=803,
 )
 
 
@@ -626,8 +626,8 @@ _CUSERMSG_SAYTEXT2 = _descriptor.Descriptor(
   options=None,
   is_extendable=False,
   extension_ranges=[],
-  serialized_start=800,
-  serialized_end=913,
+  serialized_start=805,
+  serialized_end=918,
 )
 
 
@@ -724,8 +724,8 @@ _CUSERMSG_HUDMSG = _descriptor.Descriptor(
   options=None,
   is_extendable=False,
   extension_ranges=[],
-  serialized_start=916,
-  serialized_end=1118,
+  serialized_start=921,
+  serialized_end=1123,
 )
 
 
@@ -752,8 +752,8 @@ _CUSERMSG_HUDTEXT = _descriptor.Descriptor(
   options=None,
   is_extendable=False,
   extension_ranges=[],
-  serialized_start=1120,
-  serialized_end=1155,
+  serialized_start=1125,
+  serialized_end=1160,
 )
 
 
@@ -787,8 +787,8 @@ _CUSERMSG_TEXTMSG = _descriptor.Descriptor(
   options=None,
   is_extendable=False,
   extension_ranges=[],
-  serialized_start=1157,
-  serialized_end=1204,
+  serialized_start=1162,
+  serialized_end=1209,
 )
 
 
@@ -808,8 +808,8 @@ _CUSERMSG_GAMETITLE = _descriptor.Descriptor(
   options=None,
   is_extendable=False,
   extension_ranges=[],
-  serialized_start=1206,
-  serialized_end=1226,
+  serialized_start=1211,
+  serialized_end=1231,
 )
 
 
@@ -829,8 +829,8 @@ _CUSERMSG_RESETHUD = _descriptor.Descriptor(
   options=None,
   is_extendable=False,
   extension_ranges=[],
-  serialized_start=1228,
-  serialized_end=1247,
+  serialized_start=1233,
+  serialized_end=1252,
 )
 
 
@@ -864,8 +864,8 @@ _CUSERMSG_SENDAUDIO = _descriptor.Descriptor(
   options=None,
   is_extendable=False,
   extension_ranges=[],
-  serialized_start=1249,
-  serialized_end=1297,
+  serialized_start=1254,
+  serialized_end=1302,
 )
 
 
@@ -899,8 +899,8 @@ _CUSERMSG_VOICEMASK = _descriptor.Descriptor(
   options=None,
   is_extendable=False,
   extension_ranges=[],
-  serialized_start=1299,
-  serialized_end=1377,
+  serialized_start=1304,
+  serialized_end=1382,
 )
 
 
@@ -920,8 +920,8 @@ _CUSERMSG_REQUESTSTATE = _descriptor.Descriptor(
   options=None,
   is_extendable=False,
   extension_ranges=[],
-  serialized_start=1379,
-  serialized_end=1402,
+  serialized_start=1384,
+  serialized_end=1407,
 )
 
 
@@ -948,8 +948,8 @@ _CUSERMSG_HINTTEXT = _descriptor.Descriptor(
   options=None,
   is_extendable=False,
   extension_ranges=[],
-  serialized_start=1404,
-  serialized_end=1440,
+  serialized_start=1409,
+  serialized_end=1445,
 )
 
 
@@ -976,8 +976,8 @@ _CUSERMSG_KEYHINTTEXT = _descriptor.Descriptor(
   options=None,
   is_extendable=False,
   extension_ranges=[],
-  serialized_start=1442,
-  serialized_end=1482,
+  serialized_start=1447,
+  serialized_end=1487,
 )
 
 
@@ -997,8 +997,8 @@ _CUSERMSG_STATSCRAWLMSG = _descriptor.Descriptor(
   options=None,
   is_extendable=False,
   extension_ranges=[],
-  serialized_start=1484,
-  serialized_end=1508,
+  serialized_start=1489,
+  serialized_end=1513,
 )
 
 
@@ -1032,8 +1032,8 @@ _CUSERMSG_STATSSKIPSTATE = _descriptor.Descriptor(
   options=None,
   is_extendable=False,
   extension_ranges=[],
-  serialized_start=1510,
-  serialized_end=1575,
+  serialized_start=1515,
+  serialized_end=1580,
 )
 
 
@@ -1074,8 +1074,8 @@ _CUSERMSG_VOICESUBTITLE = _descriptor.Descriptor(
   options=None,
   is_extendable=False,
   extension_ranges=[],
-  serialized_start=1577,
-  serialized_end=1648,
+  serialized_start=1582,
+  serialized_end=1653,
 )
 
 
@@ -1109,8 +1109,8 @@ _CUSERMSG_VGUIMENU_KEYS = _descriptor.Descriptor(
   options=None,
   is_extendable=False,
   extension_ranges=[],
-  serialized_start=1738,
-  serialized_end=1773,
+  serialized_start=1743,
+  serialized_end=1778,
 )
 
 _CUSERMSG_VGUIMENU = _descriptor.Descriptor(
@@ -1150,8 +1150,8 @@ _CUSERMSG_VGUIMENU = _descriptor.Descriptor(
   options=None,
   is_extendable=False,
   extension_ranges=[],
-  serialized_start=1650,
-  serialized_end=1773,
+  serialized_start=1655,
+  serialized_end=1778,
 )
 
 
@@ -1178,8 +1178,8 @@ _CUSERMSG_GEIGER = _descriptor.Descriptor(
   options=None,
   is_extendable=False,
   extension_ranges=[],
-  serialized_start=1775,
-  serialized_end=1807,
+  serialized_start=1780,
+  serialized_end=1812,
 )
 
 
@@ -1220,8 +1220,8 @@ _CUSERMSG_RUMBLE = _descriptor.Descriptor(
   options=None,
   is_extendable=False,
   extension_ranges=[],
-  serialized_start=1809,
-  serialized_end=1870,
+  serialized_start=1814,
+  serialized_end=1875,
 )
 
 
@@ -1248,8 +1248,8 @@ _CUSERMSG_TRAIN = _descriptor.Descriptor(
   options=None,
   is_extendable=False,
   extension_ranges=[],
-  serialized_start=1872,
-  serialized_end=1903,
+  serialized_start=1877,
+  serialized_end=1908,
 )
 
 
@@ -1290,8 +1290,8 @@ _CUSERMSG_SAYTEXTCHANNEL = _descriptor.Descriptor(
   options=None,
   is_extendable=False,
   extension_ranges=[],
-  serialized_start=1905,
-  serialized_end=1977,
+  serialized_start=1910,
+  serialized_end=1982,
 )
 
 
@@ -1325,13 +1325,13 @@ _CUSERMSG_MESSAGETEXT = _descriptor.Descriptor(
   options=None,
   is_extendable=False,
   extension_ranges=[],
-  serialized_start=1979,
-  serialized_end=2030,
+  serialized_start=1984,
+  serialized_end=2035,
 )
 
 _CUSERMSG_SHAKEDIR.fields_by_name['shake'].message_type = _CUSERMSG_SHAKE
-_CUSERMSG_SHAKEDIR.fields_by_name['direction'].message_type = netmessages_pb2._CMSGVECTOR
-_CUSERMSG_TILT.fields_by_name['angle'].message_type = netmessages_pb2._CMSGVECTOR
+_CUSERMSG_SHAKEDIR.fields_by_name['direction'].message_type = networkbasetypes_pb2._CMSGVECTOR
+_CUSERMSG_TILT.fields_by_name['angle'].message_type = networkbasetypes_pb2._CMSGVECTOR
 _CUSERMSG_VGUIMENU_KEYS.containing_type = _CUSERMSG_VGUIMENU;
 _CUSERMSG_VGUIMENU.fields_by_name['keys'].message_type = _CUSERMSG_VGUIMENU_KEYS
 DESCRIPTOR.message_types_by_name['CUserMsg_AchievementEvent'] = _CUSERMSG_ACHIEVEMENTEVENT

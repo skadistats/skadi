@@ -10,12 +10,13 @@ from google.protobuf import descriptor_pb2
 
 
 import google.protobuf.descriptor_pb2
+import networkbasetypes_pb2
 
 
 DESCRIPTOR = _descriptor.FileDescriptor(
   name='netmessages.proto',
   package='',
-  serialized_pb='\n\x11netmessages.proto\x1a google/protobuf/descriptor.proto\"-\n\nCMsgVector\x12\t\n\x01x\x18\x01 \x01(\x02\x12\t\n\x01y\x18\x02 \x01(\x02\x12\t\n\x01z\x18\x03 \x01(\x02\"$\n\x0c\x43MsgVector2D\x12\t\n\x01x\x18\x01 \x01(\x02\x12\t\n\x01y\x18\x02 \x01(\x02\"-\n\nCMsgQAngle\x12\t\n\x01x\x18\x01 \x01(\x02\x12\t\n\x01y\x18\x02 \x01(\x02\x12\t\n\x01z\x18\x03 \x01(\x02\"R\n\nCMsg_CVars\x12\x1f\n\x05\x63vars\x18\x01 \x03(\x0b\x32\x10.CMsg_CVars.CVar\x1a#\n\x04\x43Var\x12\x0c\n\x04name\x18\x01 \x01(\t\x12\r\n\x05value\x18\x02 \x01(\t\"\r\n\x0b\x43NETMsg_NOP\"\"\n\x12\x43NETMsg_Disconnect\x12\x0c\n\x04text\x18\x01 \x01(\t\"a\n\x0c\x43NETMsg_File\x12\x13\n\x0btransfer_id\x18\x01 \x01(\x05\x12\x11\n\tfile_name\x18\x02 \x01(\t\x12\x1b\n\x13is_replay_demo_file\x18\x03 \x01(\x08\x12\x0c\n\x04\x64\x65ny\x18\x04 \x01(\x08\"\'\n\x17\x43NETMsg_SplitScreenUser\x12\x0c\n\x04slot\x18\x01 \x01(\x05\"Z\n\x0c\x43NETMsg_Tick\x12\x0c\n\x04tick\x18\x01 \x01(\r\x12\x16\n\x0ehost_frametime\x18\x02 \x01(\r\x12$\n\x1chost_frametime_std_deviation\x18\x03 \x01(\r\"$\n\x11\x43NETMsg_StringCmd\x12\x0f\n\x07\x63ommand\x18\x01 \x01(\t\"1\n\x11\x43NETMsg_SetConVar\x12\x1c\n\x07\x63onvars\x18\x01 \x01(\x0b\x32\x0b.CMsg_CVars\"\x8a\x01\n\x13\x43NETMsg_SignonState\x12\x14\n\x0csignon_state\x18\x01 \x01(\r\x12\x13\n\x0bspawn_count\x18\x02 \x01(\r\x12\x1a\n\x12num_server_players\x18\x03 \x01(\r\x12\x1a\n\x12players_networkids\x18\x04 \x03(\t\x12\x10\n\x08map_name\x18\x05 \x01(\t\"\xa6\x01\n\x12\x43\x43LCMsg_ClientInfo\x12\x16\n\x0esend_table_crc\x18\x01 \x01(\x07\x12\x14\n\x0cserver_count\x18\x02 \x01(\r\x12\x0f\n\x07is_hltv\x18\x03 \x01(\x08\x12\x11\n\tis_replay\x18\x04 \x01(\x08\x12\x12\n\nfriends_id\x18\x05 \x01(\r\x12\x14\n\x0c\x66riends_name\x18\x06 \x01(\t\x12\x14\n\x0c\x63ustom_files\x18\x07 \x03(\x07\"S\n\x0c\x43\x43LCMsg_Move\x12\x1b\n\x13num_backup_commands\x18\x01 \x01(\r\x12\x18\n\x10num_new_commands\x18\x02 \x01(\r\x12\x0c\n\x04\x64\x61ta\x18\x03 \x01(\x0c\"k\n\x11\x43\x43LCMsg_VoiceData\x12\x0c\n\x04\x64\x61ta\x18\x01 \x01(\x0c\x12\x0c\n\x04xuid\x18\x02 \x01(\x06\x12:\n\x06\x66ormat\x18\x03 \x01(\x0e\x32\x12.VoiceDataFormat_t:\x16VOICEDATA_FORMAT_STEAM\"A\n\x13\x43\x43LCMsg_BaselineAck\x12\x15\n\rbaseline_tick\x18\x01 \x01(\x05\x12\x13\n\x0b\x62\x61seline_nr\x18\x02 \x01(\x05\"*\n\x14\x43\x43LCMsg_ListenEvents\x12\x12\n\nevent_mask\x18\x01 \x03(\x07\"\\\n\x18\x43\x43LCMsg_RespondCvarValue\x12\x0e\n\x06\x63ookie\x18\x01 \x01(\x05\x12\x13\n\x0bstatus_code\x18\x02 \x01(\x05\x12\x0c\n\x04name\x18\x03 \x01(\t\x12\r\n\x05value\x18\x04 \x01(\t\"m\n\x14\x43\x43LCMsg_FileCRCCheck\x12\x11\n\tcode_path\x18\x01 \x01(\x05\x12\x0c\n\x04path\x18\x02 \x01(\t\x12\x15\n\rcode_filename\x18\x03 \x01(\x05\x12\x10\n\x08\x66ilename\x18\x04 \x01(\t\x12\x0b\n\x03\x63rc\x18\x05 \x01(\x07\"+\n\x17\x43\x43LCMsg_LoadingProgress\x12\x10\n\x08progress\x18\x01 \x01(\x05\":\n\x1a\x43\x43LCMsg_SplitPlayerConnect\x12\x1c\n\x07\x63onvars\x18\x01 \x01(\x0b\x32\x0b.CMsg_CVars\"7\n\x15\x43\x43LCMsg_ClientMessage\x12\x10\n\x08msg_type\x18\x01 \x01(\x05\x12\x0c\n\x04\x64\x61ta\x18\x02 \x01(\x0c\"\xe2\x02\n\x12\x43SVCMsg_ServerInfo\x12\x10\n\x08protocol\x18\x01 \x01(\x05\x12\x14\n\x0cserver_count\x18\x02 \x01(\x05\x12\x14\n\x0cis_dedicated\x18\x03 \x01(\x08\x12\x0f\n\x07is_hltv\x18\x04 \x01(\x08\x12\x11\n\tis_replay\x18\x05 \x01(\x08\x12\x0c\n\x04\x63_os\x18\x06 \x01(\x05\x12\x0f\n\x07map_crc\x18\x07 \x01(\x07\x12\x12\n\nclient_crc\x18\x08 \x01(\x07\x12\x18\n\x10string_table_crc\x18\t \x01(\x07\x12\x13\n\x0bmax_clients\x18\n \x01(\x05\x12\x13\n\x0bmax_classes\x18\x0b \x01(\x05\x12\x13\n\x0bplayer_slot\x18\x0c \x01(\x05\x12\x15\n\rtick_interval\x18\r \x01(\x02\x12\x10\n\x08game_dir\x18\x0e \x01(\t\x12\x10\n\x08map_name\x18\x0f \x01(\t\x12\x10\n\x08sky_name\x18\x10 \x01(\t\x12\x11\n\thost_name\x18\x11 \x01(\t\"\xa4\x01\n\x11\x43SVCMsg_ClassInfo\x12\x18\n\x10\x63reate_on_client\x18\x01 \x01(\x08\x12+\n\x07\x63lasses\x18\x02 \x03(\x0b\x32\x1a.CSVCMsg_ClassInfo.class_t\x1aH\n\x07\x63lass_t\x12\x10\n\x08\x63lass_id\x18\x01 \x01(\x05\x12\x17\n\x0f\x64\x61ta_table_name\x18\x02 \x01(\t\x12\x12\n\nclass_name\x18\x03 \x01(\t\"\"\n\x10\x43SVCMsg_SetPause\x12\x0e\n\x06paused\x18\x01 \x01(\x08\"G\n\x11\x43SVCMsg_VoiceInit\x12\x0f\n\x07quality\x18\x01 \x01(\x05\x12\r\n\x05\x63odec\x18\x02 \x01(\t\x12\x12\n\x07version\x18\x03 \x01(\x05:\x01\x30\"\x1d\n\rCSVCMsg_Print\x12\x0c\n\x04text\x18\x01 \x01(\t\"\xb6\x03\n\x0e\x43SVCMsg_Sounds\x12\x16\n\x0ereliable_sound\x18\x01 \x01(\x08\x12+\n\x06sounds\x18\x02 \x03(\x0b\x32\x1b.CSVCMsg_Sounds.sounddata_t\x1a\xde\x02\n\x0bsounddata_t\x12\x10\n\x08origin_x\x18\x01 \x01(\x11\x12\x10\n\x08origin_y\x18\x02 \x01(\x11\x12\x10\n\x08origin_z\x18\x03 \x01(\x11\x12\x0e\n\x06volume\x18\x04 \x01(\r\x12\x13\n\x0b\x64\x65lay_value\x18\x05 \x01(\x02\x12\x17\n\x0fsequence_number\x18\x06 \x01(\x05\x12\x14\n\x0c\x65ntity_index\x18\x07 \x01(\x05\x12\x0f\n\x07\x63hannel\x18\x08 \x01(\x05\x12\r\n\x05pitch\x18\t \x01(\x05\x12\r\n\x05\x66lags\x18\n \x01(\x05\x12\x11\n\tsound_num\x18\x0b \x01(\r\x12\x18\n\x10sound_num_handle\x18\x0c \x01(\x07\x12\x16\n\x0espeaker_entity\x18\r \x01(\x05\x12\x13\n\x0brandom_seed\x18\x0e \x01(\x05\x12\x13\n\x0bsound_level\x18\x0f \x01(\x05\x12\x13\n\x0bis_sentence\x18\x10 \x01(\x08\x12\x12\n\nis_ambient\x18\x11 \x01(\x08\"\'\n\x10\x43SVCMsg_Prefetch\x12\x13\n\x0bsound_index\x18\x01 \x01(\x05\"\'\n\x0f\x43SVCMsg_SetView\x12\x14\n\x0c\x65ntity_index\x18\x01 \x01(\x05\"@\n\x10\x43SVCMsg_FixAngle\x12\x10\n\x08relative\x18\x01 \x01(\x08\x12\x1a\n\x05\x61ngle\x18\x02 \x01(\x0b\x32\x0b.CMsgQAngle\"4\n\x16\x43SVCMsg_CrosshairAngle\x12\x1a\n\x05\x61ngle\x18\x01 \x01(\x0b\x32\x0b.CMsgQAngle\"\x8a\x01\n\x10\x43SVCMsg_BSPDecal\x12\x18\n\x03pos\x18\x01 \x01(\x0b\x32\x0b.CMsgVector\x12\x1b\n\x13\x64\x65\x63\x61l_texture_index\x18\x02 \x01(\x05\x12\x14\n\x0c\x65ntity_index\x18\x03 \x01(\x05\x12\x13\n\x0bmodel_index\x18\x04 \x01(\x05\x12\x14\n\x0clow_priority\x18\x05 \x01(\x08\"z\n\x13\x43SVCMsg_SplitScreen\x12?\n\x04type\x18\x01 \x01(\x0e\x32\x18.ESplitScreenMessageType:\x17MSG_SPLITSCREEN_ADDUSER\x12\x0c\n\x04slot\x18\x02 \x01(\x05\x12\x14\n\x0cplayer_index\x18\x03 \x01(\x05\"9\n\x14\x43SVCMsg_GetCvarValue\x12\x0e\n\x06\x63ookie\x18\x01 \x01(\x05\x12\x11\n\tcvar_name\x18\x02 \x01(\t\"<\n\x0c\x43SVCMsg_Menu\x12\x13\n\x0b\x64ialog_type\x18\x01 \x01(\x05\x12\x17\n\x0fmenu_key_values\x18\x02 \x01(\x0c\"\xb0\x02\n\x11\x43SVCMsg_SendTable\x12\x0e\n\x06is_end\x18\x01 \x01(\x08\x12\x16\n\x0enet_table_name\x18\x02 \x01(\t\x12\x15\n\rneeds_decoder\x18\x03 \x01(\x08\x12,\n\x05props\x18\x04 \x03(\x0b\x32\x1d.CSVCMsg_SendTable.sendprop_t\x1a\xad\x01\n\nsendprop_t\x12\x0c\n\x04type\x18\x01 \x01(\x05\x12\x10\n\x08var_name\x18\x02 \x01(\t\x12\r\n\x05\x66lags\x18\x03 \x01(\x05\x12\x10\n\x08priority\x18\x04 \x01(\x05\x12\x0f\n\x07\x64t_name\x18\x05 \x01(\t\x12\x14\n\x0cnum_elements\x18\x06 \x01(\x05\x12\x11\n\tlow_value\x18\x07 \x01(\x02\x12\x12\n\nhigh_value\x18\x08 \x01(\x02\x12\x10\n\x08num_bits\x18\t \x01(\x05\"\xfc\x01\n\x11\x43SVCMsg_GameEvent\x12\x12\n\nevent_name\x18\x01 \x01(\t\x12\x0f\n\x07\x65ventid\x18\x02 \x01(\x05\x12&\n\x04keys\x18\x03 \x03(\x0b\x32\x18.CSVCMsg_GameEvent.key_t\x1a\x99\x01\n\x05key_t\x12\x0c\n\x04type\x18\x01 \x01(\x05\x12\x12\n\nval_string\x18\x02 \x01(\t\x12\x11\n\tval_float\x18\x03 \x01(\x02\x12\x10\n\x08val_long\x18\x04 \x01(\x05\x12\x11\n\tval_short\x18\x05 \x01(\x05\x12\x10\n\x08val_byte\x18\x06 \x01(\x05\x12\x10\n\x08val_bool\x18\x07 \x01(\x08\x12\x12\n\nval_uint64\x18\x08 \x01(\x04\"\xd1\x01\n\x15\x43SVCMsg_GameEventList\x12\x38\n\x0b\x64\x65scriptors\x18\x01 \x03(\x0b\x32#.CSVCMsg_GameEventList.descriptor_t\x1a#\n\x05key_t\x12\x0c\n\x04type\x18\x01 \x01(\x05\x12\x0c\n\x04name\x18\x02 \x01(\t\x1aY\n\x0c\x64\x65scriptor_t\x12\x0f\n\x07\x65ventid\x18\x01 \x01(\x05\x12\x0c\n\x04name\x18\x02 \x01(\t\x12*\n\x04keys\x18\x03 \x03(\x0b\x32\x1c.CSVCMsg_GameEventList.key_t\"\xac\x01\n\x16\x43SVCMsg_PacketEntities\x12\x13\n\x0bmax_entries\x18\x01 \x01(\x05\x12\x17\n\x0fupdated_entries\x18\x02 \x01(\x05\x12\x10\n\x08is_delta\x18\x03 \x01(\x08\x12\x17\n\x0fupdate_baseline\x18\x04 \x01(\x08\x12\x10\n\x08\x62\x61seline\x18\x05 \x01(\x05\x12\x12\n\ndelta_from\x18\x06 \x01(\x05\x12\x13\n\x0b\x65ntity_data\x18\x07 \x01(\x0c\"R\n\x14\x43SVCMsg_TempEntities\x12\x10\n\x08reliable\x18\x01 \x01(\x08\x12\x13\n\x0bnum_entries\x18\x02 \x01(\x05\x12\x13\n\x0b\x65ntity_data\x18\x03 \x01(\x0c\"\xca\x01\n\x19\x43SVCMsg_CreateStringTable\x12\x0c\n\x04name\x18\x01 \x01(\t\x12\x13\n\x0bmax_entries\x18\x02 \x01(\x05\x12\x13\n\x0bnum_entries\x18\x03 \x01(\x05\x12\x1c\n\x14user_data_fixed_size\x18\x04 \x01(\x08\x12\x16\n\x0euser_data_size\x18\x05 \x01(\x05\x12\x1b\n\x13user_data_size_bits\x18\x06 \x01(\x05\x12\r\n\x05\x66lags\x18\x07 \x01(\x05\x12\x13\n\x0bstring_data\x18\x08 \x01(\x0c\"_\n\x19\x43SVCMsg_UpdateStringTable\x12\x10\n\x08table_id\x18\x01 \x01(\x05\x12\x1b\n\x13num_changed_entries\x18\x02 \x01(\x05\x12\x13\n\x0bstring_data\x18\x03 \x01(\x0c\"9\n\x13\x43SVCMsg_UserMessage\x12\x10\n\x08msg_type\x18\x01 \x01(\x05\x12\x10\n\x08msg_data\x18\x02 \x01(\x0c\"\xaa\x01\n\x11\x43SVCMsg_VoiceData\x12\x0e\n\x06\x63lient\x18\x01 \x01(\x05\x12\x11\n\tproximity\x18\x02 \x01(\x08\x12\x0c\n\x04xuid\x18\x03 \x01(\x06\x12\x14\n\x0c\x61udible_mask\x18\x04 \x01(\x05\x12\x12\n\nvoice_data\x18\x05 \x01(\x0c\x12:\n\x06\x66ormat\x18\x06 \x01(\x0e\x32\x12.VoiceDataFormat_t:\x16VOICEDATA_FORMAT_STEAM\"\x85\x01\n\x16\x43SVCMsgList_GameEvents\x12/\n\x06\x65vents\x18\x01 \x03(\x0b\x32\x1f.CSVCMsgList_GameEvents.event_t\x1a:\n\x07\x65vent_t\x12\x0c\n\x04tick\x18\x01 \x01(\x05\x12!\n\x05\x65vent\x18\x02 \x01(\x0b\x32\x12.CSVCMsg_GameEvent\"\x8f\x01\n\x18\x43SVCMsgList_UserMessages\x12\x35\n\x08usermsgs\x18\x01 \x03(\x0b\x32#.CSVCMsgList_UserMessages.usermsg_t\x1a<\n\tusermsg_t\x12\x0c\n\x04tick\x18\x01 \x01(\x05\x12!\n\x03msg\x18\x02 \x01(\x0b\x32\x14.CSVCMsg_UserMessage\"<\n\x16\x43SVCMsg_PacketReliable\x12\x0c\n\x04tick\x18\x01 \x01(\x05\x12\x14\n\x0cmessagessize\x18\x02 \x01(\x05*\x9f\x01\n\x0cNET_Messages\x12\x0b\n\x07net_NOP\x10\x00\x12\x12\n\x0enet_Disconnect\x10\x01\x12\x0c\n\x08net_File\x10\x02\x12\x17\n\x13net_SplitScreenUser\x10\x03\x12\x0c\n\x08net_Tick\x10\x04\x12\x11\n\rnet_StringCmd\x10\x05\x12\x11\n\rnet_SetConVar\x10\x06\x12\x13\n\x0fnet_SignonState\x10\x07*\xd2\x01\n\x0bSIGNONSTATE\x12\x14\n\x10SIGNONSTATE_NONE\x10\x00\x12\x19\n\x15SIGNONSTATE_CHALLENGE\x10\x01\x12\x19\n\x15SIGNONSTATE_CONNECTED\x10\x02\x12\x13\n\x0fSIGNONSTATE_NEW\x10\x03\x12\x18\n\x14SIGNONSTATE_PRESPAWN\x10\x04\x12\x15\n\x11SIGNONSTATE_SPAWN\x10\x05\x12\x14\n\x10SIGNONSTATE_FULL\x10\x06\x12\x1b\n\x17SIGNONSTATE_CHANGELEVEL\x10\x07*\xea\x01\n\x0c\x43LC_Messages\x12\x12\n\x0e\x63lc_ClientInfo\x10\x08\x12\x0c\n\x08\x63lc_Move\x10\t\x12\x11\n\rclc_VoiceData\x10\n\x12\x13\n\x0f\x63lc_BaselineAck\x10\x0b\x12\x14\n\x10\x63lc_ListenEvents\x10\x0c\x12\x18\n\x14\x63lc_RespondCvarValue\x10\r\x12\x14\n\x10\x63lc_FileCRCCheck\x10\x0e\x12\x17\n\x13\x63lc_LoadingProgress\x10\x0f\x12\x1a\n\x16\x63lc_SplitPlayerConnect\x10\x10\x12\x15\n\x11\x63lc_ClientMessage\x10\x11*L\n\x11VoiceDataFormat_t\x12\x1a\n\x16VOICEDATA_FORMAT_STEAM\x10\x00\x12\x1b\n\x17VOICEDATA_FORMAT_ENGINE\x10\x01*\x89\x04\n\x0cSVC_Messages\x12\x12\n\x0esvc_ServerInfo\x10\x08\x12\x11\n\rsvc_SendTable\x10\t\x12\x11\n\rsvc_ClassInfo\x10\n\x12\x10\n\x0csvc_SetPause\x10\x0b\x12\x19\n\x15svc_CreateStringTable\x10\x0c\x12\x19\n\x15svc_UpdateStringTable\x10\r\x12\x11\n\rsvc_VoiceInit\x10\x0e\x12\x11\n\rsvc_VoiceData\x10\x0f\x12\r\n\tsvc_Print\x10\x10\x12\x0e\n\nsvc_Sounds\x10\x11\x12\x0f\n\x0bsvc_SetView\x10\x12\x12\x10\n\x0csvc_FixAngle\x10\x13\x12\x16\n\x12svc_CrosshairAngle\x10\x14\x12\x10\n\x0csvc_BSPDecal\x10\x15\x12\x13\n\x0fsvc_SplitScreen\x10\x16\x12\x13\n\x0fsvc_UserMessage\x10\x17\x12\x15\n\x11svc_EntityMessage\x10\x18\x12\x11\n\rsvc_GameEvent\x10\x19\x12\x16\n\x12svc_PacketEntities\x10\x1a\x12\x14\n\x10svc_TempEntities\x10\x1b\x12\x10\n\x0csvc_Prefetch\x10\x1c\x12\x0c\n\x08svc_Menu\x10\x1d\x12\x15\n\x11svc_GameEventList\x10\x1e\x12\x14\n\x10svc_GetCvarValue\x10\x1f\x12\x16\n\x12svc_PacketReliable\x10 *V\n\x17\x45SplitScreenMessageType\x12\x1b\n\x17MSG_SPLITSCREEN_ADDUSER\x10\x00\x12\x1e\n\x1aMSG_SPLITSCREEN_REMOVEUSER\x10\x01')
+  serialized_pb='\n\x11netmessages.proto\x1a google/protobuf/descriptor.proto\x1a\x16networkbasetypes.proto\"R\n\nCMsg_CVars\x12\x1f\n\x05\x63vars\x18\x01 \x03(\x0b\x32\x10.CMsg_CVars.CVar\x1a#\n\x04\x43Var\x12\x0c\n\x04name\x18\x01 \x01(\t\x12\r\n\x05value\x18\x02 \x01(\t\"\r\n\x0b\x43NETMsg_NOP\"\"\n\x12\x43NETMsg_Disconnect\x12\x0c\n\x04text\x18\x01 \x01(\t\"a\n\x0c\x43NETMsg_File\x12\x13\n\x0btransfer_id\x18\x01 \x01(\x05\x12\x11\n\tfile_name\x18\x02 \x01(\t\x12\x1b\n\x13is_replay_demo_file\x18\x03 \x01(\x08\x12\x0c\n\x04\x64\x65ny\x18\x04 \x01(\x08\"\'\n\x17\x43NETMsg_SplitScreenUser\x12\x0c\n\x04slot\x18\x01 \x01(\x05\"Z\n\x0c\x43NETMsg_Tick\x12\x0c\n\x04tick\x18\x01 \x01(\r\x12\x16\n\x0ehost_frametime\x18\x02 \x01(\r\x12$\n\x1chost_frametime_std_deviation\x18\x03 \x01(\r\"$\n\x11\x43NETMsg_StringCmd\x12\x0f\n\x07\x63ommand\x18\x01 \x01(\t\"1\n\x11\x43NETMsg_SetConVar\x12\x1c\n\x07\x63onvars\x18\x01 \x01(\x0b\x32\x0b.CMsg_CVars\"\x8a\x01\n\x13\x43NETMsg_SignonState\x12\x14\n\x0csignon_state\x18\x01 \x01(\r\x12\x13\n\x0bspawn_count\x18\x02 \x01(\r\x12\x1a\n\x12num_server_players\x18\x03 \x01(\r\x12\x1a\n\x12players_networkids\x18\x04 \x03(\t\x12\x10\n\x08map_name\x18\x05 \x01(\t\"\xa6\x01\n\x12\x43\x43LCMsg_ClientInfo\x12\x16\n\x0esend_table_crc\x18\x01 \x01(\x07\x12\x14\n\x0cserver_count\x18\x02 \x01(\r\x12\x0f\n\x07is_hltv\x18\x03 \x01(\x08\x12\x11\n\tis_replay\x18\x04 \x01(\x08\x12\x12\n\nfriends_id\x18\x05 \x01(\r\x12\x14\n\x0c\x66riends_name\x18\x06 \x01(\t\x12\x14\n\x0c\x63ustom_files\x18\x07 \x03(\x07\"S\n\x0c\x43\x43LCMsg_Move\x12\x1b\n\x13num_backup_commands\x18\x01 \x01(\r\x12\x18\n\x10num_new_commands\x18\x02 \x01(\r\x12\x0c\n\x04\x64\x61ta\x18\x03 \x01(\x0c\"k\n\x11\x43\x43LCMsg_VoiceData\x12\x0c\n\x04\x64\x61ta\x18\x01 \x01(\x0c\x12\x0c\n\x04xuid\x18\x02 \x01(\x06\x12:\n\x06\x66ormat\x18\x03 \x01(\x0e\x32\x12.VoiceDataFormat_t:\x16VOICEDATA_FORMAT_STEAM\"A\n\x13\x43\x43LCMsg_BaselineAck\x12\x15\n\rbaseline_tick\x18\x01 \x01(\x05\x12\x13\n\x0b\x62\x61seline_nr\x18\x02 \x01(\x05\"*\n\x14\x43\x43LCMsg_ListenEvents\x12\x12\n\nevent_mask\x18\x01 \x03(\x07\"\\\n\x18\x43\x43LCMsg_RespondCvarValue\x12\x0e\n\x06\x63ookie\x18\x01 \x01(\x05\x12\x13\n\x0bstatus_code\x18\x02 \x01(\x05\x12\x0c\n\x04name\x18\x03 \x01(\t\x12\r\n\x05value\x18\x04 \x01(\t\"m\n\x14\x43\x43LCMsg_FileCRCCheck\x12\x11\n\tcode_path\x18\x01 \x01(\x05\x12\x0c\n\x04path\x18\x02 \x01(\t\x12\x15\n\rcode_filename\x18\x03 \x01(\x05\x12\x10\n\x08\x66ilename\x18\x04 \x01(\t\x12\x0b\n\x03\x63rc\x18\x05 \x01(\x07\"+\n\x17\x43\x43LCMsg_LoadingProgress\x12\x10\n\x08progress\x18\x01 \x01(\x05\":\n\x1a\x43\x43LCMsg_SplitPlayerConnect\x12\x1c\n\x07\x63onvars\x18\x01 \x01(\x0b\x32\x0b.CMsg_CVars\"7\n\x15\x43\x43LCMsg_ClientMessage\x12\x10\n\x08msg_type\x18\x01 \x01(\x05\x12\x0c\n\x04\x64\x61ta\x18\x02 \x01(\x0c\"\xe2\x02\n\x12\x43SVCMsg_ServerInfo\x12\x10\n\x08protocol\x18\x01 \x01(\x05\x12\x14\n\x0cserver_count\x18\x02 \x01(\x05\x12\x14\n\x0cis_dedicated\x18\x03 \x01(\x08\x12\x0f\n\x07is_hltv\x18\x04 \x01(\x08\x12\x11\n\tis_replay\x18\x05 \x01(\x08\x12\x0c\n\x04\x63_os\x18\x06 \x01(\x05\x12\x0f\n\x07map_crc\x18\x07 \x01(\x07\x12\x12\n\nclient_crc\x18\x08 \x01(\x07\x12\x18\n\x10string_table_crc\x18\t \x01(\x07\x12\x13\n\x0bmax_clients\x18\n \x01(\x05\x12\x13\n\x0bmax_classes\x18\x0b \x01(\x05\x12\x13\n\x0bplayer_slot\x18\x0c \x01(\x05\x12\x15\n\rtick_interval\x18\r \x01(\x02\x12\x10\n\x08game_dir\x18\x0e \x01(\t\x12\x10\n\x08map_name\x18\x0f \x01(\t\x12\x10\n\x08sky_name\x18\x10 \x01(\t\x12\x11\n\thost_name\x18\x11 \x01(\t\"\xa4\x01\n\x11\x43SVCMsg_ClassInfo\x12\x18\n\x10\x63reate_on_client\x18\x01 \x01(\x08\x12+\n\x07\x63lasses\x18\x02 \x03(\x0b\x32\x1a.CSVCMsg_ClassInfo.class_t\x1aH\n\x07\x63lass_t\x12\x10\n\x08\x63lass_id\x18\x01 \x01(\x05\x12\x17\n\x0f\x64\x61ta_table_name\x18\x02 \x01(\t\x12\x12\n\nclass_name\x18\x03 \x01(\t\"\"\n\x10\x43SVCMsg_SetPause\x12\x0e\n\x06paused\x18\x01 \x01(\x08\"G\n\x11\x43SVCMsg_VoiceInit\x12\x0f\n\x07quality\x18\x01 \x01(\x05\x12\r\n\x05\x63odec\x18\x02 \x01(\t\x12\x12\n\x07version\x18\x03 \x01(\x05:\x01\x30\"\x1d\n\rCSVCMsg_Print\x12\x0c\n\x04text\x18\x01 \x01(\t\"\xb6\x03\n\x0e\x43SVCMsg_Sounds\x12\x16\n\x0ereliable_sound\x18\x01 \x01(\x08\x12+\n\x06sounds\x18\x02 \x03(\x0b\x32\x1b.CSVCMsg_Sounds.sounddata_t\x1a\xde\x02\n\x0bsounddata_t\x12\x10\n\x08origin_x\x18\x01 \x01(\x11\x12\x10\n\x08origin_y\x18\x02 \x01(\x11\x12\x10\n\x08origin_z\x18\x03 \x01(\x11\x12\x0e\n\x06volume\x18\x04 \x01(\r\x12\x13\n\x0b\x64\x65lay_value\x18\x05 \x01(\x02\x12\x17\n\x0fsequence_number\x18\x06 \x01(\x05\x12\x14\n\x0c\x65ntity_index\x18\x07 \x01(\x05\x12\x0f\n\x07\x63hannel\x18\x08 \x01(\x05\x12\r\n\x05pitch\x18\t \x01(\x05\x12\r\n\x05\x66lags\x18\n \x01(\x05\x12\x11\n\tsound_num\x18\x0b \x01(\r\x12\x18\n\x10sound_num_handle\x18\x0c \x01(\x07\x12\x16\n\x0espeaker_entity\x18\r \x01(\x05\x12\x13\n\x0brandom_seed\x18\x0e \x01(\x05\x12\x13\n\x0bsound_level\x18\x0f \x01(\x05\x12\x13\n\x0bis_sentence\x18\x10 \x01(\x08\x12\x12\n\nis_ambient\x18\x11 \x01(\x08\"\'\n\x10\x43SVCMsg_Prefetch\x12\x13\n\x0bsound_index\x18\x01 \x01(\x05\"\'\n\x0f\x43SVCMsg_SetView\x12\x14\n\x0c\x65ntity_index\x18\x01 \x01(\x05\"@\n\x10\x43SVCMsg_FixAngle\x12\x10\n\x08relative\x18\x01 \x01(\x08\x12\x1a\n\x05\x61ngle\x18\x02 \x01(\x0b\x32\x0b.CMsgQAngle\"4\n\x16\x43SVCMsg_CrosshairAngle\x12\x1a\n\x05\x61ngle\x18\x01 \x01(\x0b\x32\x0b.CMsgQAngle\"\x8a\x01\n\x10\x43SVCMsg_BSPDecal\x12\x18\n\x03pos\x18\x01 \x01(\x0b\x32\x0b.CMsgVector\x12\x1b\n\x13\x64\x65\x63\x61l_texture_index\x18\x02 \x01(\x05\x12\x14\n\x0c\x65ntity_index\x18\x03 \x01(\x05\x12\x13\n\x0bmodel_index\x18\x04 \x01(\x05\x12\x14\n\x0clow_priority\x18\x05 \x01(\x08\"z\n\x13\x43SVCMsg_SplitScreen\x12?\n\x04type\x18\x01 \x01(\x0e\x32\x18.ESplitScreenMessageType:\x17MSG_SPLITSCREEN_ADDUSER\x12\x0c\n\x04slot\x18\x02 \x01(\x05\x12\x14\n\x0cplayer_index\x18\x03 \x01(\x05\"9\n\x14\x43SVCMsg_GetCvarValue\x12\x0e\n\x06\x63ookie\x18\x01 \x01(\x05\x12\x11\n\tcvar_name\x18\x02 \x01(\t\"<\n\x0c\x43SVCMsg_Menu\x12\x13\n\x0b\x64ialog_type\x18\x01 \x01(\x05\x12\x17\n\x0fmenu_key_values\x18\x02 \x01(\x0c\"\xb0\x02\n\x11\x43SVCMsg_SendTable\x12\x0e\n\x06is_end\x18\x01 \x01(\x08\x12\x16\n\x0enet_table_name\x18\x02 \x01(\t\x12\x15\n\rneeds_decoder\x18\x03 \x01(\x08\x12,\n\x05props\x18\x04 \x03(\x0b\x32\x1d.CSVCMsg_SendTable.sendprop_t\x1a\xad\x01\n\nsendprop_t\x12\x0c\n\x04type\x18\x01 \x01(\x05\x12\x10\n\x08var_name\x18\x02 \x01(\t\x12\r\n\x05\x66lags\x18\x03 \x01(\x05\x12\x10\n\x08priority\x18\x04 \x01(\x05\x12\x0f\n\x07\x64t_name\x18\x05 \x01(\t\x12\x14\n\x0cnum_elements\x18\x06 \x01(\x05\x12\x11\n\tlow_value\x18\x07 \x01(\x02\x12\x12\n\nhigh_value\x18\x08 \x01(\x02\x12\x10\n\x08num_bits\x18\t \x01(\x05\"\xd1\x01\n\x15\x43SVCMsg_GameEventList\x12\x38\n\x0b\x64\x65scriptors\x18\x01 \x03(\x0b\x32#.CSVCMsg_GameEventList.descriptor_t\x1a#\n\x05key_t\x12\x0c\n\x04type\x18\x01 \x01(\x05\x12\x0c\n\x04name\x18\x02 \x01(\t\x1aY\n\x0c\x64\x65scriptor_t\x12\x0f\n\x07\x65ventid\x18\x01 \x01(\x05\x12\x0c\n\x04name\x18\x02 \x01(\t\x12*\n\x04keys\x18\x03 \x03(\x0b\x32\x1c.CSVCMsg_GameEventList.key_t\"\xac\x01\n\x16\x43SVCMsg_PacketEntities\x12\x13\n\x0bmax_entries\x18\x01 \x01(\x05\x12\x17\n\x0fupdated_entries\x18\x02 \x01(\x05\x12\x10\n\x08is_delta\x18\x03 \x01(\x08\x12\x17\n\x0fupdate_baseline\x18\x04 \x01(\x08\x12\x10\n\x08\x62\x61seline\x18\x05 \x01(\x05\x12\x12\n\ndelta_from\x18\x06 \x01(\x05\x12\x13\n\x0b\x65ntity_data\x18\x07 \x01(\x0c\"R\n\x14\x43SVCMsg_TempEntities\x12\x10\n\x08reliable\x18\x01 \x01(\x08\x12\x13\n\x0bnum_entries\x18\x02 \x01(\x05\x12\x13\n\x0b\x65ntity_data\x18\x03 \x01(\x0c\"\xca\x01\n\x19\x43SVCMsg_CreateStringTable\x12\x0c\n\x04name\x18\x01 \x01(\t\x12\x13\n\x0bmax_entries\x18\x02 \x01(\x05\x12\x13\n\x0bnum_entries\x18\x03 \x01(\x05\x12\x1c\n\x14user_data_fixed_size\x18\x04 \x01(\x08\x12\x16\n\x0euser_data_size\x18\x05 \x01(\x05\x12\x1b\n\x13user_data_size_bits\x18\x06 \x01(\x05\x12\r\n\x05\x66lags\x18\x07 \x01(\x05\x12\x13\n\x0bstring_data\x18\x08 \x01(\x0c\"_\n\x19\x43SVCMsg_UpdateStringTable\x12\x10\n\x08table_id\x18\x01 \x01(\x05\x12\x1b\n\x13num_changed_entries\x18\x02 \x01(\x05\x12\x13\n\x0bstring_data\x18\x03 \x01(\x0c\"\xaa\x01\n\x11\x43SVCMsg_VoiceData\x12\x0e\n\x06\x63lient\x18\x01 \x01(\x05\x12\x11\n\tproximity\x18\x02 \x01(\x08\x12\x0c\n\x04xuid\x18\x03 \x01(\x06\x12\x14\n\x0c\x61udible_mask\x18\x04 \x01(\x05\x12\x12\n\nvoice_data\x18\x05 \x01(\x0c\x12:\n\x06\x66ormat\x18\x06 \x01(\x0e\x32\x12.VoiceDataFormat_t:\x16VOICEDATA_FORMAT_STEAM\"<\n\x16\x43SVCMsg_PacketReliable\x12\x0c\n\x04tick\x18\x01 \x01(\x05\x12\x14\n\x0cmessagessize\x18\x02 \x01(\x05*\x9f\x01\n\x0cNET_Messages\x12\x0b\n\x07net_NOP\x10\x00\x12\x12\n\x0enet_Disconnect\x10\x01\x12\x0c\n\x08net_File\x10\x02\x12\x17\n\x13net_SplitScreenUser\x10\x03\x12\x0c\n\x08net_Tick\x10\x04\x12\x11\n\rnet_StringCmd\x10\x05\x12\x11\n\rnet_SetConVar\x10\x06\x12\x13\n\x0fnet_SignonState\x10\x07*\xea\x01\n\x0c\x43LC_Messages\x12\x12\n\x0e\x63lc_ClientInfo\x10\x08\x12\x0c\n\x08\x63lc_Move\x10\t\x12\x11\n\rclc_VoiceData\x10\n\x12\x13\n\x0f\x63lc_BaselineAck\x10\x0b\x12\x14\n\x10\x63lc_ListenEvents\x10\x0c\x12\x18\n\x14\x63lc_RespondCvarValue\x10\r\x12\x14\n\x10\x63lc_FileCRCCheck\x10\x0e\x12\x17\n\x13\x63lc_LoadingProgress\x10\x0f\x12\x1a\n\x16\x63lc_SplitPlayerConnect\x10\x10\x12\x15\n\x11\x63lc_ClientMessage\x10\x11*L\n\x11VoiceDataFormat_t\x12\x1a\n\x16VOICEDATA_FORMAT_STEAM\x10\x00\x12\x1b\n\x17VOICEDATA_FORMAT_ENGINE\x10\x01*\x89\x04\n\x0cSVC_Messages\x12\x12\n\x0esvc_ServerInfo\x10\x08\x12\x11\n\rsvc_SendTable\x10\t\x12\x11\n\rsvc_ClassInfo\x10\n\x12\x10\n\x0csvc_SetPause\x10\x0b\x12\x19\n\x15svc_CreateStringTable\x10\x0c\x12\x19\n\x15svc_UpdateStringTable\x10\r\x12\x11\n\rsvc_VoiceInit\x10\x0e\x12\x11\n\rsvc_VoiceData\x10\x0f\x12\r\n\tsvc_Print\x10\x10\x12\x0e\n\nsvc_Sounds\x10\x11\x12\x0f\n\x0bsvc_SetView\x10\x12\x12\x10\n\x0csvc_FixAngle\x10\x13\x12\x16\n\x12svc_CrosshairAngle\x10\x14\x12\x10\n\x0csvc_BSPDecal\x10\x15\x12\x13\n\x0fsvc_SplitScreen\x10\x16\x12\x13\n\x0fsvc_UserMessage\x10\x17\x12\x15\n\x11svc_EntityMessage\x10\x18\x12\x11\n\rsvc_GameEvent\x10\x19\x12\x16\n\x12svc_PacketEntities\x10\x1a\x12\x14\n\x10svc_TempEntities\x10\x1b\x12\x10\n\x0csvc_Prefetch\x10\x1c\x12\x0c\n\x08svc_Menu\x10\x1d\x12\x15\n\x11svc_GameEventList\x10\x1e\x12\x14\n\x10svc_GetCvarValue\x10\x1f\x12\x16\n\x12svc_PacketReliable\x10 *V\n\x17\x45SplitScreenMessageType\x12\x1b\n\x17MSG_SPLITSCREEN_ADDUSER\x10\x00\x12\x1e\n\x1aMSG_SPLITSCREEN_REMOVEUSER\x10\x01')
 
 _NET_MESSAGES = _descriptor.EnumDescriptor(
   name='NET_Messages',
@@ -58,57 +59,11 @@ _NET_MESSAGES = _descriptor.EnumDescriptor(
   ],
   containing_type=None,
   options=None,
-  serialized_start=5230,
-  serialized_end=5389,
+  serialized_start=4526,
+  serialized_end=4685,
 )
 
 NET_Messages = enum_type_wrapper.EnumTypeWrapper(_NET_MESSAGES)
-_SIGNONSTATE = _descriptor.EnumDescriptor(
-  name='SIGNONSTATE',
-  full_name='SIGNONSTATE',
-  filename=None,
-  file=DESCRIPTOR,
-  values=[
-    _descriptor.EnumValueDescriptor(
-      name='SIGNONSTATE_NONE', index=0, number=0,
-      options=None,
-      type=None),
-    _descriptor.EnumValueDescriptor(
-      name='SIGNONSTATE_CHALLENGE', index=1, number=1,
-      options=None,
-      type=None),
-    _descriptor.EnumValueDescriptor(
-      name='SIGNONSTATE_CONNECTED', index=2, number=2,
-      options=None,
-      type=None),
-    _descriptor.EnumValueDescriptor(
-      name='SIGNONSTATE_NEW', index=3, number=3,
-      options=None,
-      type=None),
-    _descriptor.EnumValueDescriptor(
-      name='SIGNONSTATE_PRESPAWN', index=4, number=4,
-      options=None,
-      type=None),
-    _descriptor.EnumValueDescriptor(
-      name='SIGNONSTATE_SPAWN', index=5, number=5,
-      options=None,
-      type=None),
-    _descriptor.EnumValueDescriptor(
-      name='SIGNONSTATE_FULL', index=6, number=6,
-      options=None,
-      type=None),
-    _descriptor.EnumValueDescriptor(
-      name='SIGNONSTATE_CHANGELEVEL', index=7, number=7,
-      options=None,
-      type=None),
-  ],
-  containing_type=None,
-  options=None,
-  serialized_start=5392,
-  serialized_end=5602,
-)
-
-SIGNONSTATE = enum_type_wrapper.EnumTypeWrapper(_SIGNONSTATE)
 _CLC_MESSAGES = _descriptor.EnumDescriptor(
   name='CLC_Messages',
   full_name='CLC_Messages',
@@ -158,8 +113,8 @@ _CLC_MESSAGES = _descriptor.EnumDescriptor(
   ],
   containing_type=None,
   options=None,
-  serialized_start=5605,
-  serialized_end=5839,
+  serialized_start=4688,
+  serialized_end=4922,
 )
 
 CLC_Messages = enum_type_wrapper.EnumTypeWrapper(_CLC_MESSAGES)
@@ -180,8 +135,8 @@ _VOICEDATAFORMAT_T = _descriptor.EnumDescriptor(
   ],
   containing_type=None,
   options=None,
-  serialized_start=5841,
-  serialized_end=5917,
+  serialized_start=4924,
+  serialized_end=5000,
 )
 
 VoiceDataFormat_t = enum_type_wrapper.EnumTypeWrapper(_VOICEDATAFORMAT_T)
@@ -294,8 +249,8 @@ _SVC_MESSAGES = _descriptor.EnumDescriptor(
   ],
   containing_type=None,
   options=None,
-  serialized_start=5920,
-  serialized_end=6441,
+  serialized_start=5003,
+  serialized_end=5524,
 )
 
 SVC_Messages = enum_type_wrapper.EnumTypeWrapper(_SVC_MESSAGES)
@@ -316,8 +271,8 @@ _ESPLITSCREENMESSAGETYPE = _descriptor.EnumDescriptor(
   ],
   containing_type=None,
   options=None,
-  serialized_start=6443,
-  serialized_end=6529,
+  serialized_start=5526,
+  serialized_end=5612,
 )
 
 ESplitScreenMessageType = enum_type_wrapper.EnumTypeWrapper(_ESPLITSCREENMESSAGETYPE)
@@ -329,14 +284,6 @@ net_Tick = 4
 net_StringCmd = 5
 net_SetConVar = 6
 net_SignonState = 7
-SIGNONSTATE_NONE = 0
-SIGNONSTATE_CHALLENGE = 1
-SIGNONSTATE_CONNECTED = 2
-SIGNONSTATE_NEW = 3
-SIGNONSTATE_PRESPAWN = 4
-SIGNONSTATE_SPAWN = 5
-SIGNONSTATE_FULL = 6
-SIGNONSTATE_CHANGELEVEL = 7
 clc_ClientInfo = 8
 clc_Move = 9
 clc_VoiceData = 10
@@ -379,125 +326,6 @@ MSG_SPLITSCREEN_REMOVEUSER = 1
 
 
 
-_CMSGVECTOR = _descriptor.Descriptor(
-  name='CMsgVector',
-  full_name='CMsgVector',
-  filename=None,
-  file=DESCRIPTOR,
-  containing_type=None,
-  fields=[
-    _descriptor.FieldDescriptor(
-      name='x', full_name='CMsgVector.x', index=0,
-      number=1, type=2, cpp_type=6, label=1,
-      has_default_value=False, default_value=0,
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      options=None),
-    _descriptor.FieldDescriptor(
-      name='y', full_name='CMsgVector.y', index=1,
-      number=2, type=2, cpp_type=6, label=1,
-      has_default_value=False, default_value=0,
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      options=None),
-    _descriptor.FieldDescriptor(
-      name='z', full_name='CMsgVector.z', index=2,
-      number=3, type=2, cpp_type=6, label=1,
-      has_default_value=False, default_value=0,
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      options=None),
-  ],
-  extensions=[
-  ],
-  nested_types=[],
-  enum_types=[
-  ],
-  options=None,
-  is_extendable=False,
-  extension_ranges=[],
-  serialized_start=55,
-  serialized_end=100,
-)
-
-
-_CMSGVECTOR2D = _descriptor.Descriptor(
-  name='CMsgVector2D',
-  full_name='CMsgVector2D',
-  filename=None,
-  file=DESCRIPTOR,
-  containing_type=None,
-  fields=[
-    _descriptor.FieldDescriptor(
-      name='x', full_name='CMsgVector2D.x', index=0,
-      number=1, type=2, cpp_type=6, label=1,
-      has_default_value=False, default_value=0,
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      options=None),
-    _descriptor.FieldDescriptor(
-      name='y', full_name='CMsgVector2D.y', index=1,
-      number=2, type=2, cpp_type=6, label=1,
-      has_default_value=False, default_value=0,
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      options=None),
-  ],
-  extensions=[
-  ],
-  nested_types=[],
-  enum_types=[
-  ],
-  options=None,
-  is_extendable=False,
-  extension_ranges=[],
-  serialized_start=102,
-  serialized_end=138,
-)
-
-
-_CMSGQANGLE = _descriptor.Descriptor(
-  name='CMsgQAngle',
-  full_name='CMsgQAngle',
-  filename=None,
-  file=DESCRIPTOR,
-  containing_type=None,
-  fields=[
-    _descriptor.FieldDescriptor(
-      name='x', full_name='CMsgQAngle.x', index=0,
-      number=1, type=2, cpp_type=6, label=1,
-      has_default_value=False, default_value=0,
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      options=None),
-    _descriptor.FieldDescriptor(
-      name='y', full_name='CMsgQAngle.y', index=1,
-      number=2, type=2, cpp_type=6, label=1,
-      has_default_value=False, default_value=0,
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      options=None),
-    _descriptor.FieldDescriptor(
-      name='z', full_name='CMsgQAngle.z', index=2,
-      number=3, type=2, cpp_type=6, label=1,
-      has_default_value=False, default_value=0,
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      options=None),
-  ],
-  extensions=[
-  ],
-  nested_types=[],
-  enum_types=[
-  ],
-  options=None,
-  is_extendable=False,
-  extension_ranges=[],
-  serialized_start=140,
-  serialized_end=185,
-)
-
-
 _CMSG_CVARS_CVAR = _descriptor.Descriptor(
   name='CVar',
   full_name='CMsg_CVars.CVar',
@@ -528,8 +356,8 @@ _CMSG_CVARS_CVAR = _descriptor.Descriptor(
   options=None,
   is_extendable=False,
   extension_ranges=[],
-  serialized_start=234,
-  serialized_end=269,
+  serialized_start=126,
+  serialized_end=161,
 )
 
 _CMSG_CVARS = _descriptor.Descriptor(
@@ -555,8 +383,8 @@ _CMSG_CVARS = _descriptor.Descriptor(
   options=None,
   is_extendable=False,
   extension_ranges=[],
-  serialized_start=187,
-  serialized_end=269,
+  serialized_start=79,
+  serialized_end=161,
 )
 
 
@@ -576,8 +404,8 @@ _CNETMSG_NOP = _descriptor.Descriptor(
   options=None,
   is_extendable=False,
   extension_ranges=[],
-  serialized_start=271,
-  serialized_end=284,
+  serialized_start=163,
+  serialized_end=176,
 )
 
 
@@ -604,8 +432,8 @@ _CNETMSG_DISCONNECT = _descriptor.Descriptor(
   options=None,
   is_extendable=False,
   extension_ranges=[],
-  serialized_start=286,
-  serialized_end=320,
+  serialized_start=178,
+  serialized_end=212,
 )
 
 
@@ -653,8 +481,8 @@ _CNETMSG_FILE = _descriptor.Descriptor(
   options=None,
   is_extendable=False,
   extension_ranges=[],
-  serialized_start=322,
-  serialized_end=419,
+  serialized_start=214,
+  serialized_end=311,
 )
 
 
@@ -681,8 +509,8 @@ _CNETMSG_SPLITSCREENUSER = _descriptor.Descriptor(
   options=None,
   is_extendable=False,
   extension_ranges=[],
-  serialized_start=421,
-  serialized_end=460,
+  serialized_start=313,
+  serialized_end=352,
 )
 
 
@@ -723,8 +551,8 @@ _CNETMSG_TICK = _descriptor.Descriptor(
   options=None,
   is_extendable=False,
   extension_ranges=[],
-  serialized_start=462,
-  serialized_end=552,
+  serialized_start=354,
+  serialized_end=444,
 )
 
 
@@ -751,8 +579,8 @@ _CNETMSG_STRINGCMD = _descriptor.Descriptor(
   options=None,
   is_extendable=False,
   extension_ranges=[],
-  serialized_start=554,
-  serialized_end=590,
+  serialized_start=446,
+  serialized_end=482,
 )
 
 
@@ -779,8 +607,8 @@ _CNETMSG_SETCONVAR = _descriptor.Descriptor(
   options=None,
   is_extendable=False,
   extension_ranges=[],
-  serialized_start=592,
-  serialized_end=641,
+  serialized_start=484,
+  serialized_end=533,
 )
 
 
@@ -835,8 +663,8 @@ _CNETMSG_SIGNONSTATE = _descriptor.Descriptor(
   options=None,
   is_extendable=False,
   extension_ranges=[],
-  serialized_start=644,
-  serialized_end=782,
+  serialized_start=536,
+  serialized_end=674,
 )
 
 
@@ -905,8 +733,8 @@ _CCLCMSG_CLIENTINFO = _descriptor.Descriptor(
   options=None,
   is_extendable=False,
   extension_ranges=[],
-  serialized_start=785,
-  serialized_end=951,
+  serialized_start=677,
+  serialized_end=843,
 )
 
 
@@ -947,8 +775,8 @@ _CCLCMSG_MOVE = _descriptor.Descriptor(
   options=None,
   is_extendable=False,
   extension_ranges=[],
-  serialized_start=953,
-  serialized_end=1036,
+  serialized_start=845,
+  serialized_end=928,
 )
 
 
@@ -989,8 +817,8 @@ _CCLCMSG_VOICEDATA = _descriptor.Descriptor(
   options=None,
   is_extendable=False,
   extension_ranges=[],
-  serialized_start=1038,
-  serialized_end=1145,
+  serialized_start=930,
+  serialized_end=1037,
 )
 
 
@@ -1024,8 +852,8 @@ _CCLCMSG_BASELINEACK = _descriptor.Descriptor(
   options=None,
   is_extendable=False,
   extension_ranges=[],
-  serialized_start=1147,
-  serialized_end=1212,
+  serialized_start=1039,
+  serialized_end=1104,
 )
 
 
@@ -1052,8 +880,8 @@ _CCLCMSG_LISTENEVENTS = _descriptor.Descriptor(
   options=None,
   is_extendable=False,
   extension_ranges=[],
-  serialized_start=1214,
-  serialized_end=1256,
+  serialized_start=1106,
+  serialized_end=1148,
 )
 
 
@@ -1101,8 +929,8 @@ _CCLCMSG_RESPONDCVARVALUE = _descriptor.Descriptor(
   options=None,
   is_extendable=False,
   extension_ranges=[],
-  serialized_start=1258,
-  serialized_end=1350,
+  serialized_start=1150,
+  serialized_end=1242,
 )
 
 
@@ -1157,8 +985,8 @@ _CCLCMSG_FILECRCCHECK = _descriptor.Descriptor(
   options=None,
   is_extendable=False,
   extension_ranges=[],
-  serialized_start=1352,
-  serialized_end=1461,
+  serialized_start=1244,
+  serialized_end=1353,
 )
 
 
@@ -1185,8 +1013,8 @@ _CCLCMSG_LOADINGPROGRESS = _descriptor.Descriptor(
   options=None,
   is_extendable=False,
   extension_ranges=[],
-  serialized_start=1463,
-  serialized_end=1506,
+  serialized_start=1355,
+  serialized_end=1398,
 )
 
 
@@ -1213,8 +1041,8 @@ _CCLCMSG_SPLITPLAYERCONNECT = _descriptor.Descriptor(
   options=None,
   is_extendable=False,
   extension_ranges=[],
-  serialized_start=1508,
-  serialized_end=1566,
+  serialized_start=1400,
+  serialized_end=1458,
 )
 
 
@@ -1248,8 +1076,8 @@ _CCLCMSG_CLIENTMESSAGE = _descriptor.Descriptor(
   options=None,
   is_extendable=False,
   extension_ranges=[],
-  serialized_start=1568,
-  serialized_end=1623,
+  serialized_start=1460,
+  serialized_end=1515,
 )
 
 
@@ -1388,8 +1216,8 @@ _CSVCMSG_SERVERINFO = _descriptor.Descriptor(
   options=None,
   is_extendable=False,
   extension_ranges=[],
-  serialized_start=1626,
-  serialized_end=1980,
+  serialized_start=1518,
+  serialized_end=1872,
 )
 
 
@@ -1430,8 +1258,8 @@ _CSVCMSG_CLASSINFO_CLASS_T = _descriptor.Descriptor(
   options=None,
   is_extendable=False,
   extension_ranges=[],
-  serialized_start=2075,
-  serialized_end=2147,
+  serialized_start=1967,
+  serialized_end=2039,
 )
 
 _CSVCMSG_CLASSINFO = _descriptor.Descriptor(
@@ -1464,8 +1292,8 @@ _CSVCMSG_CLASSINFO = _descriptor.Descriptor(
   options=None,
   is_extendable=False,
   extension_ranges=[],
-  serialized_start=1983,
-  serialized_end=2147,
+  serialized_start=1875,
+  serialized_end=2039,
 )
 
 
@@ -1492,8 +1320,8 @@ _CSVCMSG_SETPAUSE = _descriptor.Descriptor(
   options=None,
   is_extendable=False,
   extension_ranges=[],
-  serialized_start=2149,
-  serialized_end=2183,
+  serialized_start=2041,
+  serialized_end=2075,
 )
 
 
@@ -1534,8 +1362,8 @@ _CSVCMSG_VOICEINIT = _descriptor.Descriptor(
   options=None,
   is_extendable=False,
   extension_ranges=[],
-  serialized_start=2185,
-  serialized_end=2256,
+  serialized_start=2077,
+  serialized_end=2148,
 )
 
 
@@ -1562,8 +1390,8 @@ _CSVCMSG_PRINT = _descriptor.Descriptor(
   options=None,
   is_extendable=False,
   extension_ranges=[],
-  serialized_start=2258,
-  serialized_end=2287,
+  serialized_start=2150,
+  serialized_end=2179,
 )
 
 
@@ -1702,8 +1530,8 @@ _CSVCMSG_SOUNDS_SOUNDDATA_T = _descriptor.Descriptor(
   options=None,
   is_extendable=False,
   extension_ranges=[],
-  serialized_start=2378,
-  serialized_end=2728,
+  serialized_start=2270,
+  serialized_end=2620,
 )
 
 _CSVCMSG_SOUNDS = _descriptor.Descriptor(
@@ -1736,8 +1564,8 @@ _CSVCMSG_SOUNDS = _descriptor.Descriptor(
   options=None,
   is_extendable=False,
   extension_ranges=[],
-  serialized_start=2290,
-  serialized_end=2728,
+  serialized_start=2182,
+  serialized_end=2620,
 )
 
 
@@ -1764,8 +1592,8 @@ _CSVCMSG_PREFETCH = _descriptor.Descriptor(
   options=None,
   is_extendable=False,
   extension_ranges=[],
-  serialized_start=2730,
-  serialized_end=2769,
+  serialized_start=2622,
+  serialized_end=2661,
 )
 
 
@@ -1792,8 +1620,8 @@ _CSVCMSG_SETVIEW = _descriptor.Descriptor(
   options=None,
   is_extendable=False,
   extension_ranges=[],
-  serialized_start=2771,
-  serialized_end=2810,
+  serialized_start=2663,
+  serialized_end=2702,
 )
 
 
@@ -1827,8 +1655,8 @@ _CSVCMSG_FIXANGLE = _descriptor.Descriptor(
   options=None,
   is_extendable=False,
   extension_ranges=[],
-  serialized_start=2812,
-  serialized_end=2876,
+  serialized_start=2704,
+  serialized_end=2768,
 )
 
 
@@ -1855,8 +1683,8 @@ _CSVCMSG_CROSSHAIRANGLE = _descriptor.Descriptor(
   options=None,
   is_extendable=False,
   extension_ranges=[],
-  serialized_start=2878,
-  serialized_end=2930,
+  serialized_start=2770,
+  serialized_end=2822,
 )
 
 
@@ -1911,8 +1739,8 @@ _CSVCMSG_BSPDECAL = _descriptor.Descriptor(
   options=None,
   is_extendable=False,
   extension_ranges=[],
-  serialized_start=2933,
-  serialized_end=3071,
+  serialized_start=2825,
+  serialized_end=2963,
 )
 
 
@@ -1953,8 +1781,8 @@ _CSVCMSG_SPLITSCREEN = _descriptor.Descriptor(
   options=None,
   is_extendable=False,
   extension_ranges=[],
-  serialized_start=3073,
-  serialized_end=3195,
+  serialized_start=2965,
+  serialized_end=3087,
 )
 
 
@@ -1988,8 +1816,8 @@ _CSVCMSG_GETCVARVALUE = _descriptor.Descriptor(
   options=None,
   is_extendable=False,
   extension_ranges=[],
-  serialized_start=3197,
-  serialized_end=3254,
+  serialized_start=3089,
+  serialized_end=3146,
 )
 
 
@@ -2023,8 +1851,8 @@ _CSVCMSG_MENU = _descriptor.Descriptor(
   options=None,
   is_extendable=False,
   extension_ranges=[],
-  serialized_start=3256,
-  serialized_end=3316,
+  serialized_start=3148,
+  serialized_end=3208,
 )
 
 
@@ -2107,8 +1935,8 @@ _CSVCMSG_SENDTABLE_SENDPROP_T = _descriptor.Descriptor(
   options=None,
   is_extendable=False,
   extension_ranges=[],
-  serialized_start=3450,
-  serialized_end=3623,
+  serialized_start=3342,
+  serialized_end=3515,
 )
 
 _CSVCMSG_SENDTABLE = _descriptor.Descriptor(
@@ -2155,126 +1983,8 @@ _CSVCMSG_SENDTABLE = _descriptor.Descriptor(
   options=None,
   is_extendable=False,
   extension_ranges=[],
-  serialized_start=3319,
-  serialized_end=3623,
-)
-
-
-_CSVCMSG_GAMEEVENT_KEY_T = _descriptor.Descriptor(
-  name='key_t',
-  full_name='CSVCMsg_GameEvent.key_t',
-  filename=None,
-  file=DESCRIPTOR,
-  containing_type=None,
-  fields=[
-    _descriptor.FieldDescriptor(
-      name='type', full_name='CSVCMsg_GameEvent.key_t.type', index=0,
-      number=1, type=5, cpp_type=1, label=1,
-      has_default_value=False, default_value=0,
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      options=None),
-    _descriptor.FieldDescriptor(
-      name='val_string', full_name='CSVCMsg_GameEvent.key_t.val_string', index=1,
-      number=2, type=9, cpp_type=9, label=1,
-      has_default_value=False, default_value=unicode("", "utf-8"),
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      options=None),
-    _descriptor.FieldDescriptor(
-      name='val_float', full_name='CSVCMsg_GameEvent.key_t.val_float', index=2,
-      number=3, type=2, cpp_type=6, label=1,
-      has_default_value=False, default_value=0,
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      options=None),
-    _descriptor.FieldDescriptor(
-      name='val_long', full_name='CSVCMsg_GameEvent.key_t.val_long', index=3,
-      number=4, type=5, cpp_type=1, label=1,
-      has_default_value=False, default_value=0,
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      options=None),
-    _descriptor.FieldDescriptor(
-      name='val_short', full_name='CSVCMsg_GameEvent.key_t.val_short', index=4,
-      number=5, type=5, cpp_type=1, label=1,
-      has_default_value=False, default_value=0,
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      options=None),
-    _descriptor.FieldDescriptor(
-      name='val_byte', full_name='CSVCMsg_GameEvent.key_t.val_byte', index=5,
-      number=6, type=5, cpp_type=1, label=1,
-      has_default_value=False, default_value=0,
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      options=None),
-    _descriptor.FieldDescriptor(
-      name='val_bool', full_name='CSVCMsg_GameEvent.key_t.val_bool', index=6,
-      number=7, type=8, cpp_type=7, label=1,
-      has_default_value=False, default_value=False,
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      options=None),
-    _descriptor.FieldDescriptor(
-      name='val_uint64', full_name='CSVCMsg_GameEvent.key_t.val_uint64', index=7,
-      number=8, type=4, cpp_type=4, label=1,
-      has_default_value=False, default_value=0,
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      options=None),
-  ],
-  extensions=[
-  ],
-  nested_types=[],
-  enum_types=[
-  ],
-  options=None,
-  is_extendable=False,
-  extension_ranges=[],
-  serialized_start=3725,
-  serialized_end=3878,
-)
-
-_CSVCMSG_GAMEEVENT = _descriptor.Descriptor(
-  name='CSVCMsg_GameEvent',
-  full_name='CSVCMsg_GameEvent',
-  filename=None,
-  file=DESCRIPTOR,
-  containing_type=None,
-  fields=[
-    _descriptor.FieldDescriptor(
-      name='event_name', full_name='CSVCMsg_GameEvent.event_name', index=0,
-      number=1, type=9, cpp_type=9, label=1,
-      has_default_value=False, default_value=unicode("", "utf-8"),
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      options=None),
-    _descriptor.FieldDescriptor(
-      name='eventid', full_name='CSVCMsg_GameEvent.eventid', index=1,
-      number=2, type=5, cpp_type=1, label=1,
-      has_default_value=False, default_value=0,
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      options=None),
-    _descriptor.FieldDescriptor(
-      name='keys', full_name='CSVCMsg_GameEvent.keys', index=2,
-      number=3, type=11, cpp_type=10, label=3,
-      has_default_value=False, default_value=[],
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      options=None),
-  ],
-  extensions=[
-  ],
-  nested_types=[_CSVCMSG_GAMEEVENT_KEY_T, ],
-  enum_types=[
-  ],
-  options=None,
-  is_extendable=False,
-  extension_ranges=[],
-  serialized_start=3626,
-  serialized_end=3878,
+  serialized_start=3211,
+  serialized_end=3515,
 )
 
 
@@ -2308,8 +2018,8 @@ _CSVCMSG_GAMEEVENTLIST_KEY_T = _descriptor.Descriptor(
   options=None,
   is_extendable=False,
   extension_ranges=[],
-  serialized_start=3964,
-  serialized_end=3999,
+  serialized_start=3601,
+  serialized_end=3636,
 )
 
 _CSVCMSG_GAMEEVENTLIST_DESCRIPTOR_T = _descriptor.Descriptor(
@@ -2349,8 +2059,8 @@ _CSVCMSG_GAMEEVENTLIST_DESCRIPTOR_T = _descriptor.Descriptor(
   options=None,
   is_extendable=False,
   extension_ranges=[],
-  serialized_start=4001,
-  serialized_end=4090,
+  serialized_start=3638,
+  serialized_end=3727,
 )
 
 _CSVCMSG_GAMEEVENTLIST = _descriptor.Descriptor(
@@ -2376,8 +2086,8 @@ _CSVCMSG_GAMEEVENTLIST = _descriptor.Descriptor(
   options=None,
   is_extendable=False,
   extension_ranges=[],
-  serialized_start=3881,
-  serialized_end=4090,
+  serialized_start=3518,
+  serialized_end=3727,
 )
 
 
@@ -2446,8 +2156,8 @@ _CSVCMSG_PACKETENTITIES = _descriptor.Descriptor(
   options=None,
   is_extendable=False,
   extension_ranges=[],
-  serialized_start=4093,
-  serialized_end=4265,
+  serialized_start=3730,
+  serialized_end=3902,
 )
 
 
@@ -2488,8 +2198,8 @@ _CSVCMSG_TEMPENTITIES = _descriptor.Descriptor(
   options=None,
   is_extendable=False,
   extension_ranges=[],
-  serialized_start=4267,
-  serialized_end=4349,
+  serialized_start=3904,
+  serialized_end=3986,
 )
 
 
@@ -2565,8 +2275,8 @@ _CSVCMSG_CREATESTRINGTABLE = _descriptor.Descriptor(
   options=None,
   is_extendable=False,
   extension_ranges=[],
-  serialized_start=4352,
-  serialized_end=4554,
+  serialized_start=3989,
+  serialized_end=4191,
 )
 
 
@@ -2607,43 +2317,8 @@ _CSVCMSG_UPDATESTRINGTABLE = _descriptor.Descriptor(
   options=None,
   is_extendable=False,
   extension_ranges=[],
-  serialized_start=4556,
-  serialized_end=4651,
-)
-
-
-_CSVCMSG_USERMESSAGE = _descriptor.Descriptor(
-  name='CSVCMsg_UserMessage',
-  full_name='CSVCMsg_UserMessage',
-  filename=None,
-  file=DESCRIPTOR,
-  containing_type=None,
-  fields=[
-    _descriptor.FieldDescriptor(
-      name='msg_type', full_name='CSVCMsg_UserMessage.msg_type', index=0,
-      number=1, type=5, cpp_type=1, label=1,
-      has_default_value=False, default_value=0,
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      options=None),
-    _descriptor.FieldDescriptor(
-      name='msg_data', full_name='CSVCMsg_UserMessage.msg_data', index=1,
-      number=2, type=12, cpp_type=9, label=1,
-      has_default_value=False, default_value="",
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      options=None),
-  ],
-  extensions=[
-  ],
-  nested_types=[],
-  enum_types=[
-  ],
-  options=None,
-  is_extendable=False,
-  extension_ranges=[],
-  serialized_start=4653,
-  serialized_end=4710,
+  serialized_start=4193,
+  serialized_end=4288,
 )
 
 
@@ -2705,132 +2380,8 @@ _CSVCMSG_VOICEDATA = _descriptor.Descriptor(
   options=None,
   is_extendable=False,
   extension_ranges=[],
-  serialized_start=4713,
-  serialized_end=4883,
-)
-
-
-_CSVCMSGLIST_GAMEEVENTS_EVENT_T = _descriptor.Descriptor(
-  name='event_t',
-  full_name='CSVCMsgList_GameEvents.event_t',
-  filename=None,
-  file=DESCRIPTOR,
-  containing_type=None,
-  fields=[
-    _descriptor.FieldDescriptor(
-      name='tick', full_name='CSVCMsgList_GameEvents.event_t.tick', index=0,
-      number=1, type=5, cpp_type=1, label=1,
-      has_default_value=False, default_value=0,
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      options=None),
-    _descriptor.FieldDescriptor(
-      name='event', full_name='CSVCMsgList_GameEvents.event_t.event', index=1,
-      number=2, type=11, cpp_type=10, label=1,
-      has_default_value=False, default_value=None,
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      options=None),
-  ],
-  extensions=[
-  ],
-  nested_types=[],
-  enum_types=[
-  ],
-  options=None,
-  is_extendable=False,
-  extension_ranges=[],
-  serialized_start=4961,
-  serialized_end=5019,
-)
-
-_CSVCMSGLIST_GAMEEVENTS = _descriptor.Descriptor(
-  name='CSVCMsgList_GameEvents',
-  full_name='CSVCMsgList_GameEvents',
-  filename=None,
-  file=DESCRIPTOR,
-  containing_type=None,
-  fields=[
-    _descriptor.FieldDescriptor(
-      name='events', full_name='CSVCMsgList_GameEvents.events', index=0,
-      number=1, type=11, cpp_type=10, label=3,
-      has_default_value=False, default_value=[],
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      options=None),
-  ],
-  extensions=[
-  ],
-  nested_types=[_CSVCMSGLIST_GAMEEVENTS_EVENT_T, ],
-  enum_types=[
-  ],
-  options=None,
-  is_extendable=False,
-  extension_ranges=[],
-  serialized_start=4886,
-  serialized_end=5019,
-)
-
-
-_CSVCMSGLIST_USERMESSAGES_USERMSG_T = _descriptor.Descriptor(
-  name='usermsg_t',
-  full_name='CSVCMsgList_UserMessages.usermsg_t',
-  filename=None,
-  file=DESCRIPTOR,
-  containing_type=None,
-  fields=[
-    _descriptor.FieldDescriptor(
-      name='tick', full_name='CSVCMsgList_UserMessages.usermsg_t.tick', index=0,
-      number=1, type=5, cpp_type=1, label=1,
-      has_default_value=False, default_value=0,
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      options=None),
-    _descriptor.FieldDescriptor(
-      name='msg', full_name='CSVCMsgList_UserMessages.usermsg_t.msg', index=1,
-      number=2, type=11, cpp_type=10, label=1,
-      has_default_value=False, default_value=None,
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      options=None),
-  ],
-  extensions=[
-  ],
-  nested_types=[],
-  enum_types=[
-  ],
-  options=None,
-  is_extendable=False,
-  extension_ranges=[],
-  serialized_start=5105,
-  serialized_end=5165,
-)
-
-_CSVCMSGLIST_USERMESSAGES = _descriptor.Descriptor(
-  name='CSVCMsgList_UserMessages',
-  full_name='CSVCMsgList_UserMessages',
-  filename=None,
-  file=DESCRIPTOR,
-  containing_type=None,
-  fields=[
-    _descriptor.FieldDescriptor(
-      name='usermsgs', full_name='CSVCMsgList_UserMessages.usermsgs', index=0,
-      number=1, type=11, cpp_type=10, label=3,
-      has_default_value=False, default_value=[],
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      options=None),
-  ],
-  extensions=[
-  ],
-  nested_types=[_CSVCMSGLIST_USERMESSAGES_USERMSG_T, ],
-  enum_types=[
-  ],
-  options=None,
-  is_extendable=False,
-  extension_ranges=[],
-  serialized_start=5022,
-  serialized_end=5165,
+  serialized_start=4291,
+  serialized_end=4461,
 )
 
 
@@ -2864,8 +2415,8 @@ _CSVCMSG_PACKETRELIABLE = _descriptor.Descriptor(
   options=None,
   is_extendable=False,
   extension_ranges=[],
-  serialized_start=5167,
-  serialized_end=5227,
+  serialized_start=4463,
+  serialized_end=4523,
 )
 
 _CMSG_CVARS_CVAR.containing_type = _CMSG_CVARS;
@@ -2877,28 +2428,17 @@ _CSVCMSG_CLASSINFO_CLASS_T.containing_type = _CSVCMSG_CLASSINFO;
 _CSVCMSG_CLASSINFO.fields_by_name['classes'].message_type = _CSVCMSG_CLASSINFO_CLASS_T
 _CSVCMSG_SOUNDS_SOUNDDATA_T.containing_type = _CSVCMSG_SOUNDS;
 _CSVCMSG_SOUNDS.fields_by_name['sounds'].message_type = _CSVCMSG_SOUNDS_SOUNDDATA_T
-_CSVCMSG_FIXANGLE.fields_by_name['angle'].message_type = _CMSGQANGLE
-_CSVCMSG_CROSSHAIRANGLE.fields_by_name['angle'].message_type = _CMSGQANGLE
-_CSVCMSG_BSPDECAL.fields_by_name['pos'].message_type = _CMSGVECTOR
+_CSVCMSG_FIXANGLE.fields_by_name['angle'].message_type = networkbasetypes_pb2._CMSGQANGLE
+_CSVCMSG_CROSSHAIRANGLE.fields_by_name['angle'].message_type = networkbasetypes_pb2._CMSGQANGLE
+_CSVCMSG_BSPDECAL.fields_by_name['pos'].message_type = networkbasetypes_pb2._CMSGVECTOR
 _CSVCMSG_SPLITSCREEN.fields_by_name['type'].enum_type = _ESPLITSCREENMESSAGETYPE
 _CSVCMSG_SENDTABLE_SENDPROP_T.containing_type = _CSVCMSG_SENDTABLE;
 _CSVCMSG_SENDTABLE.fields_by_name['props'].message_type = _CSVCMSG_SENDTABLE_SENDPROP_T
-_CSVCMSG_GAMEEVENT_KEY_T.containing_type = _CSVCMSG_GAMEEVENT;
-_CSVCMSG_GAMEEVENT.fields_by_name['keys'].message_type = _CSVCMSG_GAMEEVENT_KEY_T
 _CSVCMSG_GAMEEVENTLIST_KEY_T.containing_type = _CSVCMSG_GAMEEVENTLIST;
 _CSVCMSG_GAMEEVENTLIST_DESCRIPTOR_T.fields_by_name['keys'].message_type = _CSVCMSG_GAMEEVENTLIST_KEY_T
 _CSVCMSG_GAMEEVENTLIST_DESCRIPTOR_T.containing_type = _CSVCMSG_GAMEEVENTLIST;
 _CSVCMSG_GAMEEVENTLIST.fields_by_name['descriptors'].message_type = _CSVCMSG_GAMEEVENTLIST_DESCRIPTOR_T
 _CSVCMSG_VOICEDATA.fields_by_name['format'].enum_type = _VOICEDATAFORMAT_T
-_CSVCMSGLIST_GAMEEVENTS_EVENT_T.fields_by_name['event'].message_type = _CSVCMSG_GAMEEVENT
-_CSVCMSGLIST_GAMEEVENTS_EVENT_T.containing_type = _CSVCMSGLIST_GAMEEVENTS;
-_CSVCMSGLIST_GAMEEVENTS.fields_by_name['events'].message_type = _CSVCMSGLIST_GAMEEVENTS_EVENT_T
-_CSVCMSGLIST_USERMESSAGES_USERMSG_T.fields_by_name['msg'].message_type = _CSVCMSG_USERMESSAGE
-_CSVCMSGLIST_USERMESSAGES_USERMSG_T.containing_type = _CSVCMSGLIST_USERMESSAGES;
-_CSVCMSGLIST_USERMESSAGES.fields_by_name['usermsgs'].message_type = _CSVCMSGLIST_USERMESSAGES_USERMSG_T
-DESCRIPTOR.message_types_by_name['CMsgVector'] = _CMSGVECTOR
-DESCRIPTOR.message_types_by_name['CMsgVector2D'] = _CMSGVECTOR2D
-DESCRIPTOR.message_types_by_name['CMsgQAngle'] = _CMSGQANGLE
 DESCRIPTOR.message_types_by_name['CMsg_CVars'] = _CMSG_CVARS
 DESCRIPTOR.message_types_by_name['CNETMsg_NOP'] = _CNETMSG_NOP
 DESCRIPTOR.message_types_by_name['CNETMsg_Disconnect'] = _CNETMSG_DISCONNECT
@@ -2933,35 +2473,13 @@ DESCRIPTOR.message_types_by_name['CSVCMsg_SplitScreen'] = _CSVCMSG_SPLITSCREEN
 DESCRIPTOR.message_types_by_name['CSVCMsg_GetCvarValue'] = _CSVCMSG_GETCVARVALUE
 DESCRIPTOR.message_types_by_name['CSVCMsg_Menu'] = _CSVCMSG_MENU
 DESCRIPTOR.message_types_by_name['CSVCMsg_SendTable'] = _CSVCMSG_SENDTABLE
-DESCRIPTOR.message_types_by_name['CSVCMsg_GameEvent'] = _CSVCMSG_GAMEEVENT
 DESCRIPTOR.message_types_by_name['CSVCMsg_GameEventList'] = _CSVCMSG_GAMEEVENTLIST
 DESCRIPTOR.message_types_by_name['CSVCMsg_PacketEntities'] = _CSVCMSG_PACKETENTITIES
 DESCRIPTOR.message_types_by_name['CSVCMsg_TempEntities'] = _CSVCMSG_TEMPENTITIES
 DESCRIPTOR.message_types_by_name['CSVCMsg_CreateStringTable'] = _CSVCMSG_CREATESTRINGTABLE
 DESCRIPTOR.message_types_by_name['CSVCMsg_UpdateStringTable'] = _CSVCMSG_UPDATESTRINGTABLE
-DESCRIPTOR.message_types_by_name['CSVCMsg_UserMessage'] = _CSVCMSG_USERMESSAGE
 DESCRIPTOR.message_types_by_name['CSVCMsg_VoiceData'] = _CSVCMSG_VOICEDATA
-DESCRIPTOR.message_types_by_name['CSVCMsgList_GameEvents'] = _CSVCMSGLIST_GAMEEVENTS
-DESCRIPTOR.message_types_by_name['CSVCMsgList_UserMessages'] = _CSVCMSGLIST_USERMESSAGES
 DESCRIPTOR.message_types_by_name['CSVCMsg_PacketReliable'] = _CSVCMSG_PACKETRELIABLE
-
-class CMsgVector(_message.Message):
-  __metaclass__ = _reflection.GeneratedProtocolMessageType
-  DESCRIPTOR = _CMSGVECTOR
-
-  # @@protoc_insertion_point(class_scope:CMsgVector)
-
-class CMsgVector2D(_message.Message):
-  __metaclass__ = _reflection.GeneratedProtocolMessageType
-  DESCRIPTOR = _CMSGVECTOR2D
-
-  # @@protoc_insertion_point(class_scope:CMsgVector2D)
-
-class CMsgQAngle(_message.Message):
-  __metaclass__ = _reflection.GeneratedProtocolMessageType
-  DESCRIPTOR = _CMSGQANGLE
-
-  # @@protoc_insertion_point(class_scope:CMsgQAngle)
 
 class CMsg_CVars(_message.Message):
   __metaclass__ = _reflection.GeneratedProtocolMessageType
@@ -3191,18 +2709,6 @@ class CSVCMsg_SendTable(_message.Message):
 
   # @@protoc_insertion_point(class_scope:CSVCMsg_SendTable)
 
-class CSVCMsg_GameEvent(_message.Message):
-  __metaclass__ = _reflection.GeneratedProtocolMessageType
-
-  class key_t(_message.Message):
-    __metaclass__ = _reflection.GeneratedProtocolMessageType
-    DESCRIPTOR = _CSVCMSG_GAMEEVENT_KEY_T
-
-    # @@protoc_insertion_point(class_scope:CSVCMsg_GameEvent.key_t)
-  DESCRIPTOR = _CSVCMSG_GAMEEVENT
-
-  # @@protoc_insertion_point(class_scope:CSVCMsg_GameEvent)
-
 class CSVCMsg_GameEventList(_message.Message):
   __metaclass__ = _reflection.GeneratedProtocolMessageType
 
@@ -3245,41 +2751,11 @@ class CSVCMsg_UpdateStringTable(_message.Message):
 
   # @@protoc_insertion_point(class_scope:CSVCMsg_UpdateStringTable)
 
-class CSVCMsg_UserMessage(_message.Message):
-  __metaclass__ = _reflection.GeneratedProtocolMessageType
-  DESCRIPTOR = _CSVCMSG_USERMESSAGE
-
-  # @@protoc_insertion_point(class_scope:CSVCMsg_UserMessage)
-
 class CSVCMsg_VoiceData(_message.Message):
   __metaclass__ = _reflection.GeneratedProtocolMessageType
   DESCRIPTOR = _CSVCMSG_VOICEDATA
 
   # @@protoc_insertion_point(class_scope:CSVCMsg_VoiceData)
-
-class CSVCMsgList_GameEvents(_message.Message):
-  __metaclass__ = _reflection.GeneratedProtocolMessageType
-
-  class event_t(_message.Message):
-    __metaclass__ = _reflection.GeneratedProtocolMessageType
-    DESCRIPTOR = _CSVCMSGLIST_GAMEEVENTS_EVENT_T
-
-    # @@protoc_insertion_point(class_scope:CSVCMsgList_GameEvents.event_t)
-  DESCRIPTOR = _CSVCMSGLIST_GAMEEVENTS
-
-  # @@protoc_insertion_point(class_scope:CSVCMsgList_GameEvents)
-
-class CSVCMsgList_UserMessages(_message.Message):
-  __metaclass__ = _reflection.GeneratedProtocolMessageType
-
-  class usermsg_t(_message.Message):
-    __metaclass__ = _reflection.GeneratedProtocolMessageType
-    DESCRIPTOR = _CSVCMSGLIST_USERMESSAGES_USERMSG_T
-
-    # @@protoc_insertion_point(class_scope:CSVCMsgList_UserMessages.usermsg_t)
-  DESCRIPTOR = _CSVCMSGLIST_USERMESSAGES
-
-  # @@protoc_insertion_point(class_scope:CSVCMsgList_UserMessages)
 
 class CSVCMsg_PacketReliable(_message.Message):
   __metaclass__ = _reflection.GeneratedProtocolMessageType
