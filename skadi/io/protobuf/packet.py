@@ -3,6 +3,7 @@ from __future__ import absolute_import
 from skadi import Peek
 from skadi.io import protobuf
 from skadi.protoc import netmessages_pb2 as pb_n
+from skadi.protoc import networkbasetypes_pb2 as pb_nbt
 
 import io as _io
 
@@ -13,7 +14,6 @@ IMPL_BY_KIND = {
   pb_n.net_Tick:              pb_n.CNETMsg_Tick,
   pb_n.svc_ClassInfo:         pb_n.CSVCMsg_ClassInfo,
   pb_n.svc_CreateStringTable: pb_n.CSVCMsg_CreateStringTable,
-  pb_n.svc_GameEvent:         pb_n.CSVCMsg_GameEvent,
   pb_n.svc_GameEventList:     pb_n.CSVCMsg_GameEventList,
   pb_n.svc_Menu:              pb_n.CSVCMsg_Menu,
   pb_n.svc_PacketEntities:    pb_n.CSVCMsg_PacketEntities,
@@ -23,9 +23,10 @@ IMPL_BY_KIND = {
   pb_n.svc_Sounds:            pb_n.CSVCMsg_Sounds,
   pb_n.svc_TempEntities:      pb_n.CSVCMsg_TempEntities,
   pb_n.svc_UpdateStringTable: pb_n.CSVCMsg_UpdateStringTable,
-  pb_n.svc_UserMessage:       pb_n.CSVCMsg_UserMessage,
   pb_n.svc_VoiceInit:         pb_n.CSVCMsg_VoiceInit,
-  pb_n.svc_VoiceData:         pb_n.CSVCMsg_VoiceData
+  pb_n.svc_VoiceData:         pb_n.CSVCMsg_VoiceData,
+  pb_n.svc_GameEvent:         pb_nbt.CSVCMsg_GameEvent,
+  pb_n.svc_UserMessage:       pb_nbt.CSVCMsg_UserMessage
 }
 
 

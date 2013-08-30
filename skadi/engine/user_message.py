@@ -45,7 +45,8 @@ NAME_BY_TYPE = {
   104: 'TutorialRequestExp',      105: 'TutorialPingMinimap',
   106: 'GamerulesStateChanged',   107: 'ShowSurvey',
   108: 'TutorialFade',            109: 'AddQuestLogEntry',
-  110: 'SendStatPopup',           111: 'TutorialFinish'
+  110: 'SendStatPopup',           111: 'TutorialFinish',
+  112: 'SendRoshanPopup',         113: 'SendGenericToolTip'
 }
 
 
