@@ -28,7 +28,9 @@ for abspath in args:
 
   print 'player summary:'
   for pi in file_info.game_info.dota.player_info:
-    print '- {} ({})'.format(pi.player_name, pi.hero_name)
+    player_name = pi.player_name.encode('UTF-8')
+    hero_name = pi.hero_name.encode('UTF-8')
+    print '- {} ({})'.format(player_name, hero_name)
 
   for game in demo.stream(tick=5000):
     tick, user_msgs, game_evts, world, modifiers = game
