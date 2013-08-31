@@ -1,6 +1,10 @@
+from __future__ import absolute_import
+
 import collections as c
 import copy
+import io as _io
 
+from skadi import *
 from skadi import index as i
 from skadi.engine import world as w
 from skadi.engine import game_event as e_ge
@@ -173,10 +177,27 @@ class Stream(object):
 
 
 class Demo(object):
-  def __init__(self, prologue, io):
-    self.prologue = prologue
-    self.io = io
-    self._tell = io.tell()
+  def __init__(self, abspath):
+    infile = _io.open(abspath, 'r+b')
+    if infile.read(8) != "PBUFDEM\0":
+      raise InvalidDemo('malformed header')
+
+    gio = bytearray(infile.read(4)) # LE uint file offset
+    gio = sum(gio[i] << (i * 8) for i in range(4))
+
+    try:
+      tell = infile.tell()
+      infile.seek(gio)
+      p, m = d_io.construct(infile).read()
+      self.file_info = d_io.parse(p.kind, p.compressed, m)
+      assert p.kind == pb_d.DEM_FileInfo
+      infile.seek(tell)
+    except EOFError:
+      raise InvalidDemo('no end game summary')
+
+    self.prologue = load(infile)
+    self.io = infile
+    self._tell = infile.tell()
 
   def stream(self, tick=0):
     self.io.seek(self._tell)

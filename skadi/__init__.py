@@ -58,11 +58,6 @@ class InvalidDemo(RuntimeError):
 
 
 def load(io, tick=0):
-  if io.read(8) != "PBUFDEM\0":
-    raise InvalidDemo('malformed header')
-
-  io.read(4) # game summary offset in file in bytes
-
   demo_io = d_io.construct(io)
   prologue = i_p.construct(demo_io)
 

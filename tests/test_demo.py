@@ -20,8 +20,7 @@ class TestDemo(unittest.TestCase):
   @classmethod
   def setUpClass(cls):
     # Cache demo for re-use in multiple tests
-    with _io.open(DEMO_FILE_PATH, 'r+b') as infile:
-      cls.demo = demo.construct(load(infile), infile)
+    cls.demo = demo.construct(DEMO_FILE_PATH)
 
   def test_demo_construct(self):
     assert self.demo
