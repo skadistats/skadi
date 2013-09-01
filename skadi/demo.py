@@ -86,13 +86,14 @@ def construct(*args):
 
 
 class Stream(object):
-  def __init__(self, prologue, io, world, string_tables, remaining_packets):
+  def __init__(self, prologue, io, world, string_tables, rem, sparse=False):
     self.prologue = prologue
     self.demo_io = d_io.construct(io)
     self.world = world
     self.string_tables = string_tables
+    self.sparse = sparse
 
-    for peek, message in remaining_packets:
+    for peek, message in rem:
       pbmsg = d_io.parse(peek.kind, peek.compressed, message)
       self.advance(peek.tick, pbmsg)
 
@@ -156,7 +157,7 @@ class Stream(object):
       elif mode & u_ent.PVS.Deleting:
         self.world.delete(index)
       elif mode ^ u_ent.PVS.Leaving:
-        state = dict(self.world.find_index(index))
+        state = {} if self.sparse else dict(self.world.find_index(index))
         state.update(context)
 
         self.world.update(index, state)
@@ -199,7 +200,7 @@ class Demo(object):
     self.io = infile
     self._tell = infile.tell()
 
-  def stream(self, tick=0):
+  def stream(self, tick=0, sparse=False):
     self.io.seek(self._tell)
     args = fast_forward(self.prologue, d_io.construct(self.io), tick=tick)
-    return Stream(self.prologue, self.io, *args)
+    return Stream(self.prologue, self.io, *args, sparse=sparse)
