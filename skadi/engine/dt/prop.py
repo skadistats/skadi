@@ -56,7 +56,7 @@ class Prop(object):
     terse = ('num_bits', 'num_elements', 'dt_name')
     b, e, dt = map(lambda i: getattr(self, i) or '-', terse)
 
-    _repr = "<Prop {0}.{1} t:{2} f:{3} p:{4} b:{5} e:{6} o:{7}>"
+    _repr = "<Prop ({0},{1}) t:{2} f:{3} p:{4} b:{5} e:{6} o:{7}>"
     return _repr.format(odt, vn, t, f, p, b, e, dt)
 
   def _type(self):

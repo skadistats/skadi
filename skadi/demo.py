@@ -172,7 +172,7 @@ class Stream(object):
     modifiers = self.string_tables['ActiveModifiers'].observer
 
     _, gamerules = self.world.find_by_dt('DT_DOTAGamerulesProxy')
-    modifiers.expire(gamerules[('DT_DOTAGamerules', 'm_fGameTime')])
+    modifiers.expire(gamerules[('DT_DOTAGamerulesProxy', 'DT_DOTAGamerules.m_fGameTime')])
 
     return tick, user_messages, game_events, self.world, modifiers
 

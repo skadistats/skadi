@@ -1,6 +1,7 @@
 from __future__ import absolute_import
 
 import collections as c
+import copy
 import io as _io
 import itertools as it
 import math
@@ -193,10 +194,16 @@ class Flattener(object):
     self._build(st, aggregate, exclusions, [])
     return aggregate
 
-  def _build(self, st, aggregate, exclusions, props):
+  def _build(self, st, aggregate, exclusions, props, proxy_for=None):
     self._compile(st, aggregate, exclusions, props)
     for p in props:
-      aggregate.append(p)
+      if proxy_for:
+        _p = copy.copy(p)
+        _p.var_name = '{}.{}'.format(p.origin_dt, p.var_name)
+        _p.origin_dt = proxy_for
+      else:
+        _p = p
+      aggregate.append(_p)
 
   def _compile(self, st, aggregate, exclusions, props):
     def test_excluded(p):
@@ -213,7 +220,7 @@ class Flattener(object):
         if dt_p.test_collapsible(p):
           self._compile(_st, aggregate, exclusions, props)
         else:
-          self._build(_st, aggregate, exclusions, [])
+          self._build(_st, aggregate, exclusions, [], proxy_for=p.origin_dt)
       else:
         props.append(p)
 
