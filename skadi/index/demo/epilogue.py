@@ -11,5 +11,7 @@ class EpilogueIndex(i.Index):
     super(EpilogueIndex, self).__init__(iterable)
 
   @property
-  def file_info(self):
-    return self.find(pb_d.DEM_FileInfo)
+  def dem_file_info(self):
+    kind = pb_d.DEM_FileInfo
+    p, m = self.find(kind)
+    return p, d_io.parse(kind, p.compressed, m)

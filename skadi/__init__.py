@@ -16,13 +16,14 @@ Peek = c.namedtuple('Peek', 'tick, kind, tell, size, compressed')
 
 
 from skadi import *
-from skadi import index as i
 from skadi.engine import string_table as stab
 from skadi.engine.dt import prop as dt_p
 from skadi.engine.dt import recv as dt_r
 from skadi.engine.dt import send as dt_s
 from skadi.engine.observer import active_modifier as o_am
-from skadi.index import prologue as i_p
+from skadi.index.demo import prologue as id_prologue
+from skadi.index.embed import packet as ie_packet
+from skadi.index.embed import send_tables as ie_send_tables
 from skadi.io import bitstream as b_io
 from skadi.io.protobuf import demo as d_io
 from skadi.io.protobuf import packet as p_io
@@ -60,49 +61,62 @@ class InvalidDemo(RuntimeError):
 
 def load(io, tick=0):
   demo_io = d_io.construct(io)
-  prologue = i_p.construct(demo_io)
+  prologue = id_prologue.construct(demo_io)
 
   # mash all packet svc messages together, then index them
   signon_packets = list(prologue.all_dem_signon_packet)
-  pbmsgs = [d_io.parse(p.kind, p.compressed, m) for p, m in signon_packets]
-  data = ''.join([p.data for p in pbmsgs])
-  packet_io = p_io.construct(data)
-  packet = i.construct(packet_io)
+  data = ''.join([pb.data for _, pb in signon_packets])
+  packet = ie_packet.construct(p_io.construct(data))
 
-  # class info
-  peek, message = prologue.dem_class_info
-  pbmsg = d_io.parse(peek.kind, peek.compressed, message)
-  class_info = c.OrderedDict()
+  # meta: file header
+  _, pbmsg = prologue.dem_file_header
+  file_header = FileHeader(*[getattr(pbmsg, a) for a in FileHeader._fields])
 
-  for _c in pbmsg.classes:
-    _id, dt, name = str(_c.class_id), _c.table_name, _c.network_name
-    class_info[_id] = (dt, name)
+  # meta: server info
+  _, pbmsg = packet.svc_server_info
+  server_info = ServerInfo(*[getattr(pbmsg, a) for a in ServerInfo._fields])
 
-  # send tables
-  peek, message = prologue.dem_send_tables
-  pbmsg = d_io.parse(peek.kind, peek.compressed, message)
+  # meta: voice init
+  _, pbmsg = packet.svc_voice_init
+  voice_init = VoiceInit(*[getattr(pbmsg, a) for a in VoiceInit._fields])
+
+  # prologue: meta
+  meta = Meta(file_header, server_info, voice_init)
+
+  # prologue: send tables
+  _, pbmsg = prologue.dem_send_tables
+  _send_tables = ie_send_tables.construct(p_io.construct(pbmsg.data))
   send_tables = c.OrderedDict()
 
-  for peek, message in p_io.construct(pbmsg.data):
-    pbmsg = p_io.parse(peek.kind, message)
+  for pbmsg in [pb for _, pb in _send_tables.all_svc_send_table]:
     if pbmsg.is_end:
       break
 
     send_table = _parse_cdemo_send_table(pbmsg)
     send_tables[send_table.dt] = send_table
 
-  # recv tables
+  # prologue: recv tables
   flattener = Flattener(send_tables)
   recv_tables = c.OrderedDict()
+
+  _, pbmsg = prologue.dem_class_info
+  class_info = c.OrderedDict()
+
+  for cls in pbmsg.classes:
+    _id, dt, name = str(cls.class_id), cls.table_name, cls.network_name
+    class_info[_id] = (dt, name)
 
   for st in filter(test_needs_decoder, send_tables.values()):
     props = flattener.flatten(st)
     cls = next(_id for _id, (dt, _) in class_info.items() if dt == st.dt)
     recv_tables[cls] = dt_r.construct(st.dt, props)
 
-  # game event list
-  peek, message = packet.find(pb_n.svc_GameEventList)
-  pbmsg = p_io.parse(peek.kind, message)
+  # prologue: string tables
+  pbmsgs = [pb for _, pb in packet.all_svc_create_string_table]
+  string_tables = _parse_all_csvc_create_string_tables(pbmsgs)
+
+  # prologue: game event list
+  _, pbmsg = packet.svc_game_event_list
   game_event_list = c.OrderedDict()
 
   for desc in pbmsg.descriptors:
@@ -110,30 +124,8 @@ def load(io, tick=0):
     keys = [(k.type, k.name) for k in desc.keys]
     game_event_list[_id] = (name, keys)
 
-  # string tables
-  entries = packet.find_all(pb_n.svc_CreateStringTable)
-  pbmsgs = [p_io.parse(p.kind, m) for p, m in entries]
-  string_tables = _parse_all_csvc_create_string_tables(pbmsgs)
-
-  # meta: file header
-  peek, message = prologue.dem_file_header
-  pbmsg = d_io.parse(peek.kind, peek.compressed, message)
-  file_header = FileHeader(*[getattr(pbmsg, a) for a in FileHeader._fields])
-
-  # meta: server_info
-  peek, message = packet.find(pb_n.svc_ServerInfo)
-  pbmsg = p_io.parse(peek.kind, message)
-  server_info = ServerInfo(*[getattr(pbmsg, a) for a in ServerInfo._fields])
-
-  # meta: class bits
+  # prologue: class bits
   class_bits = server_info.max_classes.bit_length()
-
-  # meta: voice init
-  peek, message = packet.find(pb_n.svc_VoiceInit)
-  pbmsg = p_io.parse(peek.kind, message)
-  voice_init = VoiceInit(*[getattr(pbmsg, a) for a in VoiceInit._fields])
-
-  meta = Meta(file_header, server_info, voice_init)
 
   return Prologue(meta, recv_tables, string_tables, game_event_list, class_bits)
 

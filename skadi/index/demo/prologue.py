@@ -1,4 +1,5 @@
 from skadi import index as i
+from skadi.io.protobuf import demo as d_io
 from skadi.protoc import demo_pb2 as pb_d
 
 
@@ -20,16 +21,24 @@ class Index(i.Index):
 
   @property
   def dem_file_header(self):
-    return self.find(pb_d.DEM_FileHeader)
+    kind = pb_d.DEM_FileHeader
+    p, m = self.find(kind)
+    return p, d_io.parse(kind, p.compressed, m)
 
   @property
   def dem_class_info(self):
-    return self.find(pb_d.DEM_ClassInfo)
+    kind = pb_d.DEM_ClassInfo
+    p, m = self.find(kind)
+    return p, d_io.parse(kind, p.compressed, m)
 
   @property
   def dem_send_tables(self):
-    return self.find(pb_d.DEM_SendTables)
+    kind = pb_d.DEM_SendTables
+    p, m = self.find(kind)
+    return p, d_io.parse(kind, p.compressed, m)
 
   @property
   def all_dem_signon_packet(self):
-    return self.find_all(pb_d.DEM_SignonPacket)
+    kind = pb_d.DEM_SignonPacket
+    ee = self.find_all(kind)
+    return ((p, d_io.parse(kind, p.compressed, m)) for p, m in ee)
