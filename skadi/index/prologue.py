@@ -19,17 +19,17 @@ class Index(i.Index):
     super(Index, self).__init__(iterable)
 
   @property
-  def file_header(self):
+  def dem_file_header(self):
     return self.find(pb_d.DEM_FileHeader)
 
   @property
-  def class_info(self):
+  def dem_class_info(self):
     return self.find(pb_d.DEM_ClassInfo)
 
   @property
-  def send_tables(self):
+  def dem_send_tables(self):
     return self.find(pb_d.DEM_SendTables)
 
   @property
-  def signon_packets(self):
+  def all_dem_signon_packet(self):
     return self.find_all(pb_d.DEM_SignonPacket)

@@ -63,14 +63,14 @@ def load(io, tick=0):
   prologue = i_p.construct(demo_io)
 
   # mash all packet svc messages together, then index them
-  signon_packets = list(prologue.signon_packets)
+  signon_packets = list(prologue.all_dem_signon_packet)
   pbmsgs = [d_io.parse(p.kind, p.compressed, m) for p, m in signon_packets]
   data = ''.join([p.data for p in pbmsgs])
   packet_io = p_io.construct(data)
   packet = i.construct(packet_io)
 
   # class info
-  peek, message = prologue.class_info
+  peek, message = prologue.dem_class_info
   pbmsg = d_io.parse(peek.kind, peek.compressed, message)
   class_info = c.OrderedDict()
 
@@ -79,7 +79,7 @@ def load(io, tick=0):
     class_info[_id] = (dt, name)
 
   # send tables
-  peek, message = prologue.send_tables
+  peek, message = prologue.dem_send_tables
   pbmsg = d_io.parse(peek.kind, peek.compressed, message)
   send_tables = c.OrderedDict()
 
@@ -116,7 +116,7 @@ def load(io, tick=0):
   string_tables = _parse_all_csvc_create_string_tables(pbmsgs)
 
   # meta: file header
-  peek, message = prologue.file_header
+  peek, message = prologue.dem_file_header
   pbmsg = d_io.parse(peek.kind, peek.compressed, message)
   file_header = FileHeader(*[getattr(pbmsg, a) for a in FileHeader._fields])
 
