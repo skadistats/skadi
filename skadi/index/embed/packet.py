@@ -34,8 +34,7 @@ class PacketIndex(i.Index):
   @property
   def all_svc_create_string_table(self):
     kind = pb_n.svc_CreateStringTable
-    ee = self.find_all(kind)
-    return ((p, p_io.parse(kind, m)) for p, m in ee)
+    return ((p, p_io.parse(kind, m)) for p, m in self.find_all(kind))
 
   # DEM_Packet:
 
@@ -54,5 +53,14 @@ class PacketIndex(i.Index):
   @property
   def all_svc_update_string_table(self):
     kind = pb_n.svc_UpdateStringTable
-    ee = self.find_all(kind)
-    return ((p, p_io.parse(kind, m)) for p, m in ee)
+    return ((p, p_io.parse(kind, m)) for p, m in self.find_all(kind))
+
+  @property
+  def all_svc_game_event(self):
+    kind = pb_n.svc_GameEvent
+    return ((p, p_io.parse(kind, m)) for p, m in self.find_all(kind))
+
+  @property
+  def all_svc_user_message(self):
+    kind = pb_n.svc_UserMessage
+    return ((p, p_io.parse(kind, m)) for p, m in self.find_all(kind))

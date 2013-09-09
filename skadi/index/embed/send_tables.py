@@ -14,5 +14,4 @@ class SendTablesIndex(i.Index):
   @property
   def all_svc_send_table(self):
     kind = pb_n.svc_SendTable
-    ee = self.find_all(kind)
-    return ((p, p_io.parse(kind, m)) for p, m in ee)
+    return ((p, p_io.parse(kind, m)) for p, m in self.find_all(kind))
