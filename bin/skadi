@@ -11,9 +11,12 @@ sys.path.append(root)
 
 from skadi import demo as d
 
-
-option_parser = optparse.OptionParser()
+usage = "skadi [FILE] \n\nExample: 'bin/%prog tests/data/test.dem'"
+option_parser = optparse.OptionParser(usage = usage)
 (options, args) = option_parser.parse_args()
+
+if len(args) < 1:
+    print "No arguments provided.  Run skadi -h for example usage."
 
 for abspath in args:
   print 'opening {0}...'.format(os.path.basename(abspath))
