@@ -10,12 +10,6 @@ from skadi.engine import game_event as e_ge
 from skadi.engine import modifiers as e_m
 from skadi.engine import user_message as e_um
 from skadi.index.embed import packet as ie_packet
-try:
-  from skadi.io import cBitstream as b_io
-  from skadi.io.unpacker import cEntity as u_ent
-except ImportError:
-  from skadi.io import bitstream as b_io
-  from skadi.io.unpacker import entity as u_ent
 from skadi.io.protobuf import demo as d_io
 from skadi.io.protobuf import packet as p_io
 from skadi.io.unpacker import string_table as u_st
@@ -23,6 +17,14 @@ from skadi.protoc import demo_pb2 as pb_d
 from skadi.protoc import netmessages_pb2 as pb_n
 from skadi.protoc import dota_modifiers_pb2 as pb_dm
 
+try:
+  from skadi.io import cBitstream as b_io
+except ImportError:
+  from skadi.io import bitstream as b_io
+try:
+  from skadi.io.unpacker import cEntity as u_ent
+except ImportError:
+  from skadi.io.unpacker import entity as u_ent
 
 def scan(prologue, demo_io, tick=None):
   full_packets, remaining_packets = [], []
