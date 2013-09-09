@@ -39,24 +39,43 @@ cdef class Bitstream:
       _bytes = _bytes + "\0" * (4 - remainder)
     self._read_data(array.array("I", _bytes))
 
-  cdef int64_t _read(Bitstream self, int length) except -1:
-    cdef int lp, rp
-    lp = self.pos / SIZEOF_WORD_BITS
-    rp = (self.pos + length - 1) / SIZEOF_WORD_BITS
+  cdef uint32_t _get(Bitstream self, int pos):
+    return self.data[pos]
 
-    cdef uint32_t l, r
-    l = self.data[lp]
-    r = self.data[rp]
-    if lp >= self.data_n or rp >= self.data_n:
-      raise EOFError("bitstream at end of data")
+  def _read(self, length): # in bits
+    try:
+      if (self.pos + length - 1) / SIZEOF_WORD_BITS >= self.data_n:
+        raise IndexError()
+      l = self._get(self.pos / SIZEOF_WORD_BITS)
+      r = self._get((self.pos + length - 1) / SIZEOF_WORD_BITS)
+    except IndexError:
+      raise EOFError('bitstream at end of data')
 
-    cdef uint32_t pos_shift, rebuild
     pos_shift = self.pos & (SIZEOF_WORD_BITS - 1)
     rebuild = r << (SIZEOF_WORD_BITS - pos_shift) | l >> pos_shift
 
     self.pos += length
 
-    return <int64_t>(rebuild & ((1 << length) - 1))
+    return int(rebuild & ((1 << length) - 1))
+
+  # cdef int64_t _read(Bitstream self, int length) except -1:
+  #   cdef int lp, rp
+  #   lp = self.pos / SIZEOF_WORD_BITS
+  #   rp = (self.pos + length - 1) / SIZEOF_WORD_BITS
+
+  #   cdef uint32_t l, r
+  #   l = self.data[lp]
+  #   r = self.data[rp]
+  #   if lp >= self.data_n or rp >= self.data_n:
+  #     raise EOFError("bitstream at end of data")
+
+  #   cdef uint32_t pos_shift, rebuild
+  #   pos_shift = self.pos & (SIZEOF_WORD_BITS - 1)
+  #   rebuild = r << (SIZEOF_WORD_BITS - pos_shift) | l >> pos_shift
+
+  #   self.pos += length
+
+  #   return <int64_t>(rebuild & ((1 << length) - 1))
 
   cdef _dealloc(Bitstream self):
     if self.data != NULL:
