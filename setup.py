@@ -16,7 +16,8 @@ setup(
     install_requires=[
       'protobuf==2.5',
       'python-snappy==0.5',
-      'bitstring==3.1.2'
+      'bitstring==3.1.2',
+      'cython>=0.19.1'
     ],
     classifiers=[
         'Intended Audience :: Developers',
