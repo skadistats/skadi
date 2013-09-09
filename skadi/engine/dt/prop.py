@@ -1,5 +1,5 @@
 from skadi import enum
-
+from skadi.engine.dt.consts import Flag, Type
 
 test_baseclass = lambda prop: prop.name == 'baseclass'
 test_collapsible = lambda prop: prop.flags & Flag.Collapsible
@@ -7,26 +7,6 @@ test_data_table = lambda prop: prop.type == Type.DataTable
 test_exclude = lambda prop: prop.flags & Flag.Exclude
 test_inside_array = lambda prop: prop.flags & Flag.InsideArray
 test_not_exclude = lambda prop: prop.flags ^ Flag.Exclude
-
-Flag = enum(
-  Unsigned              = 1 <<  0, Coord                   = 1 <<  1,
-  NoScale               = 1 <<  2, RoundDown               = 1 <<  3,
-  RoundUp               = 1 <<  4, Normal                  = 1 <<  5,
-  Exclude               = 1 <<  6, XYZE                    = 1 <<  7,
-  InsideArray           = 1 <<  8, ProxyAlways             = 1 <<  9,
-  VectorElem            = 1 << 10, Collapsible             = 1 << 11,
-  CoordMP               = 1 << 12, CoordMPLowPrecision     = 1 << 13,
-  CoordMPIntegral       = 1 << 14, CellCoord               = 1 << 15,
-  CellCoordLowPrecision = 1 << 16, CellCoordIntegral       = 1 << 17,
-  ChangesOften          = 1 << 18, EncodedAgainstTickcount = 1 << 19
-)
-
-Type = enum(
-  Int       = 0, Float  = 1, Vector = 2,
-  VectorXY  = 3, String = 4, Array  = 5,
-  DataTable = 6, Int64  = 7
-)
-
 
 def construct(*args):
   return Prop(*args)
@@ -41,13 +21,8 @@ class Prop(object):
 
   def __init__(self, origin_dt, attributes):
     self.origin_dt = origin_dt
-    self._attributes = attributes
-
-  def __getattr__(self, name):
-    if name in Prop.DELEGATED:
-      return self._attributes[name]
-    else:
-      return object.__getattribute__(self, name)
+    for name in self.DELEGATED:
+      setattr(self, name, attributes[name])
 
   def __repr__(self):
     odt, vn, t = self.origin_dt, self.var_name, self._type()

@@ -1,4 +1,5 @@
 from setuptools import setup, find_packages
+from Cython.Build import cythonize
 
 setup(
     name='skadi',
@@ -26,4 +27,10 @@ setup(
         "Programming Language :: Python :: 2.6",
         "Programming Language :: Python :: 2.7",
         "Topic :: Database",
+    ],
+    ext_modules=cythonize([
+      "skadi/io/cBitstream.pyx",
+      "skadi/io/unpacker/cProp.pyx",
+      "skadi/io/unpacker/cEntity.pyx",
     ])
+)

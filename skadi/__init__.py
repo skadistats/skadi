@@ -23,13 +23,15 @@ from skadi.engine.dt import send as dt_s
 from skadi.index.demo import prologue as id_prologue
 from skadi.index.embed import packet as ie_packet
 from skadi.index.embed import send_tables as ie_send_tables
-from skadi.io import bitstream as b_io
 from skadi.io.protobuf import demo as d_io
 from skadi.io.protobuf import packet as p_io
 from skadi.io.unpacker import string_table as u_st
 from skadi.protoc import demo_pb2 as pb_d
 from skadi.protoc import netmessages_pb2 as pb_n
-
+try:
+  from skadi.io import cBitstream as b_io
+except ImportError:
+  from skadi.io import bitstream as b_io
 
 Meta = c.namedtuple('Meta', ['file_header', 'server_info', 'voice_init'])
 
