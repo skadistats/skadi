@@ -20,7 +20,6 @@ from skadi.engine import string_table as stab
 from skadi.engine.dt import prop as dt_p
 from skadi.engine.dt import recv as dt_r
 from skadi.engine.dt import send as dt_s
-from skadi.engine.observer import active_modifier as o_am
 from skadi.index.demo import prologue as id_prologue
 from skadi.index.embed import packet as ie_packet
 from skadi.index.embed import send_tables as ie_send_tables
@@ -168,10 +167,6 @@ def _parse_all_csvc_create_string_tables(pbmsgs):
     entries = list(u_st.construct(bs, ne, eb, sf, sb))
     name = pbmsg.name
     string_tables[name] = stab.construct(name, eb, sf, sb, entries)
-
-  observer = o_am.construct()
-  observer.modifier_names = string_tables['ModifierNames']
-  string_tables['ActiveModifiers'].observer = observer
 
   return string_tables
 

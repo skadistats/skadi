@@ -8,11 +8,11 @@ def humanize(modifier, world):
   pass
 
 
-def construct(*args):
-  return ActiveModifierObserver(*args)
+def construct(modifier_names, baseline=None):
+  return Modifiers(modifier_names, baseline)
 
 
-class ActiveModifierObserver(object):
+class Modifiers(object):
   optionals = [
     'ability_level', 'stack_count', 'creation_time', 'caster', 'ability',
     'armor', 'fade_time', 'channel_time', 'portal_loop_appear',
@@ -20,8 +20,13 @@ class ActiveModifierObserver(object):
     'movement_speed', 'activity', 'damage', 'duration'
   ]
 
-  def __init__(self):
+  def __init__(self, modifier_names, baseline):
+    self.modifier_names = modifier_names
     self.reset()
+
+    if baseline:
+      for i, (n, d) in baseline.by_index.items():
+        self.note((i, n, d))
 
   def __iter__(self):
     return self.by_parent.iteritems()
@@ -30,18 +35,33 @@ class ActiveModifierObserver(object):
     self.by_parent = c.defaultdict(c.OrderedDict)
     self.to_expire = []
 
+  def limit(self, world):
+    for parent in self.by_parent.keys():
+      if parent not in world.by_ehandle:
+        # TODO: log here.
+        del self.by_parent[parent]
+
+  def expire(self, epoch):
+    gone = [(e, (p, m)) for e, (p, m) in self.to_expire if epoch >= e]
+    [self._remove(p, m) for _, (p, m) in gone]
+    [self.to_expire.remove(record) for record in gone]
+
   def note(self, entry):
     i, n, d = entry
+
+    if not d:
+      # TODO: log here.
+      return
 
     pbmsg = pb_dm.CDOTAModifierBuffTableEntry()
     pbmsg.ParseFromString(d)
 
     parent = pbmsg.parent
-    mhandle = w.to_ehandle(pbmsg.index, pbmsg.serial_num)
+    index, serial_num = pbmsg.index, pbmsg.serial_num
 
     if pbmsg.entry_type == pb_dm.DOTA_MODIFIER_ENTRY_TYPE_ACTIVE:
       attrs = {}
-      for o in ActiveModifierObserver.optionals:
+      for o in Modifiers.optionals:
         val = getattr(pbmsg, o, None)
         if val:
           attrs[o] = val
@@ -70,27 +90,18 @@ class ActiveModifierObserver(object):
       else:
         expiry = None
 
-      self._add(parent, mhandle, attrs, until=expiry)
+      self._add(parent, index, attrs, until=expiry)
     else:
-      self._remove(parent, mhandle)
+      self._remove(parent, index)
 
-  def expire(self, epoch):
-    gone = [(e, (p, m)) for e, (p, m) in self.to_expire if epoch >= e]
-    [self._remove(p, m) for _, (p, m) in gone]
-    [self.to_expire.remove(record) for record in gone]
-
-  def _add(self, parent, mhandle, attrs, until):
-    self.by_parent[parent][mhandle] = attrs
+  def _add(self, parent, index, attrs, until):
+    self.by_parent[parent][index] = attrs
     if until:
-      record = (until, (parent, mhandle))
+      record = (until, (parent, index))
       self.to_expire.append(record)
 
-  def _remove(self, parent, mhandle):
-    try:
-      del self.by_parent[parent][mhandle]
-    except KeyError, e:
-      # TODO: log here.
-      pass
-    finally:
-      if not self.by_parent[parent]:
-        del self.by_parent[parent]
+  def _remove(self, parent, index):
+    if index in self.by_parent[parent]:
+      del self.by_parent[parent][index]
+    if parent in self.by_parent and len(self.by_parent[parent]) == 0:
+      del self.by_parent[parent]

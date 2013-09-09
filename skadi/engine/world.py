@@ -19,14 +19,14 @@ def construct(*args):
 
 
 class World(object):
-  def __init__(self, recv_tables, entities=None):
-    entities = entities or []
+  def __init__(self, recv_tables):
     self.recv_tables = recv_tables
 
     self.by_index = collections.OrderedDict()
     self.by_ehandle = collections.OrderedDict()
     self.by_cls = collections.defaultdict(list)
     self.by_dt = collections.defaultdict(list)
+
     self.classes = {}
 
   def __iter__(self):

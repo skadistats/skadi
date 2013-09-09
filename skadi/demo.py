@@ -5,11 +5,11 @@ import copy
 import io as _io
 
 from skadi import *
-from skadi import index as i
-from skadi.engine import world as w
+from skadi.engine import world as e_w
 from skadi.engine import game_event as e_ge
+from skadi.engine import modifiers as e_m
 from skadi.engine import user_message as e_um
-from skadi.engine.observer import active_modifier as o_am
+from skadi.index.embed import packet as ie_packet
 from skadi.io import bitstream as b_io
 from skadi.io.protobuf import demo as d_io
 from skadi.io.protobuf import packet as p_io
@@ -20,11 +20,8 @@ from skadi.protoc import netmessages_pb2 as pb_n
 from skadi.protoc import dota_modifiers_pb2 as pb_dm
 
 
-def fast_forward(prologue, demo_io, tick=None):
+def scan(prologue, demo_io, tick=None):
   full_packets, remaining_packets = [], []
-
-  world = w.construct(prologue.recv_tables)
-  string_tables = copy.deepcopy(prologue.string_tables)
 
   if tick:
     iter_bootstrap = iter(demo_io)
@@ -32,53 +29,61 @@ def fast_forward(prologue, demo_io, tick=None):
     try:
       while True:
         p, m = next(iter_bootstrap)
-
-        if p.kind == pb_d.DEM_FullPacket:
-          full_packets.append((p, m))
-          remaining_packets = []
-        else:
-          remaining_packets.append((p, m))
-
         if p.tick > tick - 2: # hack?
           break
+
+        item = (p, d_io.parse(p.kind, p.compressed, m))
+        if p.kind == pb_d.DEM_FullPacket:
+          full_packets.append(item)
+          remaining_packets = []
+        else:
+          remaining_packets.append(item)
+
     except StopIteration:
       raise EOFError()
 
+  return full_packets, remaining_packets
+
+
+def reconstitute(full_packets, class_bits, recv_tables, string_tables):
+  w = e_w.construct(recv_tables)
+  st = copy.deepcopy(string_tables)
+
+  st_mn = st['ModifierNames']
+  st_am = st['ActiveModifiers']
+  m = e_m.construct(st_mn, baseline=st_am)
+
+  for _, fp in full_packets:
+    for table in fp.string_table.tables:
+      assert not table.items_clientside
+
+      entries = [(_i, e.str, e.data) for _i, e in enumerate(table.items)]
+      st[table.table_name].update_all(entries)
+
+      if table.table_name == 'ActiveModifiers':
+        m.reset()
+        [m.note(e) for e in entries]
+
   if full_packets:
-    for peek, message in full_packets:
-      full_packet = d_io.parse(peek.kind, peek.compressed, message)
+    _, fp = full_packets[-1]
+    packet = ie_packet.construct(p_io.construct(fp.packet.data))
 
-      for table in full_packet.string_table.tables:
-        assert not table.items_clientside
-
-        entries = [(_i, e.str, e.data) for _i, e in enumerate(table.items)]
-        string_tables[table.table_name].update_all(entries)
-
-    peek, message = full_packets[-1]
-    pbmsg = d_io.parse(peek.kind, peek.compressed, message)
-    packet = i.construct(p_io.construct(pbmsg.packet.data))
-
-    peek, message = packet.find(pb_n.svc_PacketEntities)
-    pe = p_io.parse(peek.kind, message)
+    _, pe = packet.svc_packet_entities
     ct = pe.updated_entries
     bs = b_io.construct(pe.entity_data)
-    unpacker = u_ent.construct(bs, -1, ct, False, prologue.class_bits, world)
+    unpacker = u_ent.construct(bs, -1, ct, False, class_bits, w)
 
     for index, mode, (cls, serial, diff) in unpacker:
-      data = string_tables['instancebaseline'].get(cls)[1]
+      data = st['instancebaseline'].get(cls)[1]
       bs = b_io.construct(data)
-      unpacker = u_ent.construct(bs, -1, 1, False, prologue.class_bits, world)
+      unpacker = u_ent.construct(bs, -1, 1, False, class_bits, w)
 
-      state = unpacker.unpack_baseline(prologue.recv_tables[cls])
+      state = unpacker.unpack_baseline(recv_tables[cls])
       state.update(diff)
 
-      try:
-        world.create(cls, index, serial, state)
-      except AssertionError, e:
-        # TODO: log here.
-        pass
+      w.create(cls, index, serial, state)
 
-  return world, string_tables, remaining_packets
+  return w, m, st
 
 
 def construct(*args):
@@ -86,16 +91,16 @@ def construct(*args):
 
 
 class Stream(object):
-  def __init__(self, prologue, io, world, string_tables, rem, sparse=False):
+  def __init__(self, prologue, io, world, mods, sttabs, rem, sparse=False):
     self.prologue = prologue
     self.demo_io = d_io.construct(io)
     self.world = world
-    self.string_tables = string_tables
+    self.modifiers = mods
+    self.string_tables = sttabs
     self.sparse = sparse
 
-    for peek, message in rem:
-      pbmsg = d_io.parse(peek.kind, peek.compressed, message)
-      self.advance(peek.tick, pbmsg)
+    for p, pb in rem:
+      self.advance(p.tick, pb)
 
   def __iter__(self):
     iter_entries = iter(self.demo_io)
@@ -118,10 +123,10 @@ class Stream(object):
     return iter(advance, None)
 
   def advance(self, tick, pbmsg):
-    packet = i.construct(p_io.construct(pbmsg.data))
-    all_ust = packet.find_all(pb_n.svc_UpdateStringTable)
+    packet = ie_packet.construct(p_io.construct(pbmsg.data))
+    am_entries = []
 
-    for _pbmsg in [p_io.parse(p.kind, m) for p, m in all_ust]:
+    for _, _pbmsg in packet.all_svc_update_string_table:
       key = self.string_tables.keys()[_pbmsg.table_id]
       _st = self.string_tables[key]
 
@@ -129,8 +134,11 @@ class Stream(object):
       ne = _pbmsg.num_changed_entries
       eb, sf, sb = _st.entry_bits, _st.size_fixed, _st.size_bits
 
-      for entry in u_st.construct(bs, ne, eb, sf, sb):
-        _st.update(entry)
+      entries = u_st.construct(bs, ne, eb, sf, sb)
+      if key == 'ActiveModifiers':
+        am_entries = list(entries)
+      else:
+        [_st.update(e) for e in entries]
 
     p, m = packet.find(pb_n.svc_PacketEntities)
     pe = p_io.parse(p.kind, m)
@@ -169,12 +177,13 @@ class Stream(object):
     gel = self.prologue.game_event_list
     game_events = [e_ge.parse(p_io.parse(p.kind, m), gel) for p, m in all_ge]
 
-    modifiers = self.string_tables['ActiveModifiers'].observer
+    [self.modifiers.note(e) for e in am_entries]
+    self.modifiers.limit(self.world)
 
     _, gamerules = self.world.find_by_dt('DT_DOTAGamerulesProxy')
-    modifiers.expire(gamerules[('DT_DOTAGamerulesProxy', 'DT_DOTAGamerules.m_fGameTime')])
+    self.modifiers.expire(gamerules[('DT_DOTAGamerulesProxy', 'DT_DOTAGamerules.m_fGameTime')])
 
-    return tick, user_messages, game_events, self.world, modifiers
+    return tick, user_messages, game_events, self.world, self.modifiers
 
 
 class Demo(object):
@@ -202,5 +211,9 @@ class Demo(object):
 
   def stream(self, tick=0, sparse=False):
     self.io.seek(self._tell)
-    args = fast_forward(self.prologue, d_io.construct(self.io), tick=tick)
-    return Stream(self.prologue, self.io, *args, sparse=sparse)
+
+    p = self.prologue
+    fp, rem = scan(p, d_io.construct(self.io), tick=tick)
+    w, m, st = reconstitute(fp, p.class_bits, p.recv_tables, p.string_tables)
+
+    return Stream(p, self.io, w, m, st, rem, sparse=sparse)
