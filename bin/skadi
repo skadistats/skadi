@@ -39,10 +39,6 @@ for abspath in args:
 
     # Print all active modifiers at every tick.
     for ehandle, m_list in modifiers:
-      # Unfortunately, the modifiers data is kind of messy.
-      # Sometimes there are modifiers for entities that don't exist.
-      # This is probably something the game client ignores.
-      if ehandle in world.by_ehandle:
-        pretty = map(lambda (_, a): a['name'], m_list.items())
-        dt = world.fetch_recv_table(ehandle).dt
-        print ' {dt} (#{eh}): {attrs}'.format(dt=dt, eh=ehandle, attrs=pretty)
+      pretty = map(lambda (_, a): a['name'], m_list.items())
+      dt = world.fetch_recv_table(ehandle).dt
+      print ' {dt} (#{eh}): {attrs}'.format(dt=dt, eh=ehandle, attrs=pretty)
