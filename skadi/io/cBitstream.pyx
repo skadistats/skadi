@@ -2,9 +2,6 @@ from libc cimport stdlib
 from libc.stdint cimport int64_t, uint32_t, uint64_t, uint8_t
 from cpython cimport array
 
-DEF SIZEOF_WORD_BYTES = 4
-DEF SIZEOF_WORD_BITS = SIZEOF_WORD_BYTES * 8
-
 def construct(_bytes):
   return Bitstream(_bytes)
 
@@ -39,43 +36,24 @@ cdef class Bitstream:
       _bytes = _bytes + "\0" * (4 - remainder)
     self._read_data(array.array("I", _bytes))
 
-  cdef uint32_t _get(Bitstream self, int pos):
-    return self.data[pos]
+  cdef uint32_t _read(Bitstream self, int n):
+    cdef uint32_t a, b
+    a = self.data[self.pos / 32];
+    b = self.data[(self.pos + n - 1) / 32];
 
-  def _read(self, length): # in bits
-    try:
-      if (self.pos + length - 1) / SIZEOF_WORD_BITS >= self.data_n:
-        raise IndexError()
-      l = self._get(self.pos / SIZEOF_WORD_BITS)
-      r = self._get((self.pos + length - 1) / SIZEOF_WORD_BITS)
-    except IndexError:
-      raise EOFError('bitstream at end of data')
+    cdef uint32_t read
+    read = self.pos & 31
 
-    pos_shift = self.pos & (SIZEOF_WORD_BITS - 1)
-    rebuild = r << (SIZEOF_WORD_BITS - pos_shift) | l >> pos_shift
+    a = a >> read
+    b = b << (32 - read)
 
-    self.pos += length
+    # cast up to 64 because 1 << 32 will be 0 otherwise
+    cdef uint32_t mask, ret
+    mask = <uint32_t>((<uint64_t>1 << n) - 1)
+    ret = (a | b) & mask
 
-    return int(rebuild & ((1 << length) - 1))
-
-  # cdef int64_t _read(Bitstream self, int length) except -1:
-  #   cdef int lp, rp
-  #   lp = self.pos / SIZEOF_WORD_BITS
-  #   rp = (self.pos + length - 1) / SIZEOF_WORD_BITS
-
-  #   cdef uint32_t l, r
-  #   l = self.data[lp]
-  #   r = self.data[rp]
-  #   if lp >= self.data_n or rp >= self.data_n:
-  #     raise EOFError("bitstream at end of data")
-
-  #   cdef uint32_t pos_shift, rebuild
-  #   pos_shift = self.pos & (SIZEOF_WORD_BITS - 1)
-  #   rebuild = r << (SIZEOF_WORD_BITS - pos_shift) | l >> pos_shift
-
-  #   self.pos += length
-
-  #   return <int64_t>(rebuild & ((1 << length) - 1))
+    self.pos += n;
+    return ret
 
   cdef _dealloc(Bitstream self):
     if self.data != NULL:
@@ -96,7 +74,7 @@ cdef class Bitstream:
       data[i] = <unsigned char>self.read(8)
       remainder -= 8
       i += 1
-    
+
     if remainder:
       data[i] = <unsigned char>self._read(remainder)
       i += 1
@@ -121,7 +99,7 @@ cdef class Bitstream:
       if data[i] == 0:
         break
       i += 1
-    
+
     cdef bytes output
     try:
       # Need to specify the length to deal with embedded NULLs
