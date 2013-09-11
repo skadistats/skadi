@@ -39,7 +39,7 @@ class Bitstream(object):
 
     self.pos += length
 
-    return rebuild & ((1 << length) - 1)
+    return int(rebuild & ((1 << length) - 1))
 
   def read_long(self, length):
     remaining, _bytes = length, []

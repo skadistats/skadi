@@ -1,4 +1,7 @@
-from skadi.io import bitstream as b_io
+try:
+  from skadi.io import cBitstream as b_io
+except ImportError:
+  from skadi.io import bitstream as b_io
 
 
 class UnpackComplete(RuntimeError):
