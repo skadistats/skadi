@@ -1,6 +1,10 @@
 from skadi import enum
 from skadi.io import unpacker
-from skadi.io.unpacker import prop as pu
+
+try:
+  from skadi.io.unpacker import cProp as pu
+except ImportError:
+  from skadi.io.unpacker import prop as pu
 
 
 PVS = enum(Leaving=1, Entering=2, Deleting=4)
