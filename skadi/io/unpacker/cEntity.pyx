@@ -1,7 +1,7 @@
 from skadi import enum
 from skadi.io import unpacker
 from skadi.io cimport cBitstream as bs
-from skadi.io.unpacker import prop as pu
+from skadi.io.unpacker import cProp as pu
 
 
 PVS = enum(Leaving=1, Entering=2, Deleting=4)
