@@ -26,6 +26,7 @@ try:
 except ImportError:
   from skadi.io.unpacker import entity as u_ent
 
+
 def scan(prologue, demo_io, tick=None):
   full_packets, remaining_packets = [], []
 
@@ -33,18 +34,21 @@ def scan(prologue, demo_io, tick=None):
     iter_bootstrap = iter(demo_io)
 
     try:
-      while True:
-        p, m = next(iter_bootstrap)
-        if p.tick > tick - 2: # hack?
-          break
+      p, m = next(iter_bootstrap)
+      item = (p, d_io.parse(p.kind, p.compressed, m))
 
-        item = (p, d_io.parse(p.kind, p.compressed, m))
+      while True:
         if p.kind == pb_d.DEM_FullPacket:
           full_packets.append(item)
           remaining_packets = []
         else:
           remaining_packets.append(item)
 
+        if p.tick >= tick:
+          break
+
+        p, m = next(iter_bootstrap)
+        item = (p, d_io.parse(p.kind, p.compressed, m))
     except StopIteration:
       raise EOFError()
 
@@ -100,6 +104,9 @@ class Stream(object):
   def __init__(self, prologue, io, world, mods, sttabs, rem, sparse=False):
     self.prologue = prologue
     self.demo_io = d_io.construct(io)
+    self.tick = 0
+    self.user_messages = None
+    self.game_events = None
     self.world = world
     self.modifiers = mods
     self.string_tables = sttabs
@@ -111,24 +118,31 @@ class Stream(object):
   def __iter__(self):
     iter_entries = iter(self.demo_io)
 
-    def advance():
-      try:
-        peek, message = next(iter_entries)
+    if self.tick:
+      t = self.tick
+      um, ge = self.user_messages, self.game_events
+      w, m = self.world, self.modifiers
+      yield [t, um, ge, w, m]
 
-        if peek.kind == pb_d.DEM_FullPacket:
-          return advance() # skip
-        elif peek.kind == pb_d.DEM_Stop:
-          raise StopIteration()
+    while True:
+      peek, message = next(iter_entries)
 
+      if peek.kind == pb_d.DEM_FullPacket:
+        continue
+      elif peek.kind == pb_d.DEM_Stop:
+        raise StopIteration()
+      else:
         pbmsg = d_io.parse(peek.kind, peek.compressed, message)
+        self.advance(peek.tick, pbmsg)
 
-        return self.advance(peek.tick, pbmsg)
-      except StopIteration:
-        return None
-
-    return iter(advance, None)
+      t = self.tick
+      um, ge = self.user_messages, self.game_events
+      w, m = self.world, self.modifiers
+      yield [t, um, ge, w, m]
 
   def advance(self, tick, pbmsg):
+    self.tick = tick
+
     packet = ie_packet.construct(p_io.construct(pbmsg.data))
     am_entries = []
 
@@ -145,6 +159,13 @@ class Stream(object):
         am_entries = list(entries)
       else:
         [_st.update(e) for e in entries]
+
+    um = packet.find_all(pb_n.svc_UserMessage)
+    self.user_messages = [e_um.parse(p_io.parse(p.kind, m)) for p, m in um]
+
+    ge = packet.find_all(pb_n.svc_GameEvent)
+    gel = self.prologue.game_event_list
+    self.game_events = [e_ge.parse(p_io.parse(p.kind, m), gel) for p, m in ge]
 
     p, m = packet.find(pb_n.svc_PacketEntities)
     pe = p_io.parse(p.kind, m)
@@ -176,20 +197,18 @@ class Stream(object):
 
         self.world.update(index, state)
 
-    all_um = packet.find_all(pb_n.svc_UserMessage)
-    user_messages = [e_um.parse(p_io.parse(p.kind, m)) for p, m in all_um]
-
-    all_ge = packet.find_all(pb_n.svc_GameEvent)
-    gel = self.prologue.game_event_list
-    game_events = [e_ge.parse(p_io.parse(p.kind, m), gel) for p, m in all_ge]
-
     [self.modifiers.note(e) for e in am_entries]
     self.modifiers.limit(self.world)
 
     _, gamerules = self.world.find_by_dt('DT_DOTAGamerulesProxy')
-    self.modifiers.expire(gamerules[('DT_DOTAGamerulesProxy', 'DT_DOTAGamerules.m_fGameTime')])
+    game_time_key = ('DT_DOTAGamerulesProxy', 'DT_DOTAGamerules.m_fGameTime')
+    self.modifiers.expire(gamerules[game_time_key])
 
-    return tick, user_messages, game_events, self.world, self.modifiers
+  def _report(self):
+    t = self.tick
+    um, ge = self.user_messages, self.game_events
+    w, m = self.world, self.modifiers
+    return t, um, ge, w, m
 
 
 class Demo(object):
