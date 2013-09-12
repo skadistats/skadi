@@ -3,7 +3,7 @@ Skadi
 
 Skadi parses [Dota 2](http://www.dota2.com) replay files.
 
-**This project does not yet use semantic versioning. There is no public/private API distinction at this point, though we are increasingly resisting changes to the main demo/streaming interface. For now, best to use skadi with some caution. It may not be production ready.**
+**This project does not yet use semantic versioning. There is no public/private API distinction at this point, though we are increasingly resisting changes to the main demo/streaming interface. For now, best to use Skadi with some caution. It may not be production ready.**
 
 
 The Wiki
