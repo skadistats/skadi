@@ -20,25 +20,53 @@ In a Hurry?
 Check out some simple usage in [bin/skadi](https://github.com/onethirtyfive/skadi/blob/master/bin/skadi).
 
 
-Dependencies
+Installation
 ============
 
-Über-hacker @Noxville points out a helpful way of installing everything in Ubuntu:
+Skadi comes in two forms; as a pure Python library and as a cython optimised library. The cython version is significantly faster (from 2x to over 3x the speed), but may not work on all systems. To install the cython version, use:
 
-    (might need to be superuser to execute)
-    easy_install --allow-hosts pypi.python.org protobuf
-    apt-get install python-snappy
+    python setup.py install
 
-The `--allow-hosts` option is important, since the default hosted version on Google Code is broken.
+And, if that fails, the pure python version:
 
-If you're on a different distribution or have environmental particularities, you're going for **libraries** (including dev libs) and **bindings** for:
+    python setup_basic.py install
 
-* snappy
+If you are doing development work on skadi, or don't want to install it but still want to use the cython accelerated modules, you can build the cython modules in place:
 
-And python **bindings** for:
+    python setup.py build_ext -i
 
-* protobuf
+### Dependencies
 
+#### Cython
+
+The following C libraries and development headers are required
+
+ * snappy
+ * python-dev
+
+And the python packages
+
+ * protobuf
+
+To install these dependencies with Ubuntu/Debian, the following may work:
+
+    apt-get install python-dev python-snappy python-protobuf
+
+#### Pure Python
+
+The following C libraries and python bindings are required:
+
+ * snappy
+
+And the python packages
+
+ * protobuf
+ * bitstream
+
+To install these dependencies with Ubuntu/Debian, the following may work:
+
+    apt-get install python-snappy python-protobuf
+    pip install bitstring
 
 Thanks
 ======
