@@ -30,7 +30,7 @@ except ImportError:
 def scan(prologue, demo_io, tick=None):
   full_packets, remaining_packets = [], []
 
-  if tick:
+  if tick is not None:
     iter_bootstrap = iter(demo_io)
 
     try:
@@ -104,7 +104,7 @@ class Stream(object):
   def __init__(self, prologue, io, world, mods, sttabs, rem, sparse=False):
     self.prologue = prologue
     self.demo_io = d_io.construct(io)
-    self.tick = 0
+    self.tick = None
     self.user_messages = None
     self.game_events = None
     self.world = world
@@ -118,7 +118,7 @@ class Stream(object):
   def __iter__(self):
     iter_entries = iter(self.demo_io)
 
-    if self.tick:
+    if self.tick is not None:
       t = self.tick
       um, ge = self.user_messages, self.game_events
       w, m = self.world, self.modifiers
@@ -256,7 +256,7 @@ class Demo(object):
     self.io = infile
     self._tell = infile.tell()
 
-  def stream(self, tick=0, sparse=False):
+  def stream(self, tick=None, sparse=False):
     self.io.seek(self._tell)
 
     p = self.prologue
