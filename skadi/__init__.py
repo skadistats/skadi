@@ -188,7 +188,7 @@ class Flattener(object):
     for p in props:
       if proxy_for:
         _p = copy.copy(p)
-        _p.var_name = '{}.{}'.format(p.origin_dt, p.var_name)
+        _p.var_name = '{}.{}'.format(p.origin_dt, p.var_name).encode('UTF-8')
         _p.origin_dt = proxy_for
       else:
         _p = p
