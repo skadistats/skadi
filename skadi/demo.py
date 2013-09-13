@@ -57,7 +57,7 @@ def scan(prologue, demo_io, tick=None):
 
 def reconstitute(full_packets, class_bits, recv_tables, string_tables):
   w = e_w.construct(recv_tables)
-  st = copy.deepcopy(string_tables)
+  st = string_tables
 
   st_mn = st['ModifierNames']
   st_am = st['ActiveModifiers']
@@ -139,6 +139,28 @@ class Stream(object):
       um, ge = self.user_messages, self.game_events
       w, m = self.world, self.modifiers
       yield [t, um, ge, w, m]
+
+  def iterfullticks(self):
+    iter_entries = iter(self.demo_io)
+
+    while True:
+      peek, message = next(iter_entries)
+
+      if peek.kind == pb_d.DEM_Stop:
+        raise StopIteration()
+      elif peek.kind != pb_d.DEM_FullPacket:
+        continue
+
+      pro = self.prologue
+
+      full_packet = (peek, d_io.parse(peek.kind, peek.compressed, message))
+      self.world, self.modifiers, self.string_tables = reconstitute(
+        [full_packet], pro.class_bits, pro.recv_tables, self.string_tables)
+      self.tick = peek.tick
+      self.user_messages = []
+      self.game_events = []
+      yield [self.tick, self.user_messages, self.game_events, self.world,
+             self.modifiers]
 
   def advance(self, tick, pbmsg):
     self.tick = tick
@@ -239,6 +261,7 @@ class Demo(object):
 
     p = self.prologue
     fp, rem = scan(p, d_io.construct(self.io), tick=tick)
-    w, m, st = reconstitute(fp, p.class_bits, p.recv_tables, p.string_tables)
+    clean_st = copy.deepcopy(p.string_tables)
+    w, m, st = reconstitute(fp, p.class_bits, p.recv_tables, clean_st)
 
     return Stream(p, self.io, w, m, st, rem, sparse=sparse)
