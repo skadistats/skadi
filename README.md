@@ -61,7 +61,7 @@ The following C libraries and python bindings are required:
 And the python packages
 
  * protobuf
- * bitstream
+ * bitstring
 
 To install these dependencies with Ubuntu/Debian, the following may work:
 
