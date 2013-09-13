@@ -140,6 +140,28 @@ class Stream(object):
       w, m = self.world, self.modifiers
       yield [t, um, ge, w, m]
 
+  def iterfullticks(self):
+    iter_entries = iter(self.demo_io)
+
+    while True:
+      peek, message = next(iter_entries)
+
+      if peek.kind == pb_d.DEM_Stop:
+        raise StopIteration()
+      elif peek.kind != pb_d.DEM_FullPacket:
+        continue
+
+      pro = self.prologue
+
+      full_packet = (peek, d_io.parse(peek.kind, peek.compressed, message))
+      self.world, self.modifiers, self.string_tables = reconstitute(
+        [full_packet], pro.class_bits, pro.recv_tables, self.string_tables)
+      self.tick = peek.tick
+      self.user_messages = []
+      self.game_events = []
+      yield [self.tick, self.user_messages, self.game_events, self.world,
+             self.modifiers]
+
   def advance(self, tick, pbmsg):
     self.tick = tick
 
