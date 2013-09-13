@@ -57,7 +57,7 @@ def scan(prologue, demo_io, tick=None):
 
 def reconstitute(full_packets, class_bits, recv_tables, string_tables):
   w = e_w.construct(recv_tables)
-  st = copy.deepcopy(string_tables)
+  st = string_tables
 
   st_mn = st['ModifierNames']
   st_am = st['ActiveModifiers']
@@ -261,6 +261,7 @@ class Demo(object):
 
     p = self.prologue
     fp, rem = scan(p, d_io.construct(self.io), tick=tick)
-    w, m, st = reconstitute(fp, p.class_bits, p.recv_tables, p.string_tables)
+    clean_st = copy.deepcopy(p.string_tables)
+    w, m, st = reconstitute(fp, p.class_bits, p.recv_tables, clean_st)
 
     return Stream(p, self.io, w, m, st, rem, sparse=sparse)
