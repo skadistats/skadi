@@ -91,7 +91,7 @@ def reconstitute(full_packets, class_bits, recv_tables, string_tables):
       state = unpacker.unpack_baseline(recv_tables[cls])
       state.update(diff)
 
-      w.create(cls, index, serial, state, diff)
+      w.create(cls, index, serial, state, dict(diff))
 
   return w, m, st
 
@@ -210,13 +210,14 @@ class Stream(object):
         state = unpacker.unpack_baseline(self.prologue.recv_tables[cls])
         state.update(diff)
 
-        self.world.create(cls, index, serial, state, diff)
+        self.world.create(cls, index, serial, state, dict(diff))
       elif mode & u_ent.PVS.Deleting:
         self.world.delete(index)
       elif mode ^ u_ent.PVS.Leaving:
         state = dict(context) if self.sparse else dict(self.world.find_index(index), **context)
+        diff = state if self.sparse else dict(context)
 
-        self.world.update(index, state, dict(context))
+        self.world.update(index, state, diff)
 
     [self.modifiers.note(e) for e in am_entries]
     self.modifiers.limit(self.world)

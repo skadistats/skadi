@@ -91,7 +91,7 @@ class World(object):
     coll = [(ehandle, self.find(ehandle)) for ehandle in self.by_cls[cls]]
     return collections.OrderedDict(coll)
 
-  def find_delta_all_by_cls(self, cls):
+  def find_all_delta_by_cls(self, cls):
     coll = [(ehandle, self.find_delta(ehandle)) for ehandle in self.by_cls[cls]]
     return collections.OrderedDict(coll)
 
@@ -103,7 +103,7 @@ class World(object):
 
   def find_delta_by_cls(self, cls):
     try:
-      return next(self.find_delta_all_by_cls(cls).iteritems())
+      return next(self.find_all_delta_by_cls(cls).iteritems())
     except StopIteration:
       raise KeyError(cls)
 
@@ -117,7 +117,7 @@ class World(object):
       coll = [(ehandle, self.find(ehandle)) for ehandle in self.by_dt[dt]]
     return collections.OrderedDict(coll)
 
-  def find_delta_all_by_dt(self, dt):
+  def find_all_delta_by_dt(self, dt):
     coll = []
     if dt.endswith('*'): # handle wildcard
       dt = dt.strip('*')
@@ -135,7 +135,7 @@ class World(object):
 
   def find_delta_by_dt(self, dt):
     try:
-      return next(self.find_delta_all_by_dt(dt).iteritems())
+      return next(self.find_all_delta_by_dt(dt).iteritems())
     except StopIteration:
       raise KeyError(dt)
 
