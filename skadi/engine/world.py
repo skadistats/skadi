@@ -24,6 +24,7 @@ class World(object):
 
     self.by_index = collections.OrderedDict()
     self.by_ehandle = collections.OrderedDict()
+    self.delta_by_ehandle = collections.defaultdict()
     self.by_cls = collections.defaultdict(list)
     self.by_dt = collections.defaultdict(list)
 
@@ -32,29 +33,32 @@ class World(object):
   def __iter__(self):
     return iter(self.by_ehandle.items())
 
-  def create(self, cls, index, serial, state):
+  def create(self, cls, index, serial, state, delta):
     dt = self.recv_tables[cls].dt
     ehandle = to_ehandle(index, serial)
 
     # no assertions because of duplicate creation at replay start
     self.by_index[index] = ehandle
     self.by_ehandle[ehandle] = state
+    self.delta_by_ehandle[ehandle] = delta
     self.by_cls[cls].append(ehandle)
     self.by_dt[dt].append(ehandle)
     self.classes[ehandle] = cls
 
-  def update(self, index, state):
+  def update(self, index, state, delta):
     ehandle = self.by_index[index]
     cls = self.fetch_cls(ehandle)
     dt = self.fetch_recv_table(ehandle).dt
 
     assert index in self.by_index
     assert ehandle in self.by_ehandle
+    assert ehandle in self.delta_by_ehandle
     assert ehandle in self.by_cls[cls]
     assert ehandle in self.by_dt[dt]
     assert ehandle in self.classes
 
     self.by_ehandle[ehandle] = state
+    self.delta_by_ehandle[ehandle] = delta
 
   def delete(self, index):
     ehandle = self.by_index[index]
@@ -64,6 +68,7 @@ class World(object):
     # no assertions because these will raise errors
     del self.by_index[index]
     del self.by_ehandle[ehandle]
+    del self.delta_by_ehandle[ehandle]
     self.by_cls[cls].remove(ehandle)
     self.by_dt[dt].remove(ehandle)
     del self.classes[ehandle]
@@ -71,17 +76,34 @@ class World(object):
   def find(self, ehandle):
     return self.by_ehandle[ehandle]
 
+  def find_delta(self, ehandle):
+    return self.delta_by_ehandle[ehandle]
+
   def find_index(self, index):
     ehandle = self.by_index[index]
     return self.find(ehandle)
+
+  def find_delta_index(self, index):
+    ehandle = self.by_index[index]
+    return self.find_delta(ehandle)
 
   def find_all_by_cls(self, cls):
     coll = [(ehandle, self.find(ehandle)) for ehandle in self.by_cls[cls]]
     return collections.OrderedDict(coll)
 
+  def find_delta_all_by_cls(self, cls):
+    coll = [(ehandle, self.find_delta(ehandle)) for ehandle in self.by_cls[cls]]
+    return collections.OrderedDict(coll)
+
   def find_by_cls(self, cls):
     try:
       return next(self.find_all_by_cls(cls).iteritems())
+    except StopIteration:
+      raise KeyError(cls)
+
+  def find_delta_by_cls(self, cls):
+    try:
+      return next(self.find_delta_all_by_cls(cls).iteritems())
     except StopIteration:
       raise KeyError(cls)
 
@@ -95,9 +117,25 @@ class World(object):
       coll = [(ehandle, self.find(ehandle)) for ehandle in self.by_dt[dt]]
     return collections.OrderedDict(coll)
 
+  def find_delta_all_by_dt(self, dt):
+    coll = []
+    if dt.endswith('*'): # handle wildcard
+      dt = dt.strip('*')
+      for wc_dt in (k for k in self.by_dt.keys() if k.startswith(dt)):
+        coll.extend(((h, self.find_delta(h)) for h in self.by_dt[wc_dt]))
+    else:
+      coll = [(ehandle, self.find_delta(ehandle)) for ehandle in self.by_dt[dt]]
+    return collections.OrderedDict(coll)
+
   def find_by_dt(self, dt):
     try:
       return next(self.find_all_by_dt(dt).iteritems())
+    except StopIteration:
+      raise KeyError(dt)
+
+  def find_delta_by_dt(self, dt):
+    try:
+      return next(self.find_delta_all_by_dt(dt).iteritems())
     except StopIteration:
       raise KeyError(dt)
 
