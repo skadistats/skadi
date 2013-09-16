@@ -18,7 +18,6 @@ Peek = c.namedtuple('Peek', 'tick, kind, tell, size, compressed')
 from skadi import *
 from skadi.engine import string_table as stab
 from skadi.engine.dt import prop as dt_p
-from skadi.engine.dt import recv as dt_r
 from skadi.engine.dt import send as dt_s
 from skadi.index.demo import prologue as id_prologue
 from skadi.index.embed import packet as ie_packet
@@ -32,6 +31,10 @@ try:
   from skadi.io import cBitstream as b_io
 except ImportError:
   from skadi.io import bitstream as b_io
+try:
+  from skadi.engine.dt import cRecv as dt_r
+except ImportError:
+  from skadi.engine.dt import recv as dt_r
 
 Meta = c.namedtuple('Meta', ['file_header', 'server_info', 'voice_init'])
 
