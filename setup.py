@@ -33,5 +33,6 @@ setup(
       "skadi/io/cBitstream.pyx",
       "skadi/io/unpacker/cProp.pyx",
       "skadi/io/unpacker/cEntity.pyx",
+      "skadi/engine/dt/cRecv.pyx",
     ])
 )
