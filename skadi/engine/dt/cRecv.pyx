@@ -1,4 +1,3 @@
-#cython: profile=True
 from skadi.engine.dt import prop as dt_prop
 
 
