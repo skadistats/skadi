@@ -56,6 +56,6 @@ class DemoIO(protobuf.ProtobufIO):
       # TODO: log here.
       print 'unknown kind {}'.format(kind)
       message = None
-      self.io.seek(size, 1)
+      self.io.read(size)
 
     return Peek(tick, kind, self.io.tell(), size, comp), message
