@@ -58,4 +58,9 @@ class DemoIO(protobuf.ProtobufIO):
       message = None
       self.io.read(size)
 
-    return Peek(tick, kind, self.io.tell(), size, comp), message
+    try:
+      tell = self.io.tell()
+    except IOError:
+      tell = None
+
+    return Peek(tick, kind, tell, size, comp), message
