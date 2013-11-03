@@ -50,6 +50,37 @@ NAME_BY_TYPE = {
   114: 'SendFinalGold'
 }
 
+CHAT_MESSAGE_BY_TYPE = {
+   -1: 'INVALID',                   0: 'HERO_KILL',
+    1: 'HERO_DENY',                 2: 'BARRACKS_KILL',
+    3: 'TOWER_KILL',                4: 'TOWER_DENY',
+    5: 'FIRSTBLOOD',                6: 'STREAK_KILL',
+    7: 'BUYBACK',                   8: 'AEGIS',
+    9: 'ROSHAN_KILL',              10: 'COURIER_LOST',
+   11: 'COURIER_RESPAWNED',        12: 'GLYPH_USED',
+   13: 'ITEM_PURCHASE',            14: 'CONNECT',
+   15: 'DISCONNECT',               16: 'DISCONNECT_WAIT_FOR_RECONNECT',
+   17: 'DISCONNECT_TIME_REMAINING',18: 'DISCONNECT_TIME_REMAINING_PLURAL',
+   19: 'RECONNECT',                20: 'ABANDON',
+   21: 'SAFE_TO_LEAVE',            22: 'RUNE_PICKUP',
+   23: 'RUNE_BOTTLE',              24: 'INTHEBAG',
+   25: 'SECRETSHOP',               26: 'ITEM_AUTOPURCHASED',
+   27: 'ITEMS_COMBINED',           28: 'SUPER_CREEPS',
+   29: 'CANT_USE_ACTION_ITEM',     30: 'CHARGES_EXHAUSTED',
+   31: 'CANTPAUSE',                32: 'NOPAUSESLEFT',
+   33: 'CANTPAUSEYET',             34: 'PAUSED',
+   35: 'UNPAUSE_COUNTDOWN',        36: 'UNPAUSED',
+   37: 'AUTO_UNPAUSED',            38: 'YOUPAUSED',
+   39: 'CANTUNPAUSETEAM',          40: 'SAFE_TO_LEAVE_ABANDONER',
+   41: 'VOICE_TEXT_BANNED',        42: 'SPECTATORS_WATCHING_THIS_GAME',
+   43: 'REPORT_REMINDER',          44: 'ECON_ITEM',
+   45: 'TAUNT',                    46: 'RANDOM',
+   47: 'RD_TURN',                  48: 'SAFE_TO_LEAVE_ABANDONER_EARLY',
+   49: 'DROP_RATE_BONUS',          50: 'NO_BATTLE_POINTS',
+   51: 'DENIED_AEGIS',             52: 'INFORMATIONAL',
+   53: 'AEGIS_STOLEN',             54: 'ROSHAN_CANDY',
+   55: 'ITEM_GIFTED',              56: 'HERO_KILL_WITH_GREEVIL'
+}
 
 def parse(pbmsg):
   _type = pbmsg.msg_type
