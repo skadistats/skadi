@@ -96,6 +96,8 @@ def parse(pbmsg):
   try:
     _pbmsg = getattr(ns, cls)()
     _pbmsg.ParseFromString(pbmsg.msg_data)
+  except UnicodeDecodeError, e:
+    print '! unable to decode protobuf: {}'.format(e)
   except AttributeError, e:
     err = '! protobuf {0}: open an issue at github.com/onethirtyfive/skadi'
     print err.format(cls)
