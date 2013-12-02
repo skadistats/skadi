@@ -112,7 +112,8 @@ def humanize_state(recv_table, state):
     humanized = dict()
 
     for i, v in state.items():
-        humanized['{}.{}'.format(recv_table.dt, recv_table[i].name)] = v
+        recv_prop = recv_table.by_index[i]
+        humanized['{}.{}'.format(recv_table.dt, recv_prop.name)] = v
 
     return humanized
 

@@ -1,3 +1,5 @@
+import collections as c
+
 from skadi.state.util import Flag
 
 
@@ -39,26 +41,48 @@ cdef class RecvTable(object):
     def __iter__(self):
         return iter(self.recv_props)
 
-    def __getitem__(self, int_or_tuple):
-        ind = int_or_tuple
+    def __init__(self, dt, recv_props):
+        self.dt = dt
+        self._recv_props = recv_props
 
-        if type(ind) in (int, long):
-            return self.recv_props[ind]
-        elif isinstance(ind, tuple):
-            assert len(ind) == 2
+        self._by_src = None
+        self._by_name = None
+        self._by_tuple = None
 
-            if ind in self._cache:
-                return self._cache[ind]
+    def __iter__(self):
+        return iter(self._recv_props)
 
-            for recv_prop in self:
-                _ind = (recv_prop.src, recv_prop.name)
-                if _ind in self._cache:
-                    continue
+    property by_index:
+        def __get__(self):
+            return self._recv_props
 
-                self._cache[_ind] = recv_prop
-                if _ind == ind:
-                    return recv_prop
+    property by_src:
+        def __get__(self):
+            if self._by_src is None:
+                self._by_src = c.defaultdict(list)
 
-            return None
+                for i, recv_prop in enumerate(self):
+                    self._by_src[recv_prop.src].append((i, recv_prop))
 
-        raise NotImplementedError()
+            return self._by_src
+
+    property by_name:
+        def __get__(self):
+            if self._by_name is None:
+                self._by_name = c.defaultdict(list)
+
+                for i, recv_prop in enumerate(self):
+                    self._by_name[recv_prop.name].append((i, recv_prop))
+
+            return self._by_name
+
+    property by_tuple:
+        def __get__(self):
+            if self._by_tuple is None:
+                self._by_tuple = dict()
+
+                for i, recv_prop in enumerate(self):
+                    _tuple = (recv_prop.src, recv_prop.name)
+                    self._by_tuple[_tuple] = (i, recv_prop)
+
+            return self._by_tuple

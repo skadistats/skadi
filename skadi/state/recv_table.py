@@ -1,3 +1,5 @@
+import collections as c
+
 from skadi.state.util import Flag
 
 
@@ -55,42 +57,77 @@ class RecvTable(object):
 
     def __init__(self, dt, recv_props):
         self.dt = dt
-        self.recv_props = recv_props
-        self._cache = dict()
+        self._recv_props = recv_props
+
+        self._by_src = None
+        self._by_name = None
+        self._by_tuple = None
 
     def __iter__(self):
-        return iter(self.recv_props)
+        return iter(self._recv_props)
 
-    def __getitem__(self, int_or_tuple):
+    @property
+    def by_index(self):
         """
-        Recv props are accessible in one of two ways, depending on arg type.
-
-        Tuple-based access is cached to avoid multiple O(n) performance hits.
-
-        Argument int_or_tuple, depending on type:
-        integer -- an index into the recv props array
-        tuple -- where tuple is (recv_prop.src, recv_prop.name)
+        This instance's Prop (skadi.state.util) instances--a vanilla list.
 
         """
-        ind = int_or_tuple
+        return self._recv_props
 
-        if type(ind) in (int, long):
-            return self.recv_props[ind]
-        elif isinstance(ind, tuple):
-            assert len(ind) == 2
+    @property
+    def by_src(self):
+        """
+        This instance's Prop (skadi.state.util) instances, in a dict, keyed by
+        'src' attribute. This dict makes it possible to investigate a recv
+        table's properties by DT ancestry.
 
-            if ind in self._cache:
-                return self._cache[ind]
+        Each key corresponds to a list containing (int, Prop) entries. Each
+        int is a valid key for the by_index property.
 
-            for recv_prop in self:
-                _ind = (recv_prop.src, recv_prop.name)
-                if _ind in self._cache:
-                    continue
+        """
+        if self._by_src is None:
+            self._by_src = c.defaultdict(list)
 
-                self._cache[_ind] = recv_prop
-                if _ind == ind:
-                    return recv_prop
+            for i, recv_prop in enumerate(self):
+                self._by_src[recv_prop.src].append((i, recv_prop))
 
-            return None
+        return self._by_src
 
-        raise NotImplementedError()
+    @property
+    def by_name(self):
+        """
+        This instance's Prop (skadi.state.util) instances, in a dict, keyed by
+        'name' attribute. This dict makes it possible to investigate a recv
+        table's properties by name, regardless of DT ancestry.
+
+        Each key corresponds to a list containing (int, Prop) entries. Each
+        int is a valid key for the by_index property.
+
+        """
+        if self._by_name is None:
+            self._by_name = c.defaultdict(list)
+
+            for i, recv_prop in enumerate(self):
+                self._by_name[recv_prop.name].append((i, recv_prop))
+
+        return self._by_name
+
+    @property
+    def by_tuple(self):
+        """
+        This instance's Prop (skadi.state.util) instances, in a dict, keyed by
+        ('src', 'name') tuple. This dict makes it possible to investigate a
+        recv table's properties by fully-qualified identifier.
+
+        Each key corresponds to an (int, Prop) tuple. The int is a valid key
+        for the by_index property.
+
+        """
+        if self._by_tuple is None:
+            self._by_tuple = dict()
+
+            for i, recv_prop in enumerate(self):
+                _tuple = (recv_prop.src, recv_prop.name)
+                self._by_tuple[_tuple] = (i, recv_prop)
+
+        return self._by_tuple
