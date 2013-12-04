@@ -13,24 +13,24 @@ class TestDT(unittest.TestCase):
     def test_decoder_constructs_recv_prop_decoders(self):
         _ = None
 
-        recv_props = [
+        rp = [
             Prop('a', '1', Type.Float, 0, _, 0, 0, _, 0, 0, _),
             Prop('b', '2', Type.Float, 0, _, 0, 0, _, 0, 0, _),
             Prop('c', '3', Type.Float, 0, _, 0, 0, _, 0, 0, _),
             Prop('d', '4', Type.Float, 0, _, 0, 0, _, 0, 0, _)
         ]
 
-        recv_table = state_rt.RecvTable('DT_Foo', recv_props)
+        recv_table = state_rt.RecvTable('DT_Foo', rp)
         decoder = dcdr_dt.mk(recv_table)
 
-        self.assertEqual(recv_props[0], decoder[0].prop)
-        self.assertEqual(recv_props[1], decoder[1].prop)
-        self.assertEqual(recv_props[2], decoder[2].prop)
-        self.assertEqual(recv_props[3], decoder[3].prop)
-        self.assertEqual(recv_props[0], decoder[recv_props[0]].prop)
-        self.assertEqual(recv_props[1], decoder[recv_props[1]].prop)
-        self.assertEqual(recv_props[2], decoder[recv_props[2]].prop)
-        self.assertEqual(recv_props[3], decoder[recv_props[3]].prop)
+        self.assertEqual(rp[0], decoder.by_index[0].prop)
+        self.assertEqual(rp[1], decoder.by_index[1].prop)
+        self.assertEqual(rp[2], decoder.by_index[2].prop)
+        self.assertEqual(rp[3], decoder.by_index[3].prop)
+        self.assertEqual(rp[0], decoder.by_recv_prop[rp[0]].prop)
+        self.assertEqual(rp[1], decoder.by_recv_prop[rp[1]].prop)
+        self.assertEqual(rp[2], decoder.by_recv_prop[rp[2]].prop)
+        self.assertEqual(rp[3], decoder.by_recv_prop[rp[3]].prop)
 
 
 if __name__ == '__main__':

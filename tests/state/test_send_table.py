@@ -1,9 +1,11 @@
+import importlib as il
 import io
 import os
 import unittest
 
-#from skadi.state import recv_table as state_rt
-from skadi.state import send_table as state_st
+__impl__ = 'skadi_ext' if os.environ.get('SKADI_EXT') else 'skadi'
+stt_sndtbl = il.import_module(__impl__ + '.state.send_table')
+
 from skadi.state.util import Prop, Type, Flag
 from protobuf.impl import netmessages_pb2 as pb_n
 
@@ -31,12 +33,12 @@ class TestSendTable(unittest.TestCase):
             if not os.path.isfile(os.path.join(FIXTURE_PATH, fixture)):
                 continue
 
-            send_table = state_st.mk(load(fixture))
+            send_table = stt_sndtbl.mk(load(fixture))
             lookup[send_table.name] = send_table
 
         for send_table in lookup.values():
             if send_table.needs_flattening:
-                flattened = state_st.flatten(lookup, send_table)
+                flattened = stt_sndtbl.flatten(lookup, send_table)
                 # recv_props = state_rt._sorted(flattened)
                 # print send_table.name
                 # for recv_prop in recv_props:
@@ -45,7 +47,7 @@ class TestSendTable(unittest.TestCase):
     def test_baseclass_returns_proper_name(self):
         _ = None
         send_prop = Prop(_, 'baseclass', _, _, _, _, _, 'DT_Foo', _, _, _)
-        send_table = state_st.SendTable('DT_Bar', [send_prop], True)
+        send_table = stt_sndtbl.SendTable('DT_Bar', [send_prop], True)
         self.assertEqual('DT_Foo', send_table.baseclass)
 
     def test_all_exclusions_returns_matching_send_props(self):
@@ -56,7 +58,7 @@ class TestSendTable(unittest.TestCase):
         send_prop_4 = Prop(_, _, _, 0, _, _, _, _, _, _, _)
 
         send_props = [send_prop_1, send_prop_2, send_prop_3, send_prop_4]
-        send_table = state_st.SendTable('DT_Foo', send_props, True)
+        send_table = stt_sndtbl.SendTable('DT_Foo', send_props, True)
 
         self.assertEqual(3, len(list(send_table.all_exclusions)))
 
@@ -68,7 +70,7 @@ class TestSendTable(unittest.TestCase):
         send_prop_4 = Prop(_, _, _, 0, _, _, _, _, _, _, _)
 
         send_props = [send_prop_1, send_prop_2, send_prop_3, send_prop_4]
-        send_table = state_st.SendTable('DT_Foo', send_props, True)
+        send_table = stt_sndtbl.SendTable('DT_Foo', send_props, True)
 
         self.assertEqual(2, len(list(send_table.all_non_exclusions)))
 
@@ -80,7 +82,7 @@ class TestSendTable(unittest.TestCase):
         send_prop_4 = Prop(_, _, Type.DataTable, 0, _, _, _, _, _, _, _)
 
         send_props = [send_prop_1, send_prop_2, send_prop_3, send_prop_4]
-        send_table = state_st.SendTable('DT_Foo', send_props, True)
+        send_table = stt_sndtbl.SendTable('DT_Foo', send_props, True)
 
         self.assertEqual(2, len(list(send_table.all_relations)))
 
