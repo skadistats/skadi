@@ -25,23 +25,41 @@ Example Usage
 
     from skadi.index import prologue as ndx_prlg
     from skadi.state import match as stt_mtch
+    from skadi.state import util as stt_utl
+    from skadi.state.util import PVS
     import skadi.demo as demo
 
 
     pwd = os.path.dirname(__file__)
-    FIX = os.path.abspath(os.path.join(pwd, 'demos', '37633163.dem'))
+    PATH = os.path.abspath(os.path.join(pwd, 'demos', '37633163.dem'))
 
 
-    with io.open(FIX, mode='rb') as infile:
-    io_demo = io_dm.mk(infile)
-    io_demo.bootstrap() # read and ensure header
-    prologue = ndx_prlg.parse(io_demo) # read and create demo prologue
+    with io.open(PATH, mode='rb') as infile:
+        io_demo = io_dm.mk(infile)
+        io_demo.bootstrap() # read and ensure header
+        prologue = ndx_prlg.parse(io_demo) # read and create demo prologue
 
-    full_packets, packets = demo.preroll(io_demo, 20000)
-    match = stt_mtch.mk(prologue, full_packets, packets)
+        full_packets, packets = demo.preroll(io_demo, 20000)
+        match = stt_mtch.mk(prologue, full_packets, packets)
 
-    for snapshots in demo.play(io_demo, match):
-        print len(snapshot.entities)
+        for snapshots in demo.play(io_demo, match):
+            for index, entry in snapshots[-1].entities.entry_by_index.items():
+                pvs, entity = entry
+                recv_table = prologue.recv_tables.by_cls[entity.cls]
+
+                if pvs & PVS.Enter:
+                    pvs_desc = 'ENTER'
+                elif pvs & PVS.Leave:
+                    pvs_desc = 'LEAVE'
+                    if pvs & PVS.Delete:
+                        pvs_desc += ' (DELETE)'
+
+                print pvs_desc, '#{}'.format(index), recv_table.dt
+
+                for i, v in entity.state.items():
+                    recv_prop = recv_table.by_index[i]
+                    prop_desc = '({}, {})'.format(recv_table.dt, recv_prop.name)
+                    print '  {}: {}'.format(prop_desc, v)
 
 The `snapshots` variable yielded to the `for` loop is a rotating window of
 recent game snapshots. You can get the most recent one with `snapshots[-1]`.
