@@ -16,6 +16,7 @@ from skadi.io import embed as io_mbd
 from protobuf.impl import demo_pb2 as pb_d
 from protobuf.impl import netmessages_pb2 as pb_n
 from skadi.state import send_table as stt_sndtbl
+from skadi.state.collection import recv_tables as stt_cllctn_rcvtbls
 from skadi.state.collection import string_tables as stt_cllctn_strngtbls
 from skadi.state.util import GameEvent
 
@@ -67,7 +68,7 @@ class PrologueIndex(ndx_gnrc.Index):
         self._game_event_by_id = None
         self._game_event_by_name = None
         self._packet_entities_decoder = None
-        self._recv_table_by_cls = None
+        self._recv_tables = None
         self._send_table_by_dt = None
         self._string_table_decoder_by_name = None
         self._string_tables = None
@@ -146,24 +147,24 @@ class PrologueIndex(ndx_gnrc.Index):
 
         """
         if not self._packet_entities_decoder:
-            rtbc = self.recv_table_by_cls
+            rtbc = self.recv_tables.by_cls
             self._packet_entities_decoder = dcdr_pcktntts.mk(rtbc)
 
         return self._packet_entities_decoder
 
     @property
-    def recv_table_by_cls(self):
+    def recv_tables(self):
         """
-        Dictionary relating integer value to RecvTable
-        (skadi.state.recv_table).
+        RecvTablesCollection (skadi.state.collection.recv_tables)
+        encapsulating a set of this replay's recv tables.
 
         Notably, this method flattens send tables to produce its result.
         It can take around 1 second to complete.
 
-        Lazily creates and/or returns dict with (int, RecvTable) items.
+        Lazily creates and/or returns RecvTablesCollection instance.
 
         """
-        if not self._recv_table_by_cls:
+        if not self._recv_tables:
             recv_table_by_cls = dict()
 
             for dt, send_table in self.send_table_by_dt.items():
@@ -174,9 +175,10 @@ class PrologueIndex(ndx_gnrc.Index):
                 recv_props = stt_sndtbl.flatten(send_table_by_dt, send_table)
                 recv_table_by_cls[cls] = stt_rcvtbl.mk(dt, recv_props)
 
-            self._recv_table_by_cls = recv_table_by_cls
+            self._recv_tables = stt_cllctn_rcvtbls.mk(recv_table_by_cls)
 
-        return self._recv_table_by_cls
+        return self._recv_tables
+
 
     @property
     def send_table_by_dt(self):

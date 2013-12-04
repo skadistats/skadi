@@ -64,26 +64,6 @@ class DTDecoder(object):
 
         raise StopIteration()
 
-    def __getitem__(self, int_or_recv_prop):
-        """
-        Decoders are accessible in one of two ways, depending on arg type.
-
-        Argument int_or_recv_prop, depending on type:
-        int -- an index into the recv props array
-        recv_prop -- a Prop (skadi.state.util)
-
-        Returns a prop decoder (skadi.decoder.recv_prop.*).
-
-        """
-        ind = int_or_recv_prop
-
-        if type(ind) in (int, long):
-            return self.by_index[ind]
-        elif isinstance(ind, Prop):
-            return self.by_recv_prop[ind]
-
-        raise NotImplementedError() 
-
     def decode(self, stream, prop_list):
         """
         Uses prop_list to find corresponding (skadi.state.util) Prop entries,

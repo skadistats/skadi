@@ -123,7 +123,7 @@ def process_string_tables(basis, patch_by_name):
         string_list = []
         listed = c.OrderedDict([(s.ind,s) for s in patch])
 
-        for string in basis[name]:
+        for string in basis.by_name[name]:
             if string.ind in listed:
                 string = listed[string.ind]
                 del listed[string.ind]

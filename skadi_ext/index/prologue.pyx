@@ -13,6 +13,7 @@ from skadi.io import embed as io_mbd
 from protobuf.impl import demo_pb2 as pb_d
 from protobuf.impl import netmessages_pb2 as pb_n
 from skadi.state import send_table as stt_sndtbl
+from skadi.state.collection import recv_tables as stt_cllctn_rcvtbls
 from skadi.state.collection import string_tables as stt_cllctn_strngtbls
 from skadi.state.util import GameEvent
 
@@ -36,7 +37,7 @@ cdef class PrologueIndex(Index):
     cdef object _game_event_by_id
     cdef object _game_event_by_name
     cdef object _packet_entities_decoder
-    cdef object _recv_table_by_cls
+    cdef object _recv_tables
     cdef object _send_table_by_dt
     cdef object _string_table_decoder_by_name
     cdef object _string_tables
@@ -101,7 +102,7 @@ cdef class PrologueIndex(Index):
     property packet_entities_decoder:
         def __get__(self):
             if not self._packet_entities_decoder:
-                rtbc = self.recv_table_by_cls
+                rtbc = self.recv_tables.by_cls
                 self._packet_entities_decoder = dcdr_pcktntts.mk(rtbc)
 
             return self._packet_entities_decoder

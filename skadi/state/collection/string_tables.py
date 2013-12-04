@@ -42,16 +42,6 @@ class StringTablesCollection(object):
         self.by_index = by_index
         self.by_name = by_name
 
-    def __getitem__(self, int_or_string):
-        ind = int_or_string
-
-        if isinstance(ind, (str, unicode)):
-            return self.by_name[ind]
-        if isinstance(ind, int):
-            return self.by_index[ind]
-
-        raise NotImplementedError()
-
     def __add__(self, other):
         old = self._original.copy()
         new = other._original

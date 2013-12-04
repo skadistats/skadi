@@ -108,16 +108,6 @@ def humanize_flags(flags):
     return named_flags
 
 
-def humanize_state(recv_table, state):
-    humanized = dict()
-
-    for i, v in state.items():
-        recv_prop = recv_table.by_index[i]
-        humanized['{}.{}'.format(recv_table.dt, recv_prop.name)] = v
-
-    return humanized
-
-
 def parse_game_event(pb, keys):
     attrs = []
 

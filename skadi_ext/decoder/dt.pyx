@@ -29,15 +29,5 @@ cdef class DTDecoder(object):
 
         raise StopIteration()
 
-    def __getitem__(DTDecoder self, object int_or_recv_prop):
-        cdef object ind = int_or_recv_prop
-
-        if type(ind) in (int, long):
-            return self.by_index[ind]
-        elif isinstance(ind, Prop):
-            return self.by_recv_prop[ind]
-
-        raise NotImplementedError() 
-
     cpdef object decode(DTDecoder self, object stream, object prop_list):
-        return dict([(i, self[i].decode(stream)) for i in prop_list])
+        return dict([(i, self.by_index[i].decode(stream)) for i in prop_list])
