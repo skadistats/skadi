@@ -58,7 +58,7 @@ Example Usage
 
                 for i, v in entity.state.items():
                     recv_prop = recv_table.by_index[i]
-                    prop_desc = '({}, {})'.format(recv_table.dt, recv_prop.name)
+                    prop_desc = '({}, {})'.format(recv_prop.src, recv_prop.name)
                     print '  {}: {}'.format(prop_desc, v)
 
 The `snapshots` variable yielded to the `for` loop is a rotating window of
