@@ -76,4 +76,4 @@ class DTDecoder(object):
         Returns a dict of (recv prop index, value) tuples from stream.
 
         """
-        return dict([(i, self[i].decode(stream)) for i in prop_list])
+        return dict([(i, self.by_index[i].decode(stream)) for i in prop_list])
