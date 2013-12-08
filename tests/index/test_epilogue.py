@@ -17,11 +17,6 @@ class TestEpilogue(unittest.TestCase):
         entries = TestEpilogue.fabricate_entries()
         return ndx_plg.EpilogueIndex(entries)
 
-    def test_dem_file_info_returns_match(self):
-        index = TestEpilogue.mk()
-        peek, message = index.dem_file_info
-        self.assertEqual(pb_d.DEM_FileInfo, peek.kind)
-
 
 if __name__ == '__main__':
     unittest.main()
