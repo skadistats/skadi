@@ -25,11 +25,13 @@ cdef class EntitiesCollection(object):
     cdef public object entry_by_index
     cdef public object recv_table_by_cls
     cdef public object _entry_by_ehandle
+    cdef public object _entries_by_cls
 
     def __init__(EntitiesCollection self, object entry_by_index=None, object recv_table_by_cls=None):
         self.entry_by_index = entry_by_index or {}
         self.recv_table_by_cls = recv_table_by_cls or {}
         self._entry_by_ehandle = None
+        self._entries_by_cls = None
 
     def __len__(self):
         return len(self.entry_by_index)
@@ -54,6 +56,19 @@ cdef class EntitiesCollection(object):
                 del entry_by_index[e.ind]
 
         return EntitiesCollection(entry_by_index, self.recv_table_by_cls)
+
+    property entries_by_cls:
+        def __get__(self):
+            cdef object _entries_by_cls = c.defaultdict(list)
+
+            if not self._entries_by_cls:
+                for _, entry in self.entry_by_index.items():
+                    pvs, entity = entry
+                    _entries_by_cls[entity.cls] = entry
+
+                self._entries_by_cls = _entries_by_cls
+
+            return self._entries_by_cls
 
     property entry_by_ehandle:
         def __get__(self):

@@ -25,6 +25,7 @@ class EntitiesCollection(object):
         self.entry_by_index = entry_by_index or {}
         self.recv_table_by_cls = recv_table_by_cls or {}
         self._entry_by_ehandle = None
+        self._entries_by_cls = None
 
         # FIX ME: These need to be properties.
 
@@ -72,6 +73,19 @@ class EntitiesCollection(object):
                 del entry_by_index[e.ind]
 
         return EntitiesCollection(entry_by_index, self.recv_table_by_cls)
+
+    @property
+    def entries_by_cls(self):
+        if not self._entries_by_cls:
+            _entries_by_cls = c.defaultdict(list)
+
+            for _, entry in self.entry_by_index.items():
+                pvs, entity = entry
+                _entries_by_cls[entity.cls] = entry
+
+            self._entries_by_cls = _entries_by_cls
+
+        return self._entries_by_cls
 
     @property
     def entry_by_ehandle(self):
