@@ -81,7 +81,7 @@ class EntitiesCollection(object):
 
             for _, entry in self.entry_by_index.items():
                 pvs, entity = entry
-                _entries_by_cls[entity.cls] = entry
+                _entries_by_cls[entity.cls].append(entry)
 
             self._entries_by_cls = _entries_by_cls
 
